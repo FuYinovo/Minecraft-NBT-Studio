@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<UserControl
+    x:Class="NBT_Studio.Control.NbtTreeView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:model="using:NBT_Studio.Model"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <Style x:Key="TreeNodeFont" TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="MiSans VF"></Setter>
+            <Setter Property="FontWeight" Value="SemiLight"></Setter>
+        </Style>
+        <Style x:Key="TreeNodeText" TargetType="TextBlock" BasedOn="{StaticResource TreeNodeFont}">
+            <Setter Property="FontSize" Value="16"></Setter>
+        </Style>
+
+        <Style x:Key="TreeNodeSubText" TargetType="TextBlock" BasedOn="{StaticResource TreeNodeText}">
+            <Setter Property="FontSize" Value="14"></Setter>
+            <Setter Property="VerticalAlignment" Value="Center"></Setter>
+            <Setter Property="Margin" Value="0,-3,0,0"></Setter>
+            <Setter Property="Opacity" Value=".5"></Setter>
+        </Style>
+
+        <DataTemplate x:DataType="model:NbtNode" x:Key="TreeNodeTemplate">
+            <TreeViewItem ItemsSource="{Binding Children}"
+                          IsExpanded="False"
+                          DoubleTapped="TreeViewItem_DoubleClicked"
+                          GlyphSize="10"
+                          >
+                <TreeViewItem.ContextFlyout>
+                    <MenuFlyout>
+                        <MenuFlyoutItem Text="重命名">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE8AC;" />
+                            </MenuFlyoutItem.Icon>
+                            <MenuFlyoutItem.KeyboardAccelerators>
+                                <KeyboardAccelerator Key="M"/>
+                            </MenuFlyoutItem.KeyboardAccelerators>
+                        </MenuFlyoutItem>
+                        <MenuFlyoutItem Text="删除" >
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE74D;" Foreground="#FF99A4"/>
+                            </MenuFlyoutItem.Icon>
+                            <MenuFlyoutItem.KeyboardAccelerators>
+                                <KeyboardAccelerator Key="Delete"/>
+                            </MenuFlyoutItem.KeyboardAccelerators>
+                        </MenuFlyoutItem>
+                    </MenuFlyout>
+                </TreeViewItem.ContextFlyout>
+                <TreeViewItem.Content>
+                        <StackPanel Margin="-5,0,0,0" Orientation="Horizontal" Spacing="3">
+                        <!-- 图标 -->
+                        <Image Width="20" Height="20" VerticalAlignment="Center" Margin="0,0,3,0">
+                            <Image.Source>
+                                <SvgImageSource UriSource="{Binding Icon}"></SvgImageSource>
+                            </Image.Source>
+                        </Image>
+                        <!-- 名称 -->
+                        <TextBlock Style="{StaticResource TreeNodeText}"
+                                   Text="{Binding Name}" />
+                        <!-- 子项数量 -->
+                        <TextBlock Style="{StaticResource TreeNodeSubText}"
+                                   Visibility="{Binding ChildrenCountVisibility}"
+                                   Text="{Binding ChildrenCount}" />
+                        <!-- 等号 -->
+                        <TextBlock Style="{StaticResource TreeNodeSubText}"
+                                   Visibility="{Binding EqualMarkVisibility}"
+                                   Text="=" />
+                        <!-- 值 -->
+                        <TextBlock Style="{StaticResource TreeNodeText}"
+                                   Text="{Binding Value}" />
+                    </StackPanel>
+
+                </TreeViewItem.Content>
+            </TreeViewItem>
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <Grid>
+        <TreeView
+                  ItemsSource="{x:Bind Nodes ,Mode=TwoWay}"
+                  ItemTemplate="{StaticResource TreeNodeTemplate}"
+                  SelectionMode="Single"
+                  >
+        </TreeView>
+    </Grid>
+</UserControl>
+
+
+
+
+
+
+<!-- 折叠按钮 -->
+<!-- <Button -->
+<!--     Visibility="Collapsed" -->
+<!--     BorderThickness="0" -->
+<!--     Background="Transparent" -->
+<!--     Width="30" -->
+<!--     Padding="0,2" -->
+<!--     Click="ExpandButton_OnClick" -->
+<!--     Opacity="{Binding  ExpandButtonOpacity}"> -->
+<!--     <Border BorderThickness="2" BorderBrush="{StaticResource TextBoxForegroundHeaderThemeBrush}" Opacity=".6" CornerRadius="3"> -->
+<!--         <FontIcon Margin="2" -->
+<!--                   Glyph="&#xF8AA;" -->
+<!--                   FontSize="12" -->
+<!--                   Foreground="{StaticResource TextBoxForegroundHeaderThemeBrush}" -->
+<!--                   FontWeight="Black" /> -->
+<!--     </Border> -->
+<!-- </Button> -->

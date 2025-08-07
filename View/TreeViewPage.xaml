@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Page
+    x:Class="NBT_Studio.View.TreeViewPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:control="using:NBT_Studio.Control"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:community="using:CommunityToolkit.WinUI.Controls"
+    xmlns:labs="using:CommunityToolkit.Labs.WinUI"
+    mc:Ignorable="d">
+
+    <Grid DataContext="{x:Bind _viewModel}" Padding="10,5">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"></ColumnDefinition>
+            <ColumnDefinition Width="auto"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0" x:Name="TreeViewRigon" Width="900" MinWidth="560">
+                <community:TabbedCommandBar>
+                    <community:TabbedCommandBar.AutoSuggestBox>
+                        <AutoSuggestBox x:Name="NodeSearch" QueryIcon="Find" PlaceholderText="搜索节点"></AutoSuggestBox>
+                    </community:TabbedCommandBar.AutoSuggestBox>
+                    <community:TabbedCommandBar.PaneFooter>
+                        <CommandBar Background="Transparent" DefaultLabelPosition="Right">
+                            <AppBarButton Label="设置" Icon="Setting"></AppBarButton>
+                            <AppBarButton Label="关于" Icon="Help"></AppBarButton>
+                        </CommandBar>
+                    </community:TabbedCommandBar.PaneFooter>
+
+                    <community:TabbedCommandBar.MenuItems>
+                        <community:TabbedCommandBarItem Header="文件操作">
+                            <AppBarButton Label="新建">
+                                <AppBarButton.Icon>
+                                    <FontIcon Glyph="&#xECC8;"></FontIcon>
+                                </AppBarButton.Icon>
+                            </AppBarButton>
+                            <AppBarButton Label="加载">
+                                <AppBarButton.Icon>
+                                    <FontIcon Glyph="&#xECC8;"></FontIcon>
+                                </AppBarButton.Icon>
+                            </AppBarButton>
+                            <AppBarButton Label="保存">
+                                <AppBarButton.Icon>
+                                    <FontIcon Glyph="&#xECC8;"></FontIcon>
+                                </AppBarButton.Icon>
+                            </AppBarButton>
+                            <AppBarSeparator></AppBarSeparator>
+                            <AppBarButton Label="信息" HorizontalAlignment="Right">
+                                    <AppBarButton.Icon>
+                                        <FontIcon Glyph="&#xECC8;"></FontIcon>
+                                    </AppBarButton.Icon>
+                                </AppBarButton>
+
+
+                        </community:TabbedCommandBarItem>
+                        <community:TabbedCommandBarItem Header="添加节点">
+                            <!-- 基础数据类型 -->
+                            <AppBarElementContainer>
+                                <StackPanel Orientation="Horizontal">
+                                    <control:NbtInsertButton Label="字节"
+                                                             IconUri="ms-appx:///Assets/NodeIcon/Data_node_byte.svg" />
+                                    <control:NbtInsertButton Label="短整数"
+                                                             IconUri="ms-appx:///Assets/NodeIcon/Data_node_short.svg" />
+                                    <control:NbtInsertButton Label="整数"
+                                                             IconUri="ms-appx:///Assets/NodeIcon/Data_node_int.svg" />
+                                    <control:NbtInsertButton Label="长整数"
+                                                             IconUri="ms-appx:///Assets/NodeIcon/Data_node_long.svg" />
+                                    <control:NbtInsertButton Label="单精浮点"
+                                                             IconUri="ms-appx:///Assets/NodeIcon/Data_node_float.svg" />
+                                    <control:NbtInsertButton Label="双精浮点"
+                                                             IconUri="ms-appx:///Assets/NodeIcon/Data_node_double.svg" />
+                                    <control:NbtInsertButton Label="字符串"
+                                                             IconUri="ms-appx:///Assets/NodeIcon/Data_node_string.svg" />
+                                </StackPanel>
+                            </AppBarElementContainer>
+                            <AppBarSeparator />
+                            <!-- 数组类型 -->
+                            <AppBarElementContainer>
+                                <StackPanel Orientation="Horizontal">
+                                    <control:NbtInsertButton Label="字节组"
+                                                             IconUri="ms-appx:///Assets/NodeIcon/Data_node_byte-array.svg" />
+                                    <control:NbtInsertButton Label="整数组"
+                                                             IconUri="ms-appx:///Assets/NodeIcon/Data_node_int-array.svg" />
+                                    <control:NbtInsertButton Label="长整数组"
+                                                             IconUri="ms-appx:///Assets/NodeIcon/Data_node_long-array.svg" />
+                                </StackPanel>
+                            </AppBarElementContainer>
+                            <AppBarSeparator />
+                            <!-- 复合类型 -->
+                            <AppBarElementContainer>
+                                <StackPanel Orientation="Horizontal">
+                                    <control:NbtInsertButton Label="字典"
+                                                             IconUri="ms-appx:///Assets/NodeIcon/Data_node_dictionary.svg" />
+                                    <control:NbtInsertButton Label="列表"
+                                                             IconUri="ms-appx:///Assets/NodeIcon/Data_node_list.svg" />
+                                </StackPanel>
+                            </AppBarElementContainer>
+                        </community:TabbedCommandBarItem>
+                    </community:TabbedCommandBar.MenuItems>
+                </community:TabbedCommandBar>
+            </Grid>
+
+            <Grid Grid.Row="1" Margin="0,10,0,0">
+                <StackPanel Spacing="10">
+                    <labs:TokenView HorizontalAlignment="Center" SelectedIndex="0">
+                        <labs:TokenItem Content="全部"/>
+                        <labs:TokenItem Content="字节"/>
+                        <labs:TokenItem Content="短整数"/>
+                        <labs:TokenItem Content="整数"/>
+                        <labs:TokenItem Content="长整数"/>
+                        <labs:TokenItem Content="单精浮点"/>
+                        <labs:TokenItem Content="双精浮点"/>
+                        <labs:TokenItem Content="字符串"/>
+                    </labs:TokenView>
+                    
+                    <control:NbtTreeView Nodes="{Binding Nodes}"></control:NbtTreeView>
+                </StackPanel>
+            </Grid>
+
+        </Grid>
+
+
+        <community:ContentSizer Grid.Column="1" TargetControl="{x:Bind TreeViewRigon}"></community:ContentSizer>
+
+        <Grid Grid.Column="2">
+            <Border Visibility="Collapsed"
+                    MinWidth="400">
+                <Border Background="{ThemeResource AccentAAFillColorDefaultBrush}">
+                    <TextBlock HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}"
+                               Text="选择节点查看详情"
+                               FontSize="32"
+                               FontWeight="Black"
+                               Opacity=".6" />
+                </Border>
+            </Border>
+
+            <community:TabbedCommandBar Visibility="Visible">
+               
+                <community:TabbedCommandBar.MenuItems>
+                    <community:TabbedCommandBarItem Header="数据编辑器">
+                        <AppBarElementContainer>
+
+                        </AppBarElementContainer>
+                    </community:TabbedCommandBarItem>
+                    <community:TabbedCommandBarItem Header="物品编辑器" IsContextual="True">
+                        <AppBarElementContainer>
+
+                        </AppBarElementContainer>
+                    </community:TabbedCommandBarItem>
+                    <community:TabbedCommandBarItem Header="地图编辑器" IsContextual="True">
+                        <AppBarElementContainer>
+
+                        </AppBarElementContainer>
+                    </community:TabbedCommandBarItem>
+                </community:TabbedCommandBar.MenuItems>
+            </community:TabbedCommandBar>
+        </Grid>
+    </Grid>
+</Page>

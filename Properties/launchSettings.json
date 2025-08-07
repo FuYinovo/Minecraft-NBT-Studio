@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "NBT-Studio (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "NBT-Studio (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
