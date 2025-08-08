@@ -8,17 +8,6 @@ namespace NBT_Studio.Model;
 
 public sealed class NbtNode
 {
-    public Visibility ChildrenCountVisibility { get; } = Visibility.Collapsed;
-    public Visibility EqualMarkVisibility { get; } = Visibility.Collapsed;
-    public List<NbtNode> Children { get; } = [];
-    public NbtTag Tag { get; }
-    public NbtTagEnum TagEnum { get; }
-    public string Name { get; }
-    public string Value { get; }
-    public string Icon { get; }
-    public string ChildrenCount { get; }
-
-
     /// <summary>
     ///     初始化属性
     /// </summary>
@@ -66,4 +55,14 @@ public sealed class NbtNode
             };
         }
     }
+
+    public Visibility ChildrenCountVisibility { get; } = Visibility.Collapsed;
+    public Visibility EqualMarkVisibility { get; } = Visibility.Collapsed;
+    public List<NbtNode> Children { get; } = [];
+    public NbtTag Tag { get; }
+    public NbtTagEnum TagEnum { get; }
+    public string Name { get; }
+    public string Value { get; }
+    public string Icon { get; }
+    public string ChildrenCount { get; }
 }

@@ -75,6 +75,7 @@ public class NbtTagBuilder(bool isBigEndian)
                     if (childList.Last().Tag != NbtTagEnum.End) childList.Add(new NbtTag(NbtTagEnum.End, isBigEndian));
                     break;
             }
+
             return new NbtTag(NbtTagEnum.Dictionary, isBigEndian, name, null, childList);
         }
     }

@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <UserControl
     x:Class="NBT_Studio.Control.NbtInsertButton"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -12,7 +13,7 @@
             <AppBarButton.Content>
                 <Image>
                     <Image.Source>
-                        <SvgImageSource UriSource="{x:Bind IconUri}"></SvgImageSource>
+                        <SvgImageSource UriSource="{x:Bind IconUri}" />
                     </Image.Source>
                 </Image>
             </AppBarButton.Content>

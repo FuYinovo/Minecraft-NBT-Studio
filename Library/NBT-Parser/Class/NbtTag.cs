@@ -94,7 +94,7 @@ public class NbtTag : ICloneable
     ///     DictB{ List[Int, Int] }
     ///     DictC{ IntArray }
     /// }
-    ///
+    /// 
     /// </code>
     ///     若要获取 IntArray 标签
     ///     <code>
@@ -128,7 +128,7 @@ public class NbtTag : ICloneable
     ///     DictB{ List[Int, Int] }
     ///     DictC{ IntArray }
     /// }
-    ///
+    /// 
     /// </code>
     ///     若要移除 IntArray 标签
     ///     <code>
@@ -173,7 +173,7 @@ public class NbtTag : ICloneable
     ///     DictB{ List[Int, Int] }
     ///     DictC{ IntArray }
     /// }
-    ///
+    /// 
     /// </code>
     ///     若要向 DictC 添加 LongArray 标签
     ///     <code>
@@ -207,7 +207,8 @@ public class NbtTag : ICloneable
             switch (Tag)
             {
                 case NbtTagEnum.List:
-                    if( childElement.Tag != ChildrenTag) throw new Exception($"列表<{ChildrenTag}>不能插入{childElement.Tag}元素!");
+                    if (childElement.Tag != ChildrenTag)
+                        throw new Exception($"列表<{ChildrenTag}>不能插入{childElement.Tag}元素!");
                     Children.Add(childElement);
                     break;
                 case NbtTagEnum.Dictionary:

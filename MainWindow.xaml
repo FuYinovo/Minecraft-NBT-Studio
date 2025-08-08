@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <Window
     x:Class="NBT_Studio.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -14,12 +15,11 @@
 
     <Grid>
         <NavigationView
-           IsBackEnabled="False"
+            IsBackEnabled="False"
             IsBackButtonVisible="Collapsed"
-            IsPaneVisible="False"
-            >
-           
-            <Frame x:Name="Frame"></Frame>
+            IsPaneVisible="False">
+
+            <Frame x:Name="Frame" />
         </NavigationView>
     </Grid>
 </Window>

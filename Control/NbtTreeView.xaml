@@ -13,22 +13,22 @@
     <UserControl.Resources>
         <!-- 节点字体 -->
         <Style x:Key="TreeNodeFont" TargetType="TextBlock">
-            <Setter Property="FontFamily" Value="MiSans VF"></Setter>
-            <Setter Property="FontWeight" Value="SemiLight"></Setter>
+            <Setter Property="FontFamily" Value="MiSans VF" />
+            <Setter Property="FontWeight" Value="SemiLight" />
         </Style>
         <!-- 节点主文本 -->
         <Style x:Key="TreeNodeText" TargetType="TextBlock" BasedOn="{StaticResource TreeNodeFont}">
-            <Setter Property="FontSize" Value="16"></Setter>
+            <Setter Property="FontSize" Value="16" />
         </Style>
         <!-- 节点副文本 -->
         <Style x:Key="TreeNodeSubText" TargetType="TextBlock" BasedOn="{StaticResource TreeNodeText}">
-            <Setter Property="FontSize" Value="14"></Setter>
-            <Setter Property="VerticalAlignment" Value="Center"></Setter>
-            <Setter Property="Margin" Value="0,-3,0,0"></Setter>
-            <Setter Property="Opacity" Value=".5"></Setter>
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="0,-3,0,0" />
+            <Setter Property="Opacity" Value=".5" />
         </Style>
         <!-- 转换器 -->
-        <converter:StringTruncateConverter x:Key="StringTruncateConverter"></converter:StringTruncateConverter>
+        <converter:StringTruncateConverter x:Key="StringTruncateConverter" />
 
         <DataTemplate x:DataType="model:NbtNode" x:Key="TreeNodeTemplate">
             <TreeViewItem ItemsSource="{Binding Children}"
@@ -64,7 +64,7 @@
                         <!-- 图标 -->
                         <Image Width="20" Height="20" VerticalAlignment="Center" Margin="0,0,3,0">
                             <Image.Source>
-                                <SvgImageSource UriSource="{Binding Icon}"></SvgImageSource>
+                                <SvgImageSource UriSource="{Binding Icon}" />
                             </Image.Source>
                         </Image>
                         <!-- 名称 -->
@@ -88,11 +88,10 @@
         </DataTemplate>
     </UserControl.Resources>
 
-        <Grid>
-            <TreeView
-                ItemsSource="{x:Bind Nodes ,Mode=TwoWay}"
-                ItemTemplate="{StaticResource TreeNodeTemplate}"
-                SelectionMode="Single">
-            </TreeView>
-        </Grid>
+    <Grid>
+        <TreeView
+            ItemsSource="{x:Bind Nodes ,Mode=TwoWay}"
+            ItemTemplate="{StaticResource TreeNodeTemplate}"
+            SelectionMode="Single" />
+    </Grid>
 </UserControl>

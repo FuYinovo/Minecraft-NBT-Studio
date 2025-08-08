@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-<rect height="16" id="rect1" style="fill:#291969;" width="16"/>
-<rect height="14" id="rect2" style="fill:#5646bc;" width="14" x="1" y="1"/>
-<path d="M 10.666,2.981 V 4.232 H 8.559 V 11.480 H 10.666 V 12.738 H 4.798 V 11.480 H 6.905 V 4.232 H 4.798 V 2.981 Z" id="text1" style="fill:#ffffff;"/>
+    <rect height="16" id="rect1" style="fill:#291969;" width="16"/>
+    <rect height="14" id="rect2" style="fill:#5646bc;" width="14" x="1" y="1"/>
+    <path d="M 10.666,2.981 V 4.232 H 8.559 V 11.480 H 10.666 V 12.738 H 4.798 V 11.480 H 6.905 V 4.232 H 4.798 V 2.981 Z"
+          id="text1" style="fill:#ffffff;"/>
 </svg>

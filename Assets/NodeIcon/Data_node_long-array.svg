@@ -1,2 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><defs/><rect fill="#1c7f93" height="16" id="rect1" width="16"/><polygon fill="#063f6a" id="polygon2" points="15 1 0 1 0 0 16 0 15 1"/><polygon fill="#063f6a" id="polygon3" points="1 15 1 0 0 0 0 16 1 15"/><polygon fill="#063f6a" id="polygon4" points="1 15 16 15 16 16 0 16 1 15"/><polygon fill="#063f6a" id="polygon5" points="15 1 15 16 16 16 16 0 15 1"/><path d="M5.9,11.41V4.59H7v5.87H10.1l-.12.95Z" fill="#fff" id="text1"/><path d="M6,13H3V3H6v.76H4v8.48H6Z" fill="#f7f8f8"/><path d="M13,13H10v-.76h2V3.76H10V3h3Z" fill="#f7f8f8"/></svg>
+<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <defs/>
+    <rect fill="#1c7f93" height="16" id="rect1" width="16"/>
+    <polygon fill="#063f6a" id="polygon2" points="15 1 0 1 0 0 16 0 15 1"/>
+    <polygon fill="#063f6a" id="polygon3" points="1 15 1 0 0 0 0 16 1 15"/>
+    <polygon fill="#063f6a" id="polygon4" points="1 15 16 15 16 16 0 16 1 15"/>
+    <polygon fill="#063f6a" id="polygon5" points="15 1 15 16 16 16 16 0 15 1"/>
+    <path d="M5.9,11.41V4.59H7v5.87H10.1l-.12.95Z" fill="#fff" id="text1"/>
+    <path d="M6,13H3V3H6v.76H4v8.48H6Z" fill="#f7f8f8"/>
+    <path d="M13,13H10v-.76h2V3.76H10V3h3Z" fill="#f7f8f8"/>
+</svg>

@@ -19,7 +19,7 @@ public static class DialogService
             PrimaryButtonText = primary == "[null]" ? null : primary,
             SecondaryButtonText = primary == "[null]" ? null : secondary,
             DefaultButton = ContentDialogButton.Primary,
-            CloseButtonText = close,
+            CloseButtonText = close
         };
 
         return await dialog.ShowAsync();
