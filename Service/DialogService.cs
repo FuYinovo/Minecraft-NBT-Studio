@@ -7,19 +7,20 @@ namespace NBT_Studio.Service;
 
 public static class DialogService
 {
-    public static async Task<ContentDialogResult> ShowDialog(string title, string primary = "[null]",
-        string secondary = "[null]",
-        string close = "取消")
+    public static async Task<ContentDialogResult> ShowDialog(string title, string? primary = null,
+        string? secondary = null,
+        string? close = null, Microsoft.UI.Xaml.Controls.Control? content = null)
     {
         var xamlRoot = GetXamlRoot();
         var dialog = new ContentDialog
         {
             XamlRoot = xamlRoot,
             Title = title,
-            PrimaryButtonText = primary == "[null]" ? null : primary,
-            SecondaryButtonText = primary == "[null]" ? null : secondary,
+            PrimaryButtonText = primary,
+            SecondaryButtonText = secondary,
+            CloseButtonText = close,
             DefaultButton = ContentDialogButton.Primary,
-            CloseButtonText = close
+            Content = content
         };
 
         return await dialog.ShowAsync();

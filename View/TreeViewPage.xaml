@@ -89,7 +89,9 @@
                                 </AppBarButton.Icon>
                             </AppBarButton>
                             <AppBarSeparator />
-                            <AppBarButton Label="信息" HorizontalAlignment="Right">
+                            <AppBarButton Label="信息" HorizontalAlignment="Right"
+                                          Command="{Binding ShowFileInfoCommand}"
+                                          IsEnabled="{Binding IsInfoEnabled}">
                                 <AppBarButton.Icon>
                                     <FontIcon Glyph="&#xE946;" />
                                 </AppBarButton.Icon>

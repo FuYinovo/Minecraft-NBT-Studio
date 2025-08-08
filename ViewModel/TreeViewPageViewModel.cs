@@ -12,6 +12,7 @@ using CommunityToolkit.Mvvm.Input;
 using Microsoft.UI.Xaml.Controls;
 using NBT_Parser.Class;
 using NBT_Parser.Utils;
+using NBT_Studio.Control.Content;
 using NBT_Studio.Enum;
 using NBT_Studio.Model;
 using NBT_Studio.Service;
@@ -26,6 +27,7 @@ public class TreeViewPageViewModel : INotifyPropertyChanged
         LoadFileCommand = new AsyncRelayCommand<string>(LoadFile);
         SaveFileCommand = new AsyncRelayCommand(SaveFile);
         ApplyFileCommand = new AsyncRelayCommand(ApplyFile);
+        ShowFileInfoCommand = new AsyncRelayCommand(ShowFileInfo);
         CreateFileCommand = new AsyncRelayCommand<string>(CreateFile);
     }
 
@@ -35,7 +37,7 @@ public class TreeViewPageViewModel : INotifyPropertyChanged
         // 确认是否丢弃修改
         if (IsApplyEnabled)
         {
-            var decision = await DialogService.ShowDialog("是否保存修改？", "保存", "丢弃");
+            var decision = await DialogService.ShowDialog("是否保存修改？", "保存", "丢弃", "取消");
             switch (decision)
             {
                 case ContentDialogResult.None: // 结束方法
@@ -95,6 +97,7 @@ public class TreeViewPageViewModel : INotifyPropertyChanged
 
         IsSaveEnabled = true;
         IsApplyEnabled = false;
+        IsInfoEnabled = true;
 
         return;
 
@@ -108,7 +111,7 @@ public class TreeViewPageViewModel : INotifyPropertyChanged
             catch (Exception)
             {
                 if (tired <= 2) return await TryLoadBedrockFile(bytes, begin == 0 ? 8 : 0, tired + 1);
-                await DialogService.ShowDialog("加载失败", close: "确认");
+                await DialogService.ShowDialog("加载失败", "确认");
                 return (null, false);
             }
         }
@@ -121,7 +124,7 @@ public class TreeViewPageViewModel : INotifyPropertyChanged
             }
             catch (Exception)
             {
-                await DialogService.ShowDialog("加载失败", close: "确认");
+                await DialogService.ShowDialog("加载失败", "确认");
                 return null;
             }
         }
@@ -142,8 +145,10 @@ public class TreeViewPageViewModel : INotifyPropertyChanged
 
         // 选择保存位置
         var path = await savePicker.PickSaveFileAsync();
-        if (path != null) await WriteFile(bytes, path.Path);
+        if (path == null) return;
+        await WriteFile(bytes, path.Path);
 
+        _filePath = path.Path;
         IsApplyEnabled = false;
     }
 
@@ -160,7 +165,7 @@ public class TreeViewPageViewModel : INotifyPropertyChanged
         // 确认是否丢弃修改
         if (IsApplyEnabled)
         {
-            var decision = await DialogService.ShowDialog("是否保存修改？", "保存", "丢弃");
+            var decision = await DialogService.ShowDialog("是否保存修改？", "保存", "丢弃", "取消");
             switch (decision)
             {
                 case ContentDialogResult.None: // 结束方法
@@ -174,19 +179,28 @@ public class TreeViewPageViewModel : INotifyPropertyChanged
         }
 
         // 新建文件
-        var builder = new NbtTagBuilder(true);
-        if (Nodes.Count > 0) Nodes.Clear();
-        Nodes.Clear();
-        Nodes.Add(new NbtNode(builder.Dictionary("root", [])));
         _gameEdition = param?.ToLower() switch
         {
             "java" => GameEditionEnum.Java,
             "bedrock" => GameEditionEnum.Bedrock,
             _ => throw new Exception("新建文件按钮在XAML中版本参数错误!")
         };
+        var builder = new NbtTagBuilder(_gameEdition == GameEditionEnum.Java);
+        if (Nodes.Count > 0) Nodes.Clear();
+        Nodes.Clear();
+        Nodes.Add(new NbtNode(builder.Dictionary("root", [])));
 
+        _filePath = string.Empty;
         IsApplyEnabled = false;
         IsSaveEnabled = true;
+        IsInfoEnabled = true;
+    }
+
+    private async Task ShowFileInfo()
+    {
+        var content = new NbtFileInfoContent(_filePath, _nodes.First().Tag.GetBytes().Length, _gameEdition,
+            _nodes.First().Tag.IsBigEndian);
+        await DialogService.ShowDialog("文件信息", "确认", content: content);
     }
 
     private async Task WriteFile(byte[] bytes, string path)
@@ -223,13 +237,15 @@ public class TreeViewPageViewModel : INotifyPropertyChanged
     private ObservableCollection<NbtNode> _nodes = [];
     private bool _isSaveEnabled;
     private bool _isApplyEnabled;
+    private bool _isInfoEnabled;
     private string _filePath = string.Empty;
     private bool _isBedrockLevelDat;
     private GameEditionEnum _gameEdition;
-    public IAsyncRelayCommand<string> LoadFileCommand { get; set; }
-    public IAsyncRelayCommand SaveFileCommand { get; set; }
-    public IAsyncRelayCommand ApplyFileCommand { get; set; }
-    public IAsyncRelayCommand<string> CreateFileCommand { get; set; }
+    public IAsyncRelayCommand<string> LoadFileCommand { get; }
+    public IAsyncRelayCommand SaveFileCommand { get; }
+    public IAsyncRelayCommand ApplyFileCommand { get; }
+    public IAsyncRelayCommand ShowFileInfoCommand { get; }
+    public IAsyncRelayCommand<string> CreateFileCommand { get; }
 
     public ObservableCollection<NbtNode> Nodes
     {
@@ -247,6 +263,12 @@ public class TreeViewPageViewModel : INotifyPropertyChanged
     {
         get => _isApplyEnabled;
         set => SetField(ref _isApplyEnabled, value);
+    }
+
+    public bool IsInfoEnabled
+    {
+        get => _isInfoEnabled;
+        set => SetField(ref _isInfoEnabled, value);
     }
 
     #endregion
