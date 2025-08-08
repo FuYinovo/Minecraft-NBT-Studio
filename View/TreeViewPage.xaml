@@ -13,16 +13,16 @@
 
     <Grid DataContext="{x:Bind _viewModel}" Padding="10,5">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="auto"></ColumnDefinition>
-            <ColumnDefinition Width="auto"></ColumnDefinition>
-            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
         <!-- 左侧节点区 -->
         <Grid Grid.Column="0">
             <Grid.RowDefinitions>
-                <RowDefinition Height="auto"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
             <!-- 操作区 -->
@@ -30,12 +30,12 @@
                 <community:TabbedCommandBar>
                     <!-- 头部 -->
                     <community:TabbedCommandBar.AutoSuggestBox>
-                        <AutoSuggestBox x:Name="NodeSearch" QueryIcon="Find" PlaceholderText="搜索节点"></AutoSuggestBox>
+                        <AutoSuggestBox x:Name="NodeSearch" QueryIcon="Find" PlaceholderText="搜索节点" />
                     </community:TabbedCommandBar.AutoSuggestBox>
                     <community:TabbedCommandBar.PaneFooter>
                         <CommandBar Background="Transparent" DefaultLabelPosition="Right">
-                            <AppBarButton Label="设置" Icon="Setting"></AppBarButton>
-                            <AppBarButton Label="关于" Icon="Help"></AppBarButton>
+                            <AppBarButton Label="设置" Icon="Setting" />
+                            <AppBarButton Label="关于" Icon="Help" />
                         </CommandBar>
                     </community:TabbedCommandBar.PaneFooter>
                     <!-- 子页面 -->
@@ -43,22 +43,42 @@
                         <!-- 文件操作页 -->
                         <community:TabbedCommandBarItem Header="文件操作">
                             <AppBarButton Label="新建"
-                                          Command="{Binding CreateFileCommand}">
+                                          IsCompact="True">
                                 <AppBarButton.Icon>
-                                    <FontIcon Glyph="&#xECC8;"></FontIcon>
+                                    <FontIcon Glyph="&#xECC8;" />
                                 </AppBarButton.Icon>
+                                <AppBarButton.Flyout>
+                                    <MenuFlyout>
+                                        <MenuFlyoutItem Text="Java 版"
+                                                        Command="{Binding CreateFileCommand}"
+                                                        CommandParameter="Java" />
+                                        <MenuFlyoutItem Text="基岩版"
+                                                        Command="{Binding CreateFileCommand}"
+                                                        CommandParameter="Bedrock" />
+                                    </MenuFlyout>
+                                </AppBarButton.Flyout>
                             </AppBarButton>
                             <AppBarButton Label="加载"
-                                          Command="{Binding LoadFileCommand}">
+                                          IsCompact="True">
                                 <AppBarButton.Icon>
                                     <FontIcon Glyph="&#xE78B;" />
                                 </AppBarButton.Icon>
+                                <AppBarButton.Flyout>
+                                    <MenuFlyout>
+                                        <MenuFlyoutItem Text="Java 版"
+                                                        Command="{Binding LoadFileCommand}"
+                                                        CommandParameter="Java" />
+                                        <MenuFlyoutItem Text="基岩版"
+                                                        Command="{Binding LoadFileCommand}"
+                                                        CommandParameter="Bedrock" />
+                                    </MenuFlyout>
+                                </AppBarButton.Flyout>
                             </AppBarButton>
                             <AppBarButton Label="保存"
                                           Command="{Binding ApplyFileCommand}"
                                           IsEnabled="{Binding IsApplyEnabled}">
                                 <AppBarButton.Icon>
-                                    <FontIcon Glyph="&#xE74E;"></FontIcon>
+                                    <FontIcon Glyph="&#xE74E;" />
                                 </AppBarButton.Icon>
                             </AppBarButton>
                             <AppBarButton Label="另存为"
@@ -68,7 +88,7 @@
                                     <FontIcon Glyph="&#xE792;" />
                                 </AppBarButton.Icon>
                             </AppBarButton>
-                            <AppBarSeparator></AppBarSeparator>
+                            <AppBarSeparator />
                             <AppBarButton Label="信息" HorizontalAlignment="Right">
                                 <AppBarButton.Icon>
                                     <FontIcon Glyph="&#xE946;" />
@@ -138,14 +158,14 @@
                             <labs:TokenItem Content="字符串" />
                         </labs:TokenView>
                         <!-- 节点树 -->
-                        <control:NbtTreeView Nodes="{Binding Nodes}"></control:NbtTreeView>
+                        <control:NbtTreeView Nodes="{Binding Nodes}" />
                     </StackPanel>
 
                 </ScrollView>
             </Grid>
         </Grid>
 
-        <community:ContentSizer Grid.Column="1" TargetControl="{x:Bind TreeViewGrid}"></community:ContentSizer>
+        <community:ContentSizer Grid.Column="1" TargetControl="{x:Bind TreeViewGrid}" />
 
         <!-- 右侧详情区 -->
         <Grid Grid.Column="2">
@@ -166,19 +186,13 @@
 
                 <community:TabbedCommandBar.MenuItems>
                     <community:TabbedCommandBarItem Header="数据编辑器">
-                        <AppBarElementContainer>
-
-                        </AppBarElementContainer>
+                        <AppBarElementContainer />
                     </community:TabbedCommandBarItem>
                     <community:TabbedCommandBarItem Header="物品编辑器" IsContextual="True">
-                        <AppBarElementContainer>
-
-                        </AppBarElementContainer>
+                        <AppBarElementContainer />
                     </community:TabbedCommandBarItem>
                     <community:TabbedCommandBarItem Header="地图编辑器" IsContextual="True">
-                        <AppBarElementContainer>
-
-                        </AppBarElementContainer>
+                        <AppBarElementContainer />
                     </community:TabbedCommandBarItem>
                 </community:TabbedCommandBar.MenuItems>
             </community:TabbedCommandBar>

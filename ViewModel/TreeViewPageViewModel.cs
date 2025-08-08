@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -7,16 +8,215 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Windows.Storage.Pickers;
-using NBT_Parser.Class;
-using NBT_Studio.Model;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.UI.Xaml.Controls;
+using NBT_Parser.Class;
 using NBT_Parser.Utils;
+using NBT_Studio.Enum;
+using NBT_Studio.Model;
+using NBT_Studio.Service;
+using WinRT.Interop;
 
 namespace NBT_Studio.ViewModel;
 
 public class TreeViewPageViewModel : INotifyPropertyChanged
 {
+    public TreeViewPageViewModel()
+    {
+        LoadFileCommand = new AsyncRelayCommand<string>(LoadFile);
+        SaveFileCommand = new AsyncRelayCommand(SaveFile);
+        ApplyFileCommand = new AsyncRelayCommand(ApplyFile);
+        CreateFileCommand = new AsyncRelayCommand<string>(CreateFile);
+    }
+
+
+    private async Task LoadFile(string? param)
+    {
+        // 确认是否丢弃修改
+        if (IsApplyEnabled)
+        {
+            var decision = await DialogService.ShowDialog("是否保存修改？", "保存", "丢弃");
+            switch (decision)
+            {
+                case ContentDialogResult.None: // 结束方法
+                    return;
+                case ContentDialogResult.Primary:
+                    await ApplyFile(); // 应用并执行方法
+                    break;
+                case ContentDialogResult.Secondary:
+                    break; // 执行方法
+            }
+        }
+
+        // 初始化 Picker
+        var openPicker = new FileOpenPicker
+        {
+            ViewMode = PickerViewMode.Thumbnail
+        };
+        openPicker.FileTypeFilter.Add(".nbt");
+        openPicker.FileTypeFilter.Add(".dat");
+        var hWnd = WindowNative.GetWindowHandle(App.Window);
+        InitializeWithWindow.Initialize(openPicker, hWnd);
+
+        // 选择文件
+        var file = await openPicker.PickSingleFileAsync();
+        if (file == null) return;
+
+        // 读取文件
+        _filePath = file.Path;
+        var bytes = Tools.ReadBytes(file.Path);
+        _gameEdition = param?.ToLower() switch
+        {
+            "java" => GameEditionEnum.Java,
+            "bedrock" => GameEditionEnum.Bedrock,
+            _ => throw new Exception("新建文件按钮在XAML中版本参数错误!")
+        };
+        // Java | Bedrock 分类处理
+        NbtTag rootTag;
+        switch (_gameEdition)
+        {
+            case GameEditionEnum.Java:
+                var tag = await TryLoadJavaFile(bytes);
+                if (tag == null) return;
+                rootTag = tag;
+                break;
+            case GameEditionEnum.Bedrock:
+                var result = await TryLoadBedrockFile(bytes);
+                if (result.tag == null) return;
+                _isBedrockLevelDat = result.isLevelDat;
+                rootTag = result.tag;
+                break;
+            default:
+                throw new Exception($"未知游戏版本[{_gameEdition}]");
+        }
+
+        if (Nodes.Count > 0) Nodes.Clear();
+        Nodes.Add(new NbtNode(rootTag));
+
+        IsSaveEnabled = true;
+        IsApplyEnabled = false;
+
+        return;
+
+        // 对于基岩版文件，分别尝试从 0 、8 开始解析，若均失败，则弹窗失败
+        static async Task<(NbtTag? tag, bool isLevelDat)> TryLoadBedrockFile(byte[] bytes, int begin = 0, int tired = 1)
+        {
+            try
+            {
+                return (new NbtParser().Parse(bytes, false, begin), begin != 0);
+            }
+            catch (Exception)
+            {
+                if (tired <= 2) return await TryLoadBedrockFile(bytes, begin == 0 ? 8 : 0, tired + 1);
+                await DialogService.ShowDialog("加载失败", close: "确认");
+                return (null, false);
+            }
+        }
+
+        static async Task<NbtTag?> TryLoadJavaFile(byte[] bytes)
+        {
+            try
+            {
+                return new NbtParser().Parse(bytes, true);
+            }
+            catch (Exception)
+            {
+                await DialogService.ShowDialog("加载失败", close: "确认");
+                return null;
+            }
+        }
+    }
+
+    private async Task SaveFile()
+    {
+        // 获取字节数组
+        var bytes = Nodes.First().Tag.GetBytes();
+
+        // 初始化 Picker
+        var savePicker = new FileSavePicker();
+        savePicker.FileTypeChoices.Add("NBT Files", new List<string> { ".nbt", ".dat" });
+        savePicker.SuggestedFileName =
+            string.IsNullOrWhiteSpace(_nodes.First().Name) ? "unnamed_nbt_file" : _nodes.First().Name;
+        var hWnd = WindowNative.GetWindowHandle(App.Window);
+        InitializeWithWindow.Initialize(savePicker, hWnd);
+
+        // 选择保存位置
+        var path = await savePicker.PickSaveFileAsync();
+        if (path != null) await WriteFile(bytes, path.Path);
+
+        IsApplyEnabled = false;
+    }
+
+    private async Task ApplyFile()
+    {
+        var bytes = Nodes.First().Tag.GetBytes();
+        await WriteFile(bytes, _filePath);
+
+        IsApplyEnabled = false;
+    }
+
+    private async Task CreateFile(string? param)
+    {
+        // 确认是否丢弃修改
+        if (IsApplyEnabled)
+        {
+            var decision = await DialogService.ShowDialog("是否保存修改？", "保存", "丢弃");
+            switch (decision)
+            {
+                case ContentDialogResult.None: // 结束方法
+                    return;
+                case ContentDialogResult.Primary:
+                    await ApplyFile(); // 应用并执行方法
+                    break;
+                case ContentDialogResult.Secondary:
+                    break; // 执行方法
+            }
+        }
+
+        // 新建文件
+        var builder = new NbtTagBuilder(true);
+        if (Nodes.Count > 0) Nodes.Clear();
+        Nodes.Clear();
+        Nodes.Add(new NbtNode(builder.Dictionary("root", [])));
+        _gameEdition = param?.ToLower() switch
+        {
+            "java" => GameEditionEnum.Java,
+            "bedrock" => GameEditionEnum.Bedrock,
+            _ => throw new Exception("新建文件按钮在XAML中版本参数错误!")
+        };
+
+        IsApplyEnabled = false;
+        IsSaveEnabled = true;
+    }
+
+    private async Task WriteFile(byte[] bytes, string path)
+    {
+        var fileStream = new FileStream(path, FileMode.OpenOrCreate, FileAccess.Write);
+        switch (_gameEdition)
+        {
+            case GameEditionEnum.Java:
+                await fileStream.WriteAsync(bytes);
+                break;
+            case GameEditionEnum.Bedrock:
+                if (!_isBedrockLevelDat)
+                {
+                    await fileStream.WriteAsync(bytes);
+                    break;
+                }
+
+                // 基岩版的 level.dat 文件前 8 字节是两个整数：10 和 数据长度
+                var extension = new byte[8];
+                BinaryPrimitives.WriteInt32LittleEndian(extension, 10);
+                BinaryPrimitives.WriteInt32LittleEndian(extension, bytes.Length);
+                await fileStream.WriteAsync(extension.Concat(bytes).ToArray());
+                break;
+            default:
+                throw new Exception("保存文件时无法确定游戏版本");
+        }
+
+        fileStream.Close();
+    }
+
     #region Properties
 
     public event PropertyChangedEventHandler? PropertyChanged;
@@ -24,10 +224,12 @@ public class TreeViewPageViewModel : INotifyPropertyChanged
     private bool _isSaveEnabled;
     private bool _isApplyEnabled;
     private string _filePath = string.Empty;
-    public IAsyncRelayCommand LoadFileCommand { get; set; }
+    private bool _isBedrockLevelDat;
+    private GameEditionEnum _gameEdition;
+    public IAsyncRelayCommand<string> LoadFileCommand { get; set; }
     public IAsyncRelayCommand SaveFileCommand { get; set; }
     public IAsyncRelayCommand ApplyFileCommand { get; set; }
-    public IAsyncRelayCommand CreateFileCommand { get; set; }
+    public IAsyncRelayCommand<string> CreateFileCommand { get; set; }
 
     public ObservableCollection<NbtNode> Nodes
     {
@@ -48,121 +250,6 @@ public class TreeViewPageViewModel : INotifyPropertyChanged
     }
 
     #endregion
-
-    public TreeViewPageViewModel()
-    {
-        LoadFileCommand = new AsyncRelayCommand(LoadFile);
-        SaveFileCommand = new AsyncRelayCommand(SaveFile);
-        ApplyFileCommand = new AsyncRelayCommand(ApplyFile);
-        CreateFileCommand = new AsyncRelayCommand(CreateFile);
-    }
-
-
-    private async Task LoadFile()
-    {
-        // 确认是否丢弃修改
-        if (IsApplyEnabled)
-        {
-            var decision = await Service.DialogService.ShowDialog("是否保存修改？", "保存", "丢弃");
-            switch (decision)
-            {
-                case ContentDialogResult.None: // 结束方法
-                    return;
-                case ContentDialogResult.Primary:
-                    await ApplyFile(); // 应用并执行方法
-                    break;
-                case ContentDialogResult.Secondary:
-                    break; // 执行方法
-            }
-        }
-
-        // 初始化 Picker
-        var openPicker = new FileOpenPicker
-        {
-            ViewMode = PickerViewMode.Thumbnail
-        };
-        openPicker.FileTypeFilter.Add(".nbt");
-        openPicker.FileTypeFilter.Add(".dat");
-        var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(App.Window);
-        WinRT.Interop.InitializeWithWindow.Initialize(openPicker, hWnd);
-
-        // 选择文件
-        var file = await openPicker.PickSingleFileAsync();
-        if (file == null) return;
-
-        // 读取文件
-        _filePath = file.Path;
-        var bytes = Tools.ReadBytes(file.Path);
-        var fileInfo = Tools.GetNbtBytesInfo(bytes);
-        var rootTag = new NbtParser().Parse(bytes, fileInfo.isBigEndian, fileInfo.begin);
-        if (Nodes.Count > 0) Nodes.Clear();
-        Nodes.Add(new NbtNode(rootTag));
-
-        IsSaveEnabled = true;
-        IsApplyEnabled = false;
-    }
-
-    private async Task SaveFile()
-    {
-        // 获取字节数组
-        var bytes = Nodes.First().Tag.GetBytes();
-
-        // 初始化 Picker
-        var savePicker = new FileSavePicker();
-        savePicker.FileTypeChoices.Add("NBT Files", new List<string> { ".nbt", ".dat" });
-        savePicker.SuggestedFileName =
-            string.IsNullOrWhiteSpace(_nodes.First().Name) ? "unnamed_nbt_file" : _nodes.First().Name;
-        var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(App.Window);
-        WinRT.Interop.InitializeWithWindow.Initialize(savePicker, hWnd);
-
-        // 选择保存位置
-        var path = await savePicker.PickSaveFileAsync();
-        if (path != null) await WriteFile(bytes, path.Path);
-
-        IsApplyEnabled = false;
-    }
-
-    private async Task ApplyFile()
-    {
-        var bytes = Nodes.First().Tag.GetBytes();
-        await WriteFile(bytes, _filePath);
-
-        IsApplyEnabled = false;
-    }
-
-    private async Task CreateFile()
-    {
-        // 确认是否丢弃修改
-        if (IsApplyEnabled)
-        {
-            var decision = await Service.DialogService.ShowDialog("是否保存修改？", "保存", "丢弃");
-            switch (decision)
-            {
-                case ContentDialogResult.None: // 结束方法
-                    return;
-                case ContentDialogResult.Primary:
-                    await ApplyFile(); // 应用并执行方法
-                    break;
-                case ContentDialogResult.Secondary:
-                    break; // 执行方法
-            }
-        }
-
-        // 新建文件
-        var builder = new NbtTagBuilder(true);
-        if (Nodes.Count > 0) Nodes.Clear();
-        Nodes.Clear();
-        Nodes.Add(new NbtNode(builder.Dictionary("root", [])));
-
-        IsApplyEnabled = false;
-    }
-
-    private static async Task WriteFile(byte[] bytes, string path)
-    {
-        var fileStream = new FileStream(path, FileMode.OpenOrCreate, FileAccess.Write);
-        await fileStream.WriteAsync(bytes);
-        fileStream.Close();
-    }
 
 
     #region INotifyPropertyChanged
