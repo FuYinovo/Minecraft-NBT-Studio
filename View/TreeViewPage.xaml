@@ -51,27 +51,27 @@
                             <AppBarButton Label="加载"
                                           Command="{Binding LoadFileCommand}">
                                 <AppBarButton.Icon>
-                                    <FontIcon Glyph="&#xECC8;"></FontIcon>
+                                    <FontIcon Glyph="&#xE78B;" />
                                 </AppBarButton.Icon>
                             </AppBarButton>
                             <AppBarButton Label="保存"
                                           Command="{Binding ApplyFileCommand}"
                                           IsEnabled="{Binding IsApplyEnabled}">
                                 <AppBarButton.Icon>
-                                    <FontIcon Glyph="&#xECC8;"></FontIcon>
+                                    <FontIcon Glyph="&#xE74E;"></FontIcon>
                                 </AppBarButton.Icon>
                             </AppBarButton>
                             <AppBarButton Label="另存为"
                                           Command="{Binding SaveFileCommand}"
                                           IsEnabled="{Binding IsSaveEnabled}">
                                 <AppBarButton.Icon>
-                                    <FontIcon Glyph="&#xECC8;"></FontIcon>
+                                    <FontIcon Glyph="&#xE792;" />
                                 </AppBarButton.Icon>
                             </AppBarButton>
                             <AppBarSeparator></AppBarSeparator>
                             <AppBarButton Label="信息" HorizontalAlignment="Right">
                                 <AppBarButton.Icon>
-                                    <FontIcon Glyph="&#xECC8;"></FontIcon>
+                                    <FontIcon Glyph="&#xE946;" />
                                 </AppBarButton.Icon>
                             </AppBarButton>
                         </community:TabbedCommandBarItem>
