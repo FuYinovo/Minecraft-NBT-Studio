@@ -11,8 +11,8 @@ public sealed class NbtNode
     public Visibility ChildrenCountVisibility { get; } = Visibility.Collapsed;
     public Visibility EqualMarkVisibility { get; } = Visibility.Collapsed;
     public List<NbtNode> Children { get; } = [];
+    public NbtTag Tag { get; }
     public NbtTagEnum TagEnum { get; }
-    public int ExpandButtonOpacity { get; } = 1;
     public string Name { get; }
     public string Value { get; }
     public string Icon { get; }
@@ -24,7 +24,8 @@ public sealed class NbtNode
     /// </summary>
     public NbtNode(NbtTag nbtTag)
     {
-        TagEnum = nbtTag.Tag;
+        Tag = nbtTag;
+        TagEnum = Tag.Tag;
         // 名称
         Name = nbtTag.Name ?? TagEnum.ToString();
         // 值
@@ -44,11 +45,9 @@ public sealed class NbtNode
         // 子项数量
         ChildrenCount = $"<{Children.Count.ToString()}>";
         // 是否显示子项数量
-        if (Children.Count > 0) ChildrenCountVisibility = Visibility.Visible;
+        if (TagEnum is NbtTagEnum.Dictionary or NbtTagEnum.List) ChildrenCountVisibility = Visibility.Visible;
         // 是否显示等号
         if (ChildrenCountVisibility == Visibility.Collapsed) EqualMarkVisibility = Visibility.Visible;
-        // 折叠按钮透明度
-        if (ChildrenCountVisibility == Visibility.Collapsed) ExpandButtonOpacity = 0;
 
         return;
 

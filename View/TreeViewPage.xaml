@@ -18,14 +18,17 @@
             <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
 
+        <!-- 左侧节点区 -->
         <Grid Grid.Column="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"></RowDefinition>
                 <RowDefinition Height="*"></RowDefinition>
             </Grid.RowDefinitions>
 
-            <Grid Grid.Row="0" x:Name="TreeViewRigon" Width="900" MinWidth="560">
+            <!-- 操作区 -->
+            <Grid Grid.Row="0" Width="900" MinWidth="630" x:Name="TreeViewGrid">
                 <community:TabbedCommandBar>
+                    <!-- 头部 -->
                     <community:TabbedCommandBar.AutoSuggestBox>
                         <AutoSuggestBox x:Name="NodeSearch" QueryIcon="Find" PlaceholderText="搜索节点"></AutoSuggestBox>
                     </community:TabbedCommandBar.AutoSuggestBox>
@@ -35,33 +38,44 @@
                             <AppBarButton Label="关于" Icon="Help"></AppBarButton>
                         </CommandBar>
                     </community:TabbedCommandBar.PaneFooter>
-
+                    <!-- 子页面 -->
                     <community:TabbedCommandBar.MenuItems>
+                        <!-- 文件操作页 -->
                         <community:TabbedCommandBarItem Header="文件操作">
-                            <AppBarButton Label="新建">
+                            <AppBarButton Label="新建"
+                                          Command="{Binding CreateFileCommand}">
                                 <AppBarButton.Icon>
                                     <FontIcon Glyph="&#xECC8;"></FontIcon>
                                 </AppBarButton.Icon>
                             </AppBarButton>
-                            <AppBarButton Label="加载">
+                            <AppBarButton Label="加载"
+                                          Command="{Binding LoadFileCommand}">
                                 <AppBarButton.Icon>
                                     <FontIcon Glyph="&#xECC8;"></FontIcon>
                                 </AppBarButton.Icon>
                             </AppBarButton>
-                            <AppBarButton Label="保存">
+                            <AppBarButton Label="保存"
+                                          Command="{Binding ApplyFileCommand}"
+                                          IsEnabled="{Binding IsApplyEnabled}">
+                                <AppBarButton.Icon>
+                                    <FontIcon Glyph="&#xECC8;"></FontIcon>
+                                </AppBarButton.Icon>
+                            </AppBarButton>
+                            <AppBarButton Label="另存为"
+                                          Command="{Binding SaveFileCommand}"
+                                          IsEnabled="{Binding IsSaveEnabled}">
                                 <AppBarButton.Icon>
                                     <FontIcon Glyph="&#xECC8;"></FontIcon>
                                 </AppBarButton.Icon>
                             </AppBarButton>
                             <AppBarSeparator></AppBarSeparator>
                             <AppBarButton Label="信息" HorizontalAlignment="Right">
-                                    <AppBarButton.Icon>
-                                        <FontIcon Glyph="&#xECC8;"></FontIcon>
-                                    </AppBarButton.Icon>
-                                </AppBarButton>
-
-
+                                <AppBarButton.Icon>
+                                    <FontIcon Glyph="&#xECC8;"></FontIcon>
+                                </AppBarButton.Icon>
+                            </AppBarButton>
                         </community:TabbedCommandBarItem>
+                        <!-- 添加节点页 -->
                         <community:TabbedCommandBarItem Header="添加节点">
                             <!-- 基础数据类型 -->
                             <AppBarElementContainer>
@@ -108,29 +122,32 @@
                     </community:TabbedCommandBar.MenuItems>
                 </community:TabbedCommandBar>
             </Grid>
+            <!-- 节点区 -->
+            <Grid Grid.Row="1" Margin="0,10,0,0" RowSpacing="30">
+                <ScrollView>
+                    <StackPanel Spacing="10">
+                        <!-- 节点筛选 -->
+                        <labs:TokenView HorizontalAlignment="Center" SelectedIndex="0">
+                            <labs:TokenItem Content="全部" />
+                            <labs:TokenItem Content="字节" />
+                            <labs:TokenItem Content="短整数" />
+                            <labs:TokenItem Content="整数" />
+                            <labs:TokenItem Content="长整数" />
+                            <labs:TokenItem Content="单精浮点" />
+                            <labs:TokenItem Content="双精浮点" />
+                            <labs:TokenItem Content="字符串" />
+                        </labs:TokenView>
+                        <!-- 节点树 -->
+                        <control:NbtTreeView Nodes="{Binding Nodes}"></control:NbtTreeView>
+                    </StackPanel>
 
-            <Grid Grid.Row="1" Margin="0,10,0,0">
-                <StackPanel Spacing="10">
-                    <labs:TokenView HorizontalAlignment="Center" SelectedIndex="0">
-                        <labs:TokenItem Content="全部"/>
-                        <labs:TokenItem Content="字节"/>
-                        <labs:TokenItem Content="短整数"/>
-                        <labs:TokenItem Content="整数"/>
-                        <labs:TokenItem Content="长整数"/>
-                        <labs:TokenItem Content="单精浮点"/>
-                        <labs:TokenItem Content="双精浮点"/>
-                        <labs:TokenItem Content="字符串"/>
-                    </labs:TokenView>
-                    
-                    <control:NbtTreeView Nodes="{Binding Nodes}"></control:NbtTreeView>
-                </StackPanel>
+                </ScrollView>
             </Grid>
-
         </Grid>
 
+        <community:ContentSizer Grid.Column="1" TargetControl="{x:Bind TreeViewGrid}"></community:ContentSizer>
 
-        <community:ContentSizer Grid.Column="1" TargetControl="{x:Bind TreeViewRigon}"></community:ContentSizer>
-
+        <!-- 右侧详情区 -->
         <Grid Grid.Column="2">
             <Border Visibility="Collapsed"
                     MinWidth="400">
@@ -146,7 +163,7 @@
             </Border>
 
             <community:TabbedCommandBar Visibility="Visible">
-               
+
                 <community:TabbedCommandBar.MenuItems>
                     <community:TabbedCommandBarItem Header="数据编辑器">
                         <AppBarElementContainer>
