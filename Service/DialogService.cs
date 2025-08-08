@@ -9,7 +9,7 @@ public static class DialogService
 {
     public static async Task<ContentDialogResult> ShowDialog(string title, string? primary = null,
         string? secondary = null,
-        string? close = null, Microsoft.UI.Xaml.Controls.Control? content = null)
+        string? close = null, Microsoft.UI.Xaml.Controls.Control? content = null, string? description = null)
     {
         var xamlRoot = GetXamlRoot();
         var dialog = new ContentDialog
@@ -20,7 +20,9 @@ public static class DialogService
             SecondaryButtonText = secondary,
             CloseButtonText = close,
             DefaultButton = ContentDialogButton.Primary,
-            Content = content
+            Content = content == null
+                ? new ContentControl { Content = new Grid { Children = { new TextBlock { Text = description } } } }
+                : content
         };
 
         return await dialog.ShowAsync();

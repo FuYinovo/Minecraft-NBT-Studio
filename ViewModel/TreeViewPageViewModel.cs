@@ -37,8 +37,7 @@ public class TreeViewPageViewModel : INotifyPropertyChanged
         // 确认是否丢弃修改
         if (IsApplyEnabled)
         {
-            var decision = await DialogService.ShowDialog("是否保存修改？", "保存", "丢弃", "取消");
-            switch (decision)
+            switch (await VerifyAbandonChanges())
             {
                 case ContentDialogResult.None: // 结束方法
                     return;
@@ -111,7 +110,7 @@ public class TreeViewPageViewModel : INotifyPropertyChanged
             catch (Exception)
             {
                 if (tired <= 2) return await TryLoadBedrockFile(bytes, begin == 0 ? 8 : 0, tired + 1);
-                await DialogService.ShowDialog("加载失败", "确认");
+                await DialogService.ShowDialog("加载失败", "确认", description: "请确保选择了正确的游戏版本");
                 return (null, false);
             }
         }
@@ -124,7 +123,7 @@ public class TreeViewPageViewModel : INotifyPropertyChanged
             }
             catch (Exception)
             {
-                await DialogService.ShowDialog("加载失败", "确认");
+                await DialogService.ShowDialog("加载失败", "确认", description: "请确保选择了正确的游戏版本");
                 return null;
             }
         }
@@ -165,8 +164,7 @@ public class TreeViewPageViewModel : INotifyPropertyChanged
         // 确认是否丢弃修改
         if (IsApplyEnabled)
         {
-            var decision = await DialogService.ShowDialog("是否保存修改？", "保存", "丢弃", "取消");
-            switch (decision)
+            switch (await VerifyAbandonChanges())
             {
                 case ContentDialogResult.None: // 结束方法
                     return;
@@ -229,6 +227,14 @@ public class TreeViewPageViewModel : INotifyPropertyChanged
         }
 
         fileStream.Close();
+    }
+
+    private async Task<ContentDialogResult> VerifyAbandonChanges()
+    {
+        var fileName = _filePath == string.Empty
+            ? _nodes.First().Name == string.Empty ? "未命名" : _nodes.First().Name
+            : Path.GetFileNameWithoutExtension(_filePath);
+        return await DialogService.ShowDialog("是否保存修改？", "保存", "丢弃", "取消", description: $"「{fileName}」未保存修改");
     }
 
     #region Properties
