@@ -61,7 +61,7 @@
                             <AppBarButton Label="加载"
                                           IsCompact="True">
                                 <AppBarButton.Icon>
-                                    <FontIcon Glyph="&#xE78B;" />
+                                    <FontIcon Glyph="&#xE8E5;" />
                                 </AppBarButton.Icon>
                                 <AppBarButton.Flyout>
                                     <MenuFlyout>
