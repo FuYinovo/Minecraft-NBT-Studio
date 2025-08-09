@@ -149,7 +149,9 @@
                 <ScrollView>
                     <StackPanel Spacing="10">
                         <!-- 节点筛选 -->
-                        <labs:TokenView HorizontalAlignment="Center" SelectedIndex="0">
+                        <labs:TokenView HorizontalAlignment="Center"
+                                        SelectedIndex="{Binding NodeFilterIndex, Mode=TwoWay}"
+                                        IsEnabled="{Binding IsFilterEnabled}">
                             <labs:TokenItem Content="全部" />
                             <labs:TokenItem Content="字节" />
                             <labs:TokenItem Content="短整数" />
@@ -171,8 +173,7 @@
 
         <!-- 右侧详情区 -->
         <Grid Grid.Column="2">
-            <Border Visibility="Collapsed"
-                    MinWidth="400">
+            <Border Visibility="Collapsed">
                 <Border Background="{ThemeResource AccentAAFillColorDefaultBrush}">
                     <TextBlock HorizontalAlignment="Center"
                                VerticalAlignment="Center"
@@ -185,7 +186,6 @@
             </Border>
 
             <community:TabbedCommandBar Visibility="Visible">
-
                 <community:TabbedCommandBar.MenuItems>
                     <community:TabbedCommandBarItem Header="数据编辑器">
                         <AppBarElementContainer />

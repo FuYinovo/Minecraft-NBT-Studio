@@ -3,14 +3,17 @@ using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Windows.Storage.Pickers;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using NBT_Parser.Class;
+using NBT_Parser.Enum;
 using NBT_Parser.Utils;
 using NBT_Studio.Control.Content;
 using NBT_Studio.Enum;
@@ -97,6 +100,7 @@ public class TreeViewPageViewModel : INotifyPropertyChanged
         IsSaveEnabled = true;
         IsApplyEnabled = false;
         IsInfoEnabled = true;
+        IsFilterEnabled = true;
 
         return;
 
@@ -192,6 +196,48 @@ public class TreeViewPageViewModel : INotifyPropertyChanged
         IsApplyEnabled = false;
         IsSaveEnabled = true;
         IsInfoEnabled = true;
+        IsFilterEnabled = true;
+    }
+
+    private void ApplyFilter()
+    {
+        var filterEnum = _nodeFilterIndex switch
+        {
+            1 => NbtTagEnum.Byte,
+            2 => NbtTagEnum.Short,
+            3 => NbtTagEnum.Int,
+            4 => NbtTagEnum.Long,
+            5 => NbtTagEnum.Float,
+            6 => NbtTagEnum.Double,
+            7 => NbtTagEnum.String,
+            _ => NbtTagEnum.Unknown,
+        };
+        var childrenAll = Nodes.First().GetChildrenAll();
+        switch (filterEnum)
+        {
+            // 全部显示
+            case NbtTagEnum.Unknown:
+                foreach (var child in childrenAll)
+                    child.Visibility = Visibility.Visible;
+                break;
+            // 应用筛选
+            default:
+                // 1. 隐藏其他所有节点（包括列表、字典）
+                foreach (var child in childrenAll)
+                    child.Visibility = child.TagEnum != filterEnum ? Visibility.Collapsed : Visibility.Visible;
+                // 2. 显示依旧包含「显示节点」的列表、字典
+                for (var i = childrenAll.Count - 1; i >= 0; i--) // 第一个元素是根节点，其下节点均为隐藏，故从尾部遍历
+                {
+                    var child = childrenAll[i];
+                    if (child.TagEnum is NbtTagEnum.Dictionary or NbtTagEnum.List &&
+                        child.GetVisibleChildrenCount() > 0) child.Visibility = Visibility.Visible;
+                }
+
+                break;
+        }
+
+        // 更新子项数量（方法自动过滤非列表、字典节点）
+        foreach (var child in childrenAll) child.UpdateChildrenCount();
     }
 
     private async Task ShowFileInfo()
@@ -244,6 +290,19 @@ public class TreeViewPageViewModel : INotifyPropertyChanged
     private bool _isSaveEnabled;
     private bool _isApplyEnabled;
     private bool _isInfoEnabled;
+    private bool _isFilterEnabled;
+    private int _nodeFilterIndex;
+
+    public int NodeFilterIndex
+    {
+        get => _nodeFilterIndex;
+        set
+        {
+            SetField(ref _nodeFilterIndex, value);
+            ApplyFilter();
+        }
+    }
+
     private string _filePath = string.Empty;
     private bool _isBedrockLevelDat;
     private GameEditionEnum _gameEdition;
@@ -263,6 +322,12 @@ public class TreeViewPageViewModel : INotifyPropertyChanged
     {
         get => _isSaveEnabled;
         set => SetField(ref _isSaveEnabled, value);
+    }
+
+    public bool IsFilterEnabled
+    {
+        get => _isFilterEnabled;
+        set => SetField(ref _isFilterEnabled, value);
     }
 
     public bool IsApplyEnabled

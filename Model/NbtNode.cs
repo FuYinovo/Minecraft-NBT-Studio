@@ -1,12 +1,16 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using Microsoft.UI.Xaml;
 using NBT_Parser.Class;
 using NBT_Parser.Enum;
 
 namespace NBT_Studio.Model;
 
-public sealed class NbtNode
+public sealed class NbtNode : INotifyPropertyChanged
 {
     /// <summary>
     ///     初始化属性
@@ -32,7 +36,7 @@ public sealed class NbtNode
         foreach (var child in nbtTag.Children.Where(child => child.Tag != NbtTagEnum.End))
             Children.Add(new NbtNode(child));
         // 子项数量
-        ChildrenCount = $"<{Children.Count.ToString()}>";
+        DisplayChildrenCount = $"<{Children.Count.ToString()}>";
         // 是否显示子项数量
         if (TagEnum is NbtTagEnum.Dictionary or NbtTagEnum.List) ChildrenCountVisibility = Visibility.Visible;
         // 是否显示等号
@@ -56,13 +60,82 @@ public sealed class NbtNode
         }
     }
 
+    public int GetVisibleChildrenCount()
+    {
+        if (TagEnum is not (NbtTagEnum.Dictionary or NbtTagEnum.List)) return 0;
+        var count = 0;
+        foreach (var child in Children)
+            if (child.Visibility == Visibility.Visible)
+                count++;
+        return TagEnum == NbtTagEnum.Dictionary ? count - 1 : count; // 字典的结束标签不计入其中
+    }
+
+    public void UpdateChildrenCount()
+    {
+        if (TagEnum is not (NbtTagEnum.Dictionary or NbtTagEnum.List)) return;
+        DisplayChildrenCount = $"<{GetVisibleChildrenCount()}>";
+    }
+
+    public List<NbtNode> GetChildrenAll()
+    {
+        var got = new List<NbtNode>();
+        GetChildren(ref got);
+        return got;
+    }
+
+    private void GetChildren(ref List<NbtNode> got)
+    {
+        got.Add(this);
+        foreach (var child in Children) child.GetChildren(ref got);
+    }
+
+    #region Property
+
     public Visibility ChildrenCountVisibility { get; } = Visibility.Collapsed;
     public Visibility EqualMarkVisibility { get; } = Visibility.Collapsed;
-    public List<NbtNode> Children { get; } = [];
+    public ObservableCollection<NbtNode> Children { get; } = [];
     public NbtTag Tag { get; }
     public NbtTagEnum TagEnum { get; }
     public string Name { get; }
     public string Value { get; }
     public string Icon { get; }
-    public string ChildrenCount { get; }
+
+    #region DisplayProperty
+
+    private string _displayChildrenCount;
+    private Visibility _visibility = Visibility.Visible;
+
+    public Visibility Visibility
+    {
+        get => _visibility;
+        set => SetField(ref _visibility, value);
+    }
+
+    public string DisplayChildrenCount
+    {
+        get => _displayChildrenCount;
+        set => SetField(ref _displayChildrenCount, value);
+    }
+
+    #endregion DisplayProperty
+
+    # endregion Property
+
+    # region INotifyPropertyChanged
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    private void SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
+    {
+        if (EqualityComparer<T>.Default.Equals(field, value)) return;
+        field = value;
+        OnPropertyChanged(propertyName);
+    }
+
+    #endregion
 }
