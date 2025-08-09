@@ -61,12 +61,19 @@ public sealed class NbtNode : INotifyPropertyChanged
 
     public int GetVisibleChildrenCount()
     {
-        if (TagEnum is not (NbtTagEnum.Dictionary or NbtTagEnum.List)) return 0;
         var count = 0;
-        foreach (var child in Children)
-            if (child.Visibility == Visibility.Visible)
-                count++;
-        return TagEnum == NbtTagEnum.Dictionary ? count - 1 : count; // 字典的结束标签不计入其中
+        switch (TagEnum)
+        {
+            case NbtTagEnum.Dictionary:
+                count += Children.Count(child =>
+                    child.TagEnum != NbtTagEnum.End && child.Visibility == Visibility.Visible);
+                break;
+            case NbtTagEnum.List:
+                count += Children.Count(child => child.Visibility == Visibility.Visible);
+                break;
+        }
+
+        return count;
     }
 
     public void UpdateChildrenCount()

@@ -3,6 +3,7 @@ using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -98,6 +99,7 @@ public class TreeViewPageViewModel : INotifyPropertyChanged
         IsApplyEnabled = false;
         IsInfoEnabled = true;
         IsFilterEnabled = true;
+        IsSearchBoxEnabled = true;
 
         return;
 
@@ -192,10 +194,12 @@ public class TreeViewPageViewModel : INotifyPropertyChanged
         IsSaveEnabled = true;
         IsInfoEnabled = true;
         IsFilterEnabled = true;
+        IsSearchBoxEnabled = true;
     }
 
     private void ApplyFilter()
     {
+        // 一、应用节点筛选
         var filterEnum = _nodeFilterIndex switch
         {
             1 => NbtTagEnum.Byte,
@@ -210,28 +214,38 @@ public class TreeViewPageViewModel : INotifyPropertyChanged
         var childrenAll = Nodes.First().GetChildrenAll();
         switch (filterEnum)
         {
-            // 全部显示
+            // 情景一：选择了「全部」筛选标签
             case NbtTagEnum.Unknown:
+                // 全部显示
                 foreach (var child in childrenAll)
                     child.Visibility = Visibility.Visible;
                 break;
-            // 应用筛选
+            // 情景二：选择了其他筛选标签
             default:
-                // 1. 隐藏其他所有节点（包括列表、字典）
+                // 隐藏所有非目标节点（列表、字典除外）
                 foreach (var child in childrenAll)
-                    child.Visibility = child.TagEnum != filterEnum ? Visibility.Collapsed : Visibility.Visible;
-                // 2. 显示依旧包含「显示节点」的列表、字典
-                for (var i = childrenAll.Count - 1; i >= 0; i--) // 第一个元素是根节点，其下节点均为隐藏，故从尾部遍历
                 {
-                    var child = childrenAll[i];
-                    if (child.TagEnum is NbtTagEnum.Dictionary or NbtTagEnum.List &&
-                        child.GetVisibleChildrenCount() > 0) child.Visibility = Visibility.Visible;
+                    if (child.TagEnum is NbtTagEnum.Dictionary or NbtTagEnum.List) continue;
+                    child.Visibility = child.TagEnum != filterEnum ? Visibility.Collapsed : Visibility.Visible;
                 }
 
                 break;
         }
 
-        // 更新子项数量（方法自动过滤非列表、字典节点）
+        // 二、应用节点搜索
+        foreach (var child in childrenAll.Where(child =>
+                     !string.IsNullOrWhiteSpace(SearchBoxText) && !child.Name.Contains(SearchBoxText) &&
+                     child.TagEnum is not (NbtTagEnum.Dictionary or NbtTagEnum.List)))
+            child.Visibility = Visibility.Collapsed;
+
+
+        // 三、 隐藏空的列表、字典
+        foreach (var child in childrenAll)
+            if (child.TagEnum is NbtTagEnum.Dictionary or NbtTagEnum.List && child.GetVisibleChildrenCount() <= 0)
+                child.Visibility = Visibility.Collapsed;
+
+
+        // 四、更新子项数量（方法自动过滤非列表、字典节点）
         foreach (var child in childrenAll) child.UpdateChildrenCount();
     }
 
@@ -286,7 +300,9 @@ public class TreeViewPageViewModel : INotifyPropertyChanged
     private bool _isApplyEnabled;
     private bool _isInfoEnabled;
     private bool _isFilterEnabled;
+    private bool _isSearchBoxEnabled;
     private int _nodeFilterIndex;
+    private string _searchBoxText = string.Empty;
 
     public int NodeFilterIndex
     {
@@ -335,6 +351,22 @@ public class TreeViewPageViewModel : INotifyPropertyChanged
     {
         get => _isInfoEnabled;
         set => SetField(ref _isInfoEnabled, value);
+    }
+
+    public bool IsSearchBoxEnabled
+    {
+        get => _isSearchBoxEnabled;
+        set => SetField(ref _isSearchBoxEnabled, value);
+    }
+
+    public string SearchBoxText
+    {
+        get => _searchBoxText;
+        set
+        {
+            SetField(ref _searchBoxText, value);
+            ApplyFilter();
+        }
     }
 
     #endregion
