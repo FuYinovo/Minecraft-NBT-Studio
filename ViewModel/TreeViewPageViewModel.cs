@@ -3,7 +3,6 @@ using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -12,11 +11,11 @@ using Windows.Storage.Pickers;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using NBT_Parser.Class;
-using NBT_Parser.Enum;
-using NBT_Parser.Utils;
 using NBT_Studio.Control.Content;
 using NBT_Studio.Enum;
+using NBT_Studio.Library.NBT_Parser.Class;
+using NBT_Studio.Library.NBT_Parser.Enum;
+using NBT_Studio.Library.NBT_Parser.Utils;
 using NBT_Studio.Model;
 using NBT_Studio.Service;
 using WinRT.Interop;
@@ -34,12 +33,14 @@ public class TreeViewPageViewModel : INotifyPropertyChanged
         CreateFileCommand = new AsyncRelayCommand<string>(CreateFile);
     }
 
-
+    /// <summary>加载 NBT 文件</summary>
     private async Task LoadFile(string? param)
     {
         // 确认是否丢弃修改
         if (IsApplyEnabled)
-            switch (await VerifyAbandonChanges())
+        {
+            var choice = await VerifyAbandonChanges();
+            switch (choice)
             {
                 case ContentDialogResult.None: // 结束方法
                     return;
@@ -48,7 +49,9 @@ public class TreeViewPageViewModel : INotifyPropertyChanged
                     break;
                 case ContentDialogResult.Secondary:
                     break; // 执行方法
+                default: throw new Exception($"未知的对话框选择[{choice}]");
             }
+        }
 
         // 初始化 Picker
         var openPicker = new FileOpenPicker
@@ -132,6 +135,7 @@ public class TreeViewPageViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>将 NBT 文件另存为</summary>
     private async Task SaveFile()
     {
         // 获取字节数组
@@ -154,6 +158,7 @@ public class TreeViewPageViewModel : INotifyPropertyChanged
         IsApplyEnabled = false;
     }
 
+    /// <summary>保存 NBT 文件</summary>
     private async Task ApplyFile()
     {
         var bytes = Nodes.First().Tag.GetBytes();
@@ -162,6 +167,7 @@ public class TreeViewPageViewModel : INotifyPropertyChanged
         IsApplyEnabled = false;
     }
 
+    /// <summary>创建 NBT 文件</summary>
     private async Task CreateFile(string? param)
     {
         // 确认是否丢弃修改
@@ -197,6 +203,7 @@ public class TreeViewPageViewModel : INotifyPropertyChanged
         IsSearchBoxEnabled = true;
     }
 
+    /// <summary> 应用节点筛选</summary>
     private void ApplyFilter()
     {
         // 一、应用节点筛选
@@ -249,6 +256,7 @@ public class TreeViewPageViewModel : INotifyPropertyChanged
         foreach (var child in childrenAll) child.UpdateChildrenCount();
     }
 
+    /// <summary> 展示 NBT 文件信息 </summary>
     private async Task ShowFileInfo()
     {
         var content = new NbtFileInfoContent(_filePath, _nodes.First().Tag.GetBytes().Length, _gameEdition,
@@ -256,6 +264,7 @@ public class TreeViewPageViewModel : INotifyPropertyChanged
         await DialogService.ShowDialog("文件信息", "确认", content: content);
     }
 
+    /// <summary>写入 NBT 文件</summary>
     private async Task WriteFile(byte[] bytes, string path)
     {
         var fileStream = new FileStream(path, FileMode.OpenOrCreate, FileAccess.Write);
@@ -284,6 +293,7 @@ public class TreeViewPageViewModel : INotifyPropertyChanged
         fileStream.Close();
     }
 
+    /// <summary>确认是否丢弃 NBT 文件未保存的修改</summary>
     private async Task<ContentDialogResult> VerifyAbandonChanges()
     {
         var fileName = _filePath == string.Empty

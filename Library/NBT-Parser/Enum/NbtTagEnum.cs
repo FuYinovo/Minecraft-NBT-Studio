@@ -1,4 +1,4 @@
-﻿namespace NBT_Parser.Enum;
+﻿namespace NBT_Studio.Library.NBT_Parser.Enum;
 
 public enum NbtTagEnum
 {

@@ -34,7 +34,7 @@
                             QueryIcon="Find"
                             PlaceholderText="搜索节点"
                             Text="{Binding SearchBoxText, Mode=TwoWay}"
-                            IsEnabled="{Binding IsSearchBoxEnabled}"/>
+                            IsEnabled="{Binding IsSearchBoxEnabled}" />
                     </community:TabbedCommandBar.AutoSuggestBox>
                     <community:TabbedCommandBar.PaneFooter>
                         <CommandBar Background="Transparent" DefaultLabelPosition="Right">

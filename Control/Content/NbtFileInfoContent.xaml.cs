@@ -29,6 +29,7 @@ public sealed partial class NbtFileInfoContent
             case GameEditionEnum.Java:
                 ItemBedrock.IsEnabled = false;
                 break;
+            default: throw new Exception($"未知游戏版本[{gameEditionEnum}]");
         }
 
         switch (isBigEndian)

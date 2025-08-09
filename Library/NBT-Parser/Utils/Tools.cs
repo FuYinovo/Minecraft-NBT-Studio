@@ -3,7 +3,7 @@ using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.IO;
 
-namespace NBT_Parser.Utils;
+namespace NBT_Studio.Library.NBT_Parser.Utils;
 
 public static class Tools
 {

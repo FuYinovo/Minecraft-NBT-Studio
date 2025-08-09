@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using NBT_Parser.Enum;
+using NBT_Studio.Library.NBT_Parser.Enum;
 
-namespace NBT_Parser.Class;
+namespace NBT_Studio.Library.NBT_Parser.Class;
 
 public class NbtTagBuilder(bool isBigEndian)
 {

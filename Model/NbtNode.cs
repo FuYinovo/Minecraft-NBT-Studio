@@ -4,19 +4,21 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Microsoft.UI.Xaml;
-using NBT_Parser.Class;
-using NBT_Parser.Enum;
+using NBT_Studio.Library.NBT_Parser.Class;
+using NBT_Studio.Library.NBT_Parser.Enum;
 
 namespace NBT_Studio.Model;
 
-public sealed class NbtNode : INotifyPropertyChanged
+public sealed partial class NbtNode : INotifyPropertyChanged
 {
     /// <summary>
     ///     初始化属性
     /// </summary>
     public NbtNode(NbtTag nbtTag)
     {
+        // NBT 标签实例
         Tag = nbtTag;
+        // NBT 标签枚举
         TagEnum = Tag.Tag;
         // 名称
         Name = nbtTag.Name ?? TagEnum.ToString();
@@ -59,6 +61,9 @@ public sealed class NbtNode : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    ///     获取自身可见子项的数量
+    /// </summary>
     public int GetVisibleChildrenCount()
     {
         var count = 0;
@@ -76,12 +81,18 @@ public sealed class NbtNode : INotifyPropertyChanged
         return count;
     }
 
+    /// <summary>
+    ///     更新自身「子项数量」在界面上的文本
+    /// </summary>
     public void UpdateChildrenCount()
     {
         if (TagEnum is not (NbtTagEnum.Dictionary or NbtTagEnum.List)) return;
         DisplayChildrenCount = $"<{GetVisibleChildrenCount()}>";
     }
 
+    /// <summary>
+    ///     以自身为根节点，获取所有子项
+    /// </summary>
     public List<NbtNode> GetChildrenAll()
     {
         var got = new List<NbtNode>();
@@ -89,6 +100,11 @@ public sealed class NbtNode : INotifyPropertyChanged
         return got;
     }
 
+    /// <summary>
+    ///     GetChildrenAll 的实现方法
+    /// </summary>
+    /// <remarks>递归方法</remarks>
+    /// <param name="got">已取得的子项列表</param>
     private void GetChildren(ref List<NbtNode> got)
     {
         got.Add(this);
@@ -108,7 +124,7 @@ public sealed class NbtNode : INotifyPropertyChanged
 
     #region DisplayProperty
 
-    private string _displayChildrenCount;
+    private string _displayChildrenCount = string.Empty;
     private Visibility _visibility = Visibility.Visible;
 
     public Visibility Visibility

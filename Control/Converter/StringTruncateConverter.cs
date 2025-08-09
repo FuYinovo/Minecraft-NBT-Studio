@@ -3,7 +3,10 @@ using Microsoft.UI.Xaml.Data;
 
 namespace NBT_Studio.Control.Converter;
 
-public class StringTruncateConverter : IValueConverter
+/// <summary>
+///     将一个长度大于 50 的字符串截断
+/// </summary>
+public partial class StringTruncateConverter : IValueConverter
 {
     private const int MaxLength = 50;
 

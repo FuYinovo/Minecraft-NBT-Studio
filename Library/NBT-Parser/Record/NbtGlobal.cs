@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using NBT_Parser.Enum;
+using NBT_Studio.Library.NBT_Parser.Enum;
 
-namespace NBT_Parser.Record;
+namespace NBT_Studio.Library.NBT_Parser.Record;
 
 public abstract record NbtGlobal
 {

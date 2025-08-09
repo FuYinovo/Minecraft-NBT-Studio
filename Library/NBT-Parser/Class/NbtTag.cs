@@ -3,14 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using NBT_Parser.Enum;
-using NBT_Parser.Record;
-using NBT_Parser.Utils;
+using NBT_Studio.Library.NBT_Parser.Enum;
+using NBT_Studio.Library.NBT_Parser.Record;
+using NBT_Studio.Library.NBT_Parser.Utils;
 
-namespace NBT_Parser.Class;
+namespace NBT_Studio.Library.NBT_Parser.Class;
 
 public class NbtTag : ICloneable
 {
+    private static readonly int[] ZeroBeginArray = [0];
     public readonly NbtTagEnum ChildrenTag;
     public readonly bool IsBigEndian;
     public readonly NbtTagEnum Tag;
@@ -187,7 +188,7 @@ public class NbtTag : ICloneable
     /// <param name="addedZero">[忽略]</param>
     public NbtTag AppendChild(NbtTag child, int[] indexes, int begin = 0, bool addedZero = false)
     {
-        if (!addedZero) indexes = new[] { 0 }.Concat(indexes).ToArray();
+        if (!addedZero) indexes = ZeroBeginArray.Concat(indexes).ToArray();
         var index = indexes[begin];
         try
         {

@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using NBT_Parser.Enum;
-using NBT_Parser.Record;
-using NBT_Parser.Utils;
+using NBT_Studio.Library.NBT_Parser.Enum;
+using NBT_Studio.Library.NBT_Parser.Record;
+using NBT_Studio.Library.NBT_Parser.Utils;
 
-namespace NBT_Parser.Class;
+namespace NBT_Studio.Library.NBT_Parser.Class;
 
 public class NbtParser
 {
