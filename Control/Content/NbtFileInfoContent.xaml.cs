@@ -5,11 +5,6 @@ namespace NBT_Studio.Control.Content;
 
 public sealed partial class NbtFileInfoContent
 {
-    private string FilePath { get; }
-    private int FileLength { get; }
-    private int GameEdition { get; }
-    private int IsBigEndian { get; }
-
     public NbtFileInfoContent(string filePath, int fileLength, GameEditionEnum gameEditionEnum, bool isBigEndian)
     {
         FilePath = filePath;
@@ -46,4 +41,9 @@ public sealed partial class NbtFileInfoContent
                 break;
         }
     }
+
+    private string FilePath { get; }
+    private int FileLength { get; }
+    private int GameEdition { get; }
+    private int IsBigEndian { get; }
 }

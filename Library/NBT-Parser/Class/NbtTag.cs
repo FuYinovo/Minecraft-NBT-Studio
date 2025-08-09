@@ -11,8 +11,8 @@ namespace NBT_Parser.Class;
 
 public class NbtTag : ICloneable
 {
-    public readonly bool IsBigEndian;
     public readonly NbtTagEnum ChildrenTag;
+    public readonly bool IsBigEndian;
     public readonly NbtTagEnum Tag;
     private Memory<byte> _bytes; // 不包含子元素 (终止于「首个子元素头部 - 1」)
     private string _floatValueTemp = string.Empty;

@@ -3,7 +3,6 @@ using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -39,7 +38,6 @@ public class TreeViewPageViewModel : INotifyPropertyChanged
     {
         // 确认是否丢弃修改
         if (IsApplyEnabled)
-        {
             switch (await VerifyAbandonChanges())
             {
                 case ContentDialogResult.None: // 结束方法
@@ -50,7 +48,6 @@ public class TreeViewPageViewModel : INotifyPropertyChanged
                 case ContentDialogResult.Secondary:
                     break; // 执行方法
             }
-        }
 
         // 初始化 Picker
         var openPicker = new FileOpenPicker
@@ -167,7 +164,6 @@ public class TreeViewPageViewModel : INotifyPropertyChanged
     {
         // 确认是否丢弃修改
         if (IsApplyEnabled)
-        {
             switch (await VerifyAbandonChanges())
             {
                 case ContentDialogResult.None: // 结束方法
@@ -178,7 +174,6 @@ public class TreeViewPageViewModel : INotifyPropertyChanged
                 case ContentDialogResult.Secondary:
                     break; // 执行方法
             }
-        }
 
         // 新建文件
         _gameEdition = param?.ToLower() switch
@@ -210,7 +205,7 @@ public class TreeViewPageViewModel : INotifyPropertyChanged
             5 => NbtTagEnum.Float,
             6 => NbtTagEnum.Double,
             7 => NbtTagEnum.String,
-            _ => NbtTagEnum.Unknown,
+            _ => NbtTagEnum.Unknown
         };
         var childrenAll = Nodes.First().GetChildrenAll();
         switch (filterEnum)

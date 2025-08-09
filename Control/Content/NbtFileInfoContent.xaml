@@ -10,15 +10,15 @@
 
     <Grid>
         <StackPanel Spacing="16">
-            <TextBox Header="文件路径" Text="{x:Bind FilePath}" IsReadOnly="True"></TextBox>
-            <TextBox Header="文件长度" Text="{x:Bind FileLength}" IsReadOnly="True"></TextBox>
+            <TextBox Header="文件路径" Text="{x:Bind FilePath}" IsReadOnly="True" />
+            <TextBox Header="文件长度" Text="{x:Bind FileLength}" IsReadOnly="True" />
             <ComboBox Header="文件端序" SelectedIndex="{x:Bind IsBigEndian}">
-                <ComboBoxItem x:Name="ItemLittleEndian" Content="小端序"></ComboBoxItem>
-                <ComboBoxItem x:Name="ItemBiggerEndian" Content="大端序"></ComboBoxItem>
+                <ComboBoxItem x:Name="ItemLittleEndian" Content="小端序" />
+                <ComboBoxItem x:Name="ItemBiggerEndian" Content="大端序" />
             </ComboBox>
             <ComboBox Header="游戏版本" SelectedIndex="{x:Bind GameEdition}" IsTabStop="False">
-                <ComboBoxItem x:Name="ItemJava" Content="Java 版"></ComboBoxItem>
-                <ComboBoxItem x:Name="ItemBedrock" Content="基岩版"></ComboBoxItem>
+                <ComboBoxItem x:Name="ItemJava" Content="Java 版" />
+                <ComboBoxItem x:Name="ItemBedrock" Content="基岩版" />
             </ComboBox>
         </StackPanel>
     </Grid>
