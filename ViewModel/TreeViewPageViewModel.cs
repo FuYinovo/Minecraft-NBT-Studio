@@ -3,6 +3,7 @@ using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -22,7 +23,10 @@ using WinRT.Interop;
 
 namespace NBT_Studio.ViewModel;
 
-public class TreeViewPageViewModel : INotifyPropertyChanged
+/// <summary>
+/// 文件操作、节点筛选、
+/// </summary>
+public sealed partial class TreeViewPageViewModel : INotifyPropertyChanged
 {
     public TreeViewPageViewModel()
     {
@@ -95,8 +99,8 @@ public class TreeViewPageViewModel : INotifyPropertyChanged
                 throw new Exception($"未知游戏版本[{_gameEdition}]");
         }
 
-        if (Nodes.Count > 0) Nodes.Clear();
-        Nodes.Add(new NbtNode(rootTag));
+        Nodes.Clear();
+        Nodes.Add(new NbtNode(rootTag, true, NodeChangeAction));
 
         IsSaveEnabled = true;
         IsApplyEnabled = false;
@@ -193,7 +197,7 @@ public class TreeViewPageViewModel : INotifyPropertyChanged
         var builder = new NbtTagBuilder(_gameEdition == GameEditionEnum.Java);
         if (Nodes.Count > 0) Nodes.Clear();
         Nodes.Clear();
-        Nodes.Add(new NbtNode(builder.Dictionary("root", [])));
+        Nodes.Add(new NbtNode(builder.Dictionary("root", []), true, NodeChangeAction));
 
         _filePath = string.Empty;
         IsApplyEnabled = false;
@@ -267,7 +271,7 @@ public class TreeViewPageViewModel : INotifyPropertyChanged
     /// <summary>写入 NBT 文件</summary>
     private async Task WriteFile(byte[] bytes, string path)
     {
-        var fileStream = new FileStream(path, FileMode.OpenOrCreate, FileAccess.Write);
+        var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write);
         switch (_gameEdition)
         {
             case GameEditionEnum.Java:
@@ -300,6 +304,29 @@ public class TreeViewPageViewModel : INotifyPropertyChanged
             ? _nodes.First().Name == string.Empty ? "未命名" : _nodes.First().Name
             : Path.GetFileNameWithoutExtension(_filePath);
         return await DialogService.ShowDialog("是否保存修改？", "保存", "丢弃", "取消", description: $"「{fileName}」未保存修改");
+    }
+
+    /// <summary> 处理节点修改操作相关 UI 更新 </summary>
+    /// <remarks> 委托方法</remarks>
+    private void NodeChangeAction(NbtNode node, NodeChangeType type)
+    {
+        switch (type)
+        {
+            case NodeChangeType.Rename:
+                break;
+            case NodeChangeType.Remove:
+                node.Visibility = Visibility.Collapsed;
+                foreach (var child in node.Children) child.Visibility = Visibility.Collapsed;
+                node.UpdateChildrenCount();
+                Nodes.Remove(node);
+                break;
+            case NodeChangeType.Revalue:
+                break;
+            default:
+                throw new Exception("无法确定节点修改操作类型");
+        }
+
+        IsApplyEnabled = true;
     }
 
     #region Properties
@@ -384,7 +411,7 @@ public class TreeViewPageViewModel : INotifyPropertyChanged
 
     #region INotifyPropertyChanged
 
-    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
@@ -397,4 +424,11 @@ public class TreeViewPageViewModel : INotifyPropertyChanged
     }
 
     #endregion
+}
+
+/// <summary>
+/// 数据操作
+/// </summary>
+public sealed partial class TreeViewPageViewModel
+{
 }

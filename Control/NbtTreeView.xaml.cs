@@ -14,18 +14,16 @@ public sealed partial class NbtTreeView
         typeof(NbtTreeView),
         new PropertyMetadata(new ObservableCollection<NbtNode>()));
 
-
-    public NbtTreeView()
-    {
-        InitializeComponent();
-    }
-
     public ObservableCollection<NbtNode> Nodes
     {
         get => (ObservableCollection<NbtNode>)GetValue(_nodesDependencyProperty);
         set => SetValue(_nodesDependencyProperty, value);
     }
 
+    public NbtTreeView()
+    {
+        InitializeComponent();
+    }
 
     /// <summary>
     ///     展开或折叠子项

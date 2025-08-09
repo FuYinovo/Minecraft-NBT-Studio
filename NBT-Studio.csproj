@@ -57,6 +57,9 @@
         <Page Update="Control\Content\NbtFileInfoContent.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
+        <Page Update="Control\Content\RenameNodeContent.xaml">
+          <SubType>Designer</SubType>
+        </Page>
     </ItemGroup>
     <ItemGroup>
         <Page Update="Control\NbtInsertButton.xaml">

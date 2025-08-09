@@ -41,7 +41,7 @@
                 <TreeViewItem.ContextFlyout>
                     <MenuFlyout>
                         <!-- 重命名 -->
-                        <MenuFlyoutItem Text="重命名">
+                        <MenuFlyoutItem Text="重命名" Command="{Binding RenameCommand}">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Glyph="&#xE8AC;" />
                             </MenuFlyoutItem.Icon>
@@ -50,7 +50,7 @@
                             </MenuFlyoutItem.KeyboardAccelerators>
                         </MenuFlyoutItem>
                         <!-- 删除 -->
-                        <MenuFlyoutItem Text="删除">
+                        <MenuFlyoutItem Text="删除" Command="{Binding DeleteCommand}">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Glyph="&#xE74D;" Foreground="#ff7f8d" />
                             </MenuFlyoutItem.Icon>
@@ -92,7 +92,8 @@
 
     <Grid>
         <TreeView
-            ItemsSource="{x:Bind Nodes ,Mode=TwoWay}"
+            x:Name="TreeView"
+            ItemsSource="{x:Bind Nodes, Mode=TwoWay}"
             ItemTemplate="{StaticResource TreeNodeTemplate}"
             SelectionMode="Single"
             CanDrag="False" CanDragItems="False" AllowDrop="False" />
