@@ -20,8 +20,8 @@
                                             Description="设置深浅色模式"
                                             Padding="20,20,160,20"
                                             Width="500">
-                        <ComboBox SelectedValue="{Binding Theme}" SelectedValuePath="Tag">
-                            <ComboBoxItem Tag="{x:Bind enum:Theme.Default}" Content="系统主题"></ComboBoxItem>
+                        <ComboBox SelectedValue="{Binding Theme, Mode=TwoWay}" SelectedValuePath="Tag">
+                            <ComboBoxItem Tag="{x:Bind enum:Theme.Default}" Content="系统"></ComboBoxItem>
                             <ComboBoxItem Tag="{x:Bind enum:Theme.Dark}" Content="深色"></ComboBoxItem>
                             <ComboBoxItem Tag="{x:Bind enum:Theme.Light}" Content="浅色"></ComboBoxItem>
                         </ComboBox>
@@ -36,10 +36,10 @@
                                             Description="节点的排序方式"
                                             Padding="20,20,160,20"
                                             Width="500">
-                        <ComboBox SelectedValue="{Binding SortType}" SelectedValuePath="Tag">
+                        <ComboBox SelectedValue="{Binding SortType, Mode=TwoWay}" SelectedValuePath="Tag">
                             <ComboBoxItem Tag="{x:Bind enum:SortType.Default}" Content="默认"></ComboBoxItem>
-                            <ComboBoxItem Tag="{x:Bind enum:SortType.Alphabetical}" Content="首字母排序"></ComboBoxItem>
-                            <ComboBoxItem Tag="{x:Bind enum:SortType.ByType}" Content="类型排序"></ComboBoxItem>
+                            <ComboBoxItem Tag="{x:Bind enum:SortType.Alphabetical}" Content="首字母"></ComboBoxItem>
+                            <ComboBoxItem Tag="{x:Bind enum:SortType.ByType}" Content="类型"></ComboBoxItem>
                         </ComboBox>
                     </community:SettingsCard>
                 </community:SettingsExpander.Items>

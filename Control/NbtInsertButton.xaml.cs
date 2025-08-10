@@ -1,5 +1,6 @@
 using System.Windows.Input;
 using Microsoft.UI.Xaml;
+using NBT_Studio.Library.NBT_Parser.Enum;
 
 namespace NBT_Studio.Control;
 
@@ -31,9 +32,14 @@ public sealed partial class NbtInsertButton
         set => SetValue(_iconUriDependencyProperty, value);
     }
 
-    public ICommand ButtonCommand
+    public ICommand? ButtonCommand
     {
         get => (ICommand)GetValue(_buttonCommandDependencyProperty);
         set => SetValue(_buttonCommandDependencyProperty, value);
+    }
+
+    private void AppBarButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        ButtonCommand?.Execute((NbtTagEnum)Tag);
     }
 }

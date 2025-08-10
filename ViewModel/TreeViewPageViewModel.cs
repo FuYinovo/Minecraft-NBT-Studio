@@ -3,7 +3,6 @@ using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -20,23 +19,143 @@ using NBT_Studio.Library.NBT_Parser.Utils;
 using NBT_Studio.Model;
 using NBT_Studio.Service;
 using WinRT.Interop;
+using CommunityToolkit.Mvvm.Messaging.Messages;
+using CommunityToolkit.Mvvm.Messaging;
+using NBT_Studio.Message;
 
 namespace NBT_Studio.ViewModel;
 
 /// <summary>
-/// 文件操作、
+/// 属性、构造方法
 /// </summary>
 public sealed partial class TreeViewPageViewModel : INotifyPropertyChanged
 {
     public TreeViewPageViewModel()
     {
+        RegisterMessages();
+
         LoadFileCommand = new AsyncRelayCommand<string>(LoadFile);
         SaveFileCommand = new AsyncRelayCommand(SaveFile);
         ApplyFileCommand = new AsyncRelayCommand(ApplyFile);
         ShowFileInfoCommand = new AsyncRelayCommand(ShowFileInfo);
         CreateFileCommand = new AsyncRelayCommand<string>(CreateFile);
+        AddNodeCommand = new AsyncRelayCommand<NbtTagEnum>(AddNode);
     }
 
+    /// <summary>
+    /// 注册消息队列
+    /// </summary>
+    private void RegisterMessages()
+    {
+        // 「选中节点改动」消息
+        WeakReferenceMessenger.Default.Register<ValueChangedMessage<TreeViewNode>>(this,
+            (_, v) => _selectedNode = v.Value);
+        // 「排序方式改动」消息
+        WeakReferenceMessenger.Default.Register<SettingsValueChangedMessage<SortType>>(this,
+            (_, v) => ApplySort(v.Value));
+    }
+
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+    private ObservableCollection<NbtNode> _nodes = [];
+    private bool _isSaveEnabled;
+    private bool _isApplyEnabled;
+    private bool _isInfoEnabled;
+    private bool _isFilterEnabled;
+    private bool _isSearchBoxEnabled;
+    private int _nodeFilterIndex;
+    private string _searchBoxText = string.Empty;
+
+    public int NodeFilterIndex
+    {
+        get => _nodeFilterIndex;
+        set
+        {
+            SetField(ref _nodeFilterIndex, value);
+            ApplyFilter();
+        }
+    }
+
+    private string _filePath = string.Empty;
+    private bool _isBedrockLevelDat;
+    private TreeViewNode? _selectedNode;
+    private GameEdition _gameEdition;
+    public IAsyncRelayCommand<string> LoadFileCommand { get; }
+    public IAsyncRelayCommand SaveFileCommand { get; }
+    public IAsyncRelayCommand ApplyFileCommand { get; }
+    public IAsyncRelayCommand ShowFileInfoCommand { get; }
+    public IAsyncRelayCommand<string> CreateFileCommand { get; }
+    public IAsyncRelayCommand<NbtTagEnum> AddNodeCommand { get; }
+
+    public ObservableCollection<NbtNode> Nodes
+    {
+        get => _nodes;
+        set => SetField(ref _nodes, value);
+    }
+
+    public bool IsSaveEnabled
+    {
+        get => _isSaveEnabled;
+        set => SetField(ref _isSaveEnabled, value);
+    }
+
+    public bool IsFilterEnabled
+    {
+        get => _isFilterEnabled;
+        set => SetField(ref _isFilterEnabled, value);
+    }
+
+    public bool IsApplyEnabled
+    {
+        get => _isApplyEnabled;
+        set => SetField(ref _isApplyEnabled, value);
+    }
+
+    public bool IsInfoEnabled
+    {
+        get => _isInfoEnabled;
+        set => SetField(ref _isInfoEnabled, value);
+    }
+
+    public bool IsSearchBoxEnabled
+    {
+        get => _isSearchBoxEnabled;
+        set => SetField(ref _isSearchBoxEnabled, value);
+    }
+
+    public string SearchBoxText
+    {
+        get => _searchBoxText;
+        set
+        {
+            SetField(ref _searchBoxText, value);
+            ApplyFilter();
+        }
+    }
+
+
+    #region INotifyPropertyChanged
+
+    private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    private void SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
+    {
+        if (EqualityComparer<T>.Default.Equals(field, value)) return;
+        field = value;
+        OnPropertyChanged(propertyName);
+    }
+
+    #endregion
+}
+
+/// <summary>
+/// 文件操作、
+/// </summary>
+public sealed partial class TreeViewPageViewModel
+{
     /// <summary>加载 NBT 文件</summary>
     private async Task LoadFile(string? param)
     {
@@ -235,103 +354,6 @@ public sealed partial class TreeViewPageViewModel : INotifyPropertyChanged
 
         fileStream.Close();
     }
-
-
-    #region Properties
-
-    public event PropertyChangedEventHandler? PropertyChanged;
-    private ObservableCollection<NbtNode> _nodes = [];
-    private bool _isSaveEnabled;
-    private bool _isApplyEnabled;
-    private bool _isInfoEnabled;
-    private bool _isFilterEnabled;
-    private bool _isSearchBoxEnabled;
-    private int _nodeFilterIndex;
-    private string _searchBoxText = string.Empty;
-
-    public int NodeFilterIndex
-    {
-        get => _nodeFilterIndex;
-        set
-        {
-            SetField(ref _nodeFilterIndex, value);
-            ApplyFilter();
-        }
-    }
-
-    private string _filePath = string.Empty;
-    private bool _isBedrockLevelDat;
-    private GameEdition _gameEdition;
-    public IAsyncRelayCommand<string> LoadFileCommand { get; }
-    public IAsyncRelayCommand SaveFileCommand { get; }
-    public IAsyncRelayCommand ApplyFileCommand { get; }
-    public IAsyncRelayCommand ShowFileInfoCommand { get; }
-    public IAsyncRelayCommand<string> CreateFileCommand { get; }
-
-    public ObservableCollection<NbtNode> Nodes
-    {
-        get => _nodes;
-        set => SetField(ref _nodes, value);
-    }
-
-    public bool IsSaveEnabled
-    {
-        get => _isSaveEnabled;
-        set => SetField(ref _isSaveEnabled, value);
-    }
-
-    public bool IsFilterEnabled
-    {
-        get => _isFilterEnabled;
-        set => SetField(ref _isFilterEnabled, value);
-    }
-
-    public bool IsApplyEnabled
-    {
-        get => _isApplyEnabled;
-        set => SetField(ref _isApplyEnabled, value);
-    }
-
-    public bool IsInfoEnabled
-    {
-        get => _isInfoEnabled;
-        set => SetField(ref _isInfoEnabled, value);
-    }
-
-    public bool IsSearchBoxEnabled
-    {
-        get => _isSearchBoxEnabled;
-        set => SetField(ref _isSearchBoxEnabled, value);
-    }
-
-    public string SearchBoxText
-    {
-        get => _searchBoxText;
-        set
-        {
-            SetField(ref _searchBoxText, value);
-            ApplyFilter();
-        }
-    }
-
-    #endregion
-
-
-    #region INotifyPropertyChanged
-
-    private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
-
-    private void SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
-    {
-        if (EqualityComparer<T>.Default.Equals(field, value)) return;
-        field = value;
-        OnPropertyChanged(propertyName);
-    }
-
-    #endregion
 }
 
 /// <summary>
@@ -434,8 +456,9 @@ public sealed partial class TreeViewPageViewModel
         IsApplyEnabled = true;
     }
 
-    public void ApplySort(SortType type)
+    private void ApplySort(SortType type)
     {
+        // TODO)) 节点筛选
     }
 }
 
@@ -444,4 +467,65 @@ public sealed partial class TreeViewPageViewModel
 /// </summary>
 public sealed partial class TreeViewPageViewModel
 {
+    /// <summary>
+    /// 添加节点
+    /// </summary>
+    private async Task AddNode(NbtTagEnum tagEnum)
+    {
+        if (_selectedNode == null)
+        {
+            await DialogService.ShowDialog("添加失败", primary: "确认", description: "选择一个父节点或其子项");
+            return;
+        }
+
+        // 初始化弹窗
+        var content = new AddNodeContent(tagEnum);
+        var dialog = DialogService.GetDialog($"添加「{tagEnum}」节点", "确认", close: "取消", content: content);
+        content.DialogOkButtonEnabledSetter = b => dialog.IsPrimaryButtonEnabled = b;
+        dialog.IsPrimaryButtonEnabled = false;
+
+        // 获取输入的名称、值
+        var choice = await dialog.ShowAsync();
+        if (choice == ContentDialogResult.None) return;
+        var name = content.NodeName;
+        var value = content.NodeValue;
+
+        // 一、向 NBT 标签实例添加节点
+        var builder =
+            new NbtTagBuilder(_gameEdition switch
+            {
+                GameEdition.Java => true,
+                GameEdition.Bedrock => false,
+                _ => throw new Exception($"未知游戏版本[{_gameEdition}]")
+            });
+        // 若「选中」是列表或字典，则为自身添加子项，否则为父节点添加子项
+        var parent = ((NbtNode)_selectedNode.Content).TagEnum is NbtTagEnum.Dictionary or NbtTagEnum.List
+            ? _selectedNode
+            : _selectedNode.Parent;
+        var parentTag = ((NbtNode)parent.Content).Tag;
+        var tag = tagEnum switch
+        {
+            NbtTagEnum.Byte => builder.Byte(name, byte.Parse((string)value)),
+            NbtTagEnum.Short => builder.Short(name, short.Parse((string)value)),
+            NbtTagEnum.Int => builder.Int(name, int.Parse((string)value)),
+            NbtTagEnum.Long => builder.Long(name, long.Parse((string)value)),
+            NbtTagEnum.Float => builder.Float(name, float.Parse((string)value)),
+            NbtTagEnum.Double => builder.Double(name, double.Parse((string)value)),
+            NbtTagEnum.ByteArray => builder.ByteArray(name, (byte[])value),
+            NbtTagEnum.String => builder.String(name, (string)value),
+            NbtTagEnum.List => builder.List(name, [], content.ChildrenTag),
+            NbtTagEnum.Dictionary => builder.Dictionary(name, []),
+            NbtTagEnum.IntArray => builder.IntArray(name, (int[])value),
+            NbtTagEnum.LongArray => builder.LongArray(name, (long[])value),
+            _ => throw new ArgumentOutOfRangeException(nameof(tagEnum), tagEnum, null)
+        };
+        parentTag.AppendChild(tag, []);
+
+        // 二、向节点树添加节点(UI)
+        ((NbtNode)parent.Content).Children.Add(new NbtNode(tag));
+        OnPropertyChanged(nameof(Nodes));
+
+        if (_filePath != string.Empty) IsApplyEnabled = true;
+        IsSaveEnabled = true;
+    }
 }

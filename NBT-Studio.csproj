@@ -61,6 +61,9 @@
         <Page Update="Control\Content\RenameNodeContent.xaml">
           <SubType>Designer</SubType>
         </Page>
+        <Page Update="Control\Content\AddNodeContent.xaml">
+          <SubType>Designer</SubType>
+        </Page>
     </ItemGroup>
     <ItemGroup>
         <Page Update="Control\NbtInsertButton.xaml">

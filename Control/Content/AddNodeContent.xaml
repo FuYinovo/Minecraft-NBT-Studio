@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<UserControl
+    x:Class="NBT_Studio.Control.Content.AddNodeContent"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid>
+        <StackPanel Spacing="16">
+            <!-- 提供边框笔刷 -->
+            <TextBox Visibility="Collapsed" x:Name="RedBorder" BorderBrush="#FF5370"></TextBox>
+            <TextBox Visibility="Collapsed" x:Name="DefaultBorder"></TextBox>
+
+            <TextBox Header="名称"
+                     PlaceholderText="可选"
+                     Text="{x:Bind NodeName, Mode=TwoWay}"></TextBox>
+            <TextBox x:Name="ValueTextBox"
+                     Header="值"
+                     PlaceholderText="必须"
+                     Text="{x:Bind NodeValue, Mode=TwoWay}"
+                     TextChanged="TextBox_OnTextChanged"></TextBox>
+        </StackPanel>
+    </Grid>
+</UserControl>

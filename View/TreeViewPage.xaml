@@ -9,6 +9,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:community="using:CommunityToolkit.WinUI.Controls"
     xmlns:labs="using:CommunityToolkit.Labs.WinUI"
+    xmlns:tag="using:NBT_Studio.Library.NBT_Parser.Enum"
     mc:Ignorable="d">
 
     <Grid DataContext="{x:Bind _viewModel}" Padding="10,5">
@@ -41,7 +42,7 @@
                             <AppBarButton Label="设置" Icon="Setting" AllowFocusOnInteraction="True">
                                 <AppBarButton.Flyout>
                                     <Flyout>
-                                        <control:Settings x:Name="Settings" PageViewModel="{x:Bind _viewModel}"></control:Settings>
+                                        <control:Settings></control:Settings>
                                     </Flyout>
                                 </AppBarButton.Flyout>
                             </AppBarButton>
@@ -113,19 +114,33 @@
                             <AppBarElementContainer>
                                 <StackPanel Orientation="Horizontal">
                                     <control:NbtInsertButton Label="字节"
-                                                             IconUri="ms-appx:///Assets/NodeIcon/Data_node_byte.svg" />
+                                                             Tag="{x:Bind tag:NbtTagEnum.Byte}"
+                                                             IconUri="ms-appx:///Assets/NodeIcon/Data_node_byte.svg"
+                                                             ButtonCommand="{Binding AddNodeCommand}" />
                                     <control:NbtInsertButton Label="短整数"
-                                                             IconUri="ms-appx:///Assets/NodeIcon/Data_node_short.svg" />
+                                                             Tag="{x:Bind tag:NbtTagEnum.Short}"
+                                                             IconUri="ms-appx:///Assets/NodeIcon/Data_node_short.svg"
+                                                             ButtonCommand="{Binding AddNodeCommand}" />
                                     <control:NbtInsertButton Label="整数"
-                                                             IconUri="ms-appx:///Assets/NodeIcon/Data_node_int.svg" />
+                                                             Tag="{x:Bind tag:NbtTagEnum.Int}"
+                                                             IconUri="ms-appx:///Assets/NodeIcon/Data_node_int.svg"
+                                                             ButtonCommand="{Binding AddNodeCommand}" />
                                     <control:NbtInsertButton Label="长整数"
-                                                             IconUri="ms-appx:///Assets/NodeIcon/Data_node_long.svg" />
+                                                             Tag="{x:Bind tag:NbtTagEnum.Long}"
+                                                             IconUri="ms-appx:///Assets/NodeIcon/Data_node_long.svg"
+                                                             ButtonCommand="{Binding AddNodeCommand}" />
                                     <control:NbtInsertButton Label="单精浮点"
-                                                             IconUri="ms-appx:///Assets/NodeIcon/Data_node_float.svg" />
+                                                             Tag="{x:Bind tag:NbtTagEnum.Float}"
+                                                             IconUri="ms-appx:///Assets/NodeIcon/Data_node_float.svg"
+                                                             ButtonCommand="{Binding AddNodeCommand}" />
                                     <control:NbtInsertButton Label="双精浮点"
-                                                             IconUri="ms-appx:///Assets/NodeIcon/Data_node_double.svg" />
+                                                             Tag="{x:Bind tag:NbtTagEnum.Double}"
+                                                             IconUri="ms-appx:///Assets/NodeIcon/Data_node_double.svg"
+                                                             ButtonCommand="{Binding AddNodeCommand}" />
                                     <control:NbtInsertButton Label="字符串"
-                                                             IconUri="ms-appx:///Assets/NodeIcon/Data_node_string.svg" />
+                                                             Tag="{x:Bind tag:NbtTagEnum.String}"
+                                                             IconUri="ms-appx:///Assets/NodeIcon/Data_node_string.svg"
+                                                             ButtonCommand="{Binding AddNodeCommand}" />
                                 </StackPanel>
                             </AppBarElementContainer>
                             <AppBarSeparator />
@@ -133,11 +148,17 @@
                             <AppBarElementContainer>
                                 <StackPanel Orientation="Horizontal">
                                     <control:NbtInsertButton Label="字节组"
-                                                             IconUri="ms-appx:///Assets/NodeIcon/Data_node_byte-array.svg" />
+                                                             Tag="{x:Bind tag:NbtTagEnum.ByteArray}"
+                                                             IconUri="ms-appx:///Assets/NodeIcon/Data_node_byte-array.svg"
+                                                             ButtonCommand="{Binding AddNodeCommand}" />
                                     <control:NbtInsertButton Label="整数组"
-                                                             IconUri="ms-appx:///Assets/NodeIcon/Data_node_int-array.svg" />
+                                                             Tag="{x:Bind tag:NbtTagEnum.IntArray}"
+                                                             IconUri="ms-appx:///Assets/NodeIcon/Data_node_int-array.svg"
+                                                             ButtonCommand="{Binding AddNodeCommand}" />
                                     <control:NbtInsertButton Label="长整数组"
-                                                             IconUri="ms-appx:///Assets/NodeIcon/Data_node_long-array.svg" />
+                                                             Tag="{x:Bind tag:NbtTagEnum.LongArray}"
+                                                             IconUri="ms-appx:///Assets/NodeIcon/Data_node_long-array.svg"
+                                                             ButtonCommand="{Binding AddNodeCommand}" />
                                 </StackPanel>
                             </AppBarElementContainer>
                             <AppBarSeparator />
@@ -145,9 +166,13 @@
                             <AppBarElementContainer>
                                 <StackPanel Orientation="Horizontal">
                                     <control:NbtInsertButton Label="字典"
-                                                             IconUri="ms-appx:///Assets/NodeIcon/Data_node_dictionary.svg" />
+                                                             Tag="{x:Bind tag:NbtTagEnum.Dictionary}"
+                                                             IconUri="ms-appx:///Assets/NodeIcon/Data_node_dictionary.svg"
+                                                             ButtonCommand="{Binding AddNodeCommand}" />
                                     <control:NbtInsertButton Label="列表"
-                                                             IconUri="ms-appx:///Assets/NodeIcon/Data_node_list.svg" />
+                                                             Tag="{x:Bind tag:NbtTagEnum.List}"
+                                                             IconUri="ms-appx:///Assets/NodeIcon/Data_node_list.svg"
+                                                             ButtonCommand="{Binding AddNodeCommand}" />
                                 </StackPanel>
                             </AppBarElementContainer>
                         </community:TabbedCommandBarItem>

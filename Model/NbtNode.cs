@@ -15,7 +15,7 @@ using NBT_Studio.Library.NBT_Parser.Enum;
 
 namespace NBT_Studio.Model;
 
-// 属性定义、构造方法
+// 属性、构造方法
 public sealed partial class NbtNode : INotifyPropertyChanged
 {
     /// <summary>

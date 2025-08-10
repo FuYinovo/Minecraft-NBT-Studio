@@ -1,22 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Windows.Storage;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
 using NBT_Studio.Enum;
+using NBT_Studio.Message;
 
 namespace NBT_Studio.ViewModel;
 
 public sealed partial class SettingsViewModel : INotifyPropertyChanged
 {
-    public SettingsViewModel(TreeViewPageViewModel pageViewModel)
+    public SettingsViewModel()
     {
-        _pageViewModel = pageViewModel;
         _nameToValueSetter = GetValueSetters();
         _ = LoadSettingsFile();
     }
@@ -35,7 +35,6 @@ public sealed partial class SettingsViewModel : INotifyPropertyChanged
         {
             if (_nameToValueSetter.TryGetValue(key, out var value)) value(_settings[key]);
         }
-        Debug.WriteLine(Theme + " : " + SortType);
     }
 
     /// <summary>
@@ -51,7 +50,7 @@ public sealed partial class SettingsViewModel : INotifyPropertyChanged
     /// <summary>
     /// 获取「名称」到「[方法]设置值」的字典
     /// </summary>
-    private  Dictionary<string, Action<int>> GetValueSetters()
+    private Dictionary<string, Action<int>> GetValueSetters()
     {
         return new Dictionary<string, Action<int>>
         {
@@ -76,16 +75,10 @@ public sealed partial class SettingsViewModel : INotifyPropertyChanged
         };
     }
 
-    private void ApplySort(SortType value)
-    {
-        _pageViewModel.ApplySort(value);
-    }
-
     #endregion
 
     #region Private Properties
 
-    private readonly TreeViewPageViewModel _pageViewModel;
     private readonly JsonSerializerOptions _jsonSerializerOptions = new() { WriteIndented = true };
     private static readonly Uri SettingsFileUri = new("ms-appx:///Assets/Config/Settings.json");
     private SortType _sortType = SortType.Default;
@@ -103,8 +96,8 @@ public sealed partial class SettingsViewModel : INotifyPropertyChanged
         set
         {
             SetField(ref _sortType, value);
+            WeakReferenceMessenger.Default.Send(new SettingsValueChangedMessage<SortType>(value));
             _ = UpdateSettingsFile();
-            ApplySort(value);
         }
     }
 
@@ -114,11 +107,11 @@ public sealed partial class SettingsViewModel : INotifyPropertyChanged
         set
         {
             SetField(ref _theme, value);
+            WeakReferenceMessenger.Default.Send(new SettingsValueChangedMessage<Theme>(value));
             _ = UpdateSettingsFile();
             ApplyTheme(value);
         }
     }
-
 
     #endregion
 

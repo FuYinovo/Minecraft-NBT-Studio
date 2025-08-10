@@ -1,16 +1,17 @@
-using System;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Linq;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using NBT_Studio.Model;
+using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Messaging.Messages;
 
 namespace NBT_Studio.Control;
 
 public sealed partial class NbtTreeView
 {
+    #region Properties
+
     private readonly DependencyProperty _nodesDependencyProperty = DependencyProperty.Register(
         nameof(Nodes),
         typeof(ObservableCollection<NbtNode>),
@@ -22,6 +23,8 @@ public sealed partial class NbtTreeView
         get => (ObservableCollection<NbtNode>)GetValue(_nodesDependencyProperty);
         set => SetValue(_nodesDependencyProperty, value);
     }
+
+    #endregion
 
     public NbtTreeView()
     {
@@ -35,5 +38,14 @@ public sealed partial class NbtTreeView
     {
         if (sender is not TreeViewItem treeViewItem) return;
         treeViewItem.IsExpanded = !treeViewItem.IsExpanded;
+    }
+
+    /// <summary>
+    /// 通知「选择节点」修改的消息
+    /// </summary>
+    private void UpdateSelectedNode(TreeView sender, TreeViewSelectionChangedEventArgs args)
+    {
+        WeakReferenceMessenger.Default.Send(
+            new ValueChangedMessage<TreeViewNode>(sender.SelectedNode));
     }
 }

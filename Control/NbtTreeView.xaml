@@ -84,7 +84,6 @@
                         <TextBlock Style="{StaticResource TreeNodeText}"
                                    Text="{Binding Value , Converter={StaticResource StringTruncateConverter}}" />
                     </StackPanel>
-
                 </TreeViewItem.Content>
             </TreeViewItem>
         </DataTemplate>
@@ -95,6 +94,7 @@
             ItemsSource="{x:Bind Nodes, Mode=TwoWay}"
             ItemTemplate="{StaticResource TreeNodeTemplate}"
             SelectionMode="Single"
-            CanDrag="False" CanDragItems="False" AllowDrop="False"/>
+            CanDrag="False" CanDragItems="False" AllowDrop="False"
+            SelectionChanged="UpdateSelectedNode"/>
     </Grid>
 </UserControl>
