@@ -21,6 +21,14 @@ public static class DialogService
         string? secondary = null,
         string? close = null, Microsoft.UI.Xaml.Controls.Control? content = null, string? description = null)
     {
+        var dialogContent = content switch
+        {
+            null => new ContentControl { Content = new Grid { Children = { new TextBlock { Text = description } } }, },
+            _ => content
+        };
+        if (App.MainWindow != null)
+            dialogContent.RequestedTheme = ((FrameworkElement)App.MainWindow.Content).RequestedTheme;
+
         var xamlRoot = GetXamlRoot();
         var dialog = new ContentDialog
         {
@@ -30,9 +38,8 @@ public static class DialogService
             SecondaryButtonText = secondary,
             CloseButtonText = close,
             DefaultButton = ContentDialogButton.Primary,
-            Content = content == null
-                ? new ContentControl { Content = new Grid { Children = { new TextBlock { Text = description } } } }
-                : content
+            Content = dialogContent,
+            RequestedTheme = dialogContent.RequestedTheme
         };
 
         return await dialog.ShowAsync();
@@ -43,7 +50,7 @@ public static class DialogService
     /// </summary>
     private static XamlRoot GetXamlRoot()
     {
-        var xamlRoot = App.Window?.Content.XamlRoot;
+        var xamlRoot = App.MainWindow?.Content.XamlRoot;
         if (xamlRoot != null) return xamlRoot;
         throw new Exception("Failed to get XamlRoot");
     }

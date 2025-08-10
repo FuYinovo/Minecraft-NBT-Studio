@@ -38,7 +38,13 @@
                     </community:TabbedCommandBar.AutoSuggestBox>
                     <community:TabbedCommandBar.PaneFooter>
                         <CommandBar Background="Transparent" DefaultLabelPosition="Right">
-                            <AppBarButton Label="设置" Icon="Setting" />
+                            <AppBarButton Label="设置" Icon="Setting" AllowFocusOnInteraction="True">
+                                <AppBarButton.Flyout>
+                                    <Flyout>
+                                        <control:Settings x:Name="Settings" PageViewModel="{x:Bind _viewModel}"></control:Settings>
+                                    </Flyout>
+                                </AppBarButton.Flyout>
+                            </AppBarButton>
                             <AppBarButton Label="关于" Icon="Help" />
                         </CommandBar>
                     </community:TabbedCommandBar.PaneFooter>

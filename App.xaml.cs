@@ -4,7 +4,8 @@ namespace NBT_Studio;
 
 public partial class App
 {
-    public static readonly Window Window = new MainWindow();
+
+    public static Window? MainWindow ;
 
     public App()
     {
@@ -13,6 +14,7 @@ public partial class App
 
     protected override void OnLaunched(LaunchActivatedEventArgs args)
     {
-        Window.Activate();
+        MainWindow = new MainWindow();
+        MainWindow.Activate();
     }
 }

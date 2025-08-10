@@ -1,6 +1,6 @@
 ﻿namespace NBT_Studio.Enum;
 
-public enum GameEditionEnum
+public enum GameEdition
 {
     Java,
     Bedrock

@@ -372,11 +372,6 @@ public class NbtTag : ICloneable
         if (Tag == NbtTagEnum.List)
         {
             var childrenTagField = (byte)ChildrenTag;
-            foreach (var child in Children)
-            {
-                Debug.WriteLine($"{string.Join(", ", child.Children[0].Value)} : [{child.IsRemoved}]");
-            }
-
             var childrenCountField = BitConverter.GetBytes(Children.Count(child => !child.IsRemoved));
             bytes.Add(childrenTagField);
             bytes.AddRange(IsBigEndian ? childrenCountField.Reverse() : childrenCountField);

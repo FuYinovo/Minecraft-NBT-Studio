@@ -24,7 +24,7 @@ using WinRT.Interop;
 namespace NBT_Studio.ViewModel;
 
 /// <summary>
-/// 文件操作、节点筛选、
+/// 文件操作、
 /// </summary>
 public sealed partial class TreeViewPageViewModel : INotifyPropertyChanged
 {
@@ -64,7 +64,7 @@ public sealed partial class TreeViewPageViewModel : INotifyPropertyChanged
         };
         openPicker.FileTypeFilter.Add(".nbt");
         openPicker.FileTypeFilter.Add(".dat");
-        var hWnd = WindowNative.GetWindowHandle(App.Window);
+        var hWnd = WindowNative.GetWindowHandle(App.MainWindow);
         InitializeWithWindow.Initialize(openPicker, hWnd);
 
         // 选择文件
@@ -76,20 +76,20 @@ public sealed partial class TreeViewPageViewModel : INotifyPropertyChanged
         var bytes = Tools.ReadBytes(file.Path);
         _gameEdition = param?.ToLower() switch
         {
-            "java" => GameEditionEnum.Java,
-            "bedrock" => GameEditionEnum.Bedrock,
+            "java" => GameEdition.Java,
+            "bedrock" => GameEdition.Bedrock,
             _ => throw new Exception("新建文件按钮在XAML中版本参数错误!")
         };
         // Java | Bedrock 分类处理
         NbtTag rootTag;
         switch (_gameEdition)
         {
-            case GameEditionEnum.Java:
+            case GameEdition.Java:
                 var tag = await TryLoadJavaFile(bytes);
                 if (tag == null) return;
                 rootTag = tag;
                 break;
-            case GameEditionEnum.Bedrock:
+            case GameEdition.Bedrock:
                 var result = await TryLoadBedrockFile(bytes);
                 if (result.tag == null) return;
                 _isBedrockLevelDat = result.isLevelDat;
@@ -150,7 +150,7 @@ public sealed partial class TreeViewPageViewModel : INotifyPropertyChanged
         savePicker.FileTypeChoices.Add("NBT Files", new List<string> { ".nbt", ".dat" });
         savePicker.SuggestedFileName =
             string.IsNullOrWhiteSpace(_nodes.First().Name) ? "unnamed_nbt_file" : _nodes.First().Name;
-        var hWnd = WindowNative.GetWindowHandle(App.Window);
+        var hWnd = WindowNative.GetWindowHandle(App.MainWindow);
         InitializeWithWindow.Initialize(savePicker, hWnd);
 
         // 选择保存位置
@@ -190,11 +190,11 @@ public sealed partial class TreeViewPageViewModel : INotifyPropertyChanged
         // 新建文件
         _gameEdition = param?.ToLower() switch
         {
-            "java" => GameEditionEnum.Java,
-            "bedrock" => GameEditionEnum.Bedrock,
+            "java" => GameEdition.Java,
+            "bedrock" => GameEdition.Bedrock,
             _ => throw new Exception("新建文件按钮在XAML中版本参数错误!")
         };
-        var builder = new NbtTagBuilder(_gameEdition == GameEditionEnum.Java);
+        var builder = new NbtTagBuilder(_gameEdition == GameEdition.Java);
         if (Nodes.Count > 0) Nodes.Clear();
         Nodes.Clear();
         Nodes.Add(new NbtNode(builder.Dictionary("root", []), true, NodeChangeAction));
@@ -207,66 +207,6 @@ public sealed partial class TreeViewPageViewModel : INotifyPropertyChanged
         IsSearchBoxEnabled = true;
     }
 
-    /// <summary> 应用节点筛选</summary>
-    private void ApplyFilter()
-    {
-        // 一、应用节点筛选
-        var filterEnum = _nodeFilterIndex switch
-        {
-            1 => NbtTagEnum.Byte,
-            2 => NbtTagEnum.Short,
-            3 => NbtTagEnum.Int,
-            4 => NbtTagEnum.Long,
-            5 => NbtTagEnum.Float,
-            6 => NbtTagEnum.Double,
-            7 => NbtTagEnum.String,
-            _ => NbtTagEnum.Unknown
-        };
-        var childrenAll = Nodes.First().GetChildrenAll();
-        switch (filterEnum)
-        {
-            // 情景一：选择了「全部」筛选标签
-            case NbtTagEnum.Unknown:
-                // 全部显示
-                foreach (var child in childrenAll)
-                    child.Visibility = Visibility.Visible;
-                break;
-            // 情景二：选择了其他筛选标签
-            default:
-                // 隐藏所有非目标节点（列表、字典除外）
-                foreach (var child in childrenAll)
-                {
-                    if (child.TagEnum is NbtTagEnum.Dictionary or NbtTagEnum.List) continue;
-                    child.Visibility = child.TagEnum != filterEnum ? Visibility.Collapsed : Visibility.Visible;
-                }
-
-                break;
-        }
-
-        // 二、应用节点搜索
-        foreach (var child in childrenAll.Where(child =>
-                     !string.IsNullOrWhiteSpace(SearchBoxText) && !child.Name.Contains(SearchBoxText) &&
-                     child.TagEnum is not (NbtTagEnum.Dictionary or NbtTagEnum.List)))
-            child.Visibility = Visibility.Collapsed;
-
-
-        // 三、 隐藏空的列表、字典
-        foreach (var child in childrenAll)
-            if (child.TagEnum is NbtTagEnum.Dictionary or NbtTagEnum.List && child.GetVisibleChildrenCount() <= 0)
-                child.Visibility = Visibility.Collapsed;
-
-
-        // 四、更新子项数量（方法自动过滤非列表、字典节点）
-        foreach (var child in childrenAll) child.UpdateChildrenCount();
-    }
-
-    /// <summary> 展示 NBT 文件信息 </summary>
-    private async Task ShowFileInfo()
-    {
-        var content = new NbtFileInfoContent(_filePath, _nodes.First().Tag.GetBytes().Length, _gameEdition,
-            _nodes.First().Tag.IsBigEndian);
-        await DialogService.ShowDialog("文件信息", "确认", content: content);
-    }
 
     /// <summary>写入 NBT 文件</summary>
     private async Task WriteFile(byte[] bytes, string path)
@@ -274,10 +214,10 @@ public sealed partial class TreeViewPageViewModel : INotifyPropertyChanged
         var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write);
         switch (_gameEdition)
         {
-            case GameEditionEnum.Java:
+            case GameEdition.Java:
                 await fileStream.WriteAsync(bytes);
                 break;
-            case GameEditionEnum.Bedrock:
+            case GameEdition.Bedrock:
                 if (!_isBedrockLevelDat)
                 {
                     await fileStream.WriteAsync(bytes);
@@ -297,37 +237,6 @@ public sealed partial class TreeViewPageViewModel : INotifyPropertyChanged
         fileStream.Close();
     }
 
-    /// <summary>确认是否丢弃 NBT 文件未保存的修改</summary>
-    private async Task<ContentDialogResult> VerifyAbandonChanges()
-    {
-        var fileName = _filePath == string.Empty
-            ? _nodes.First().Name == string.Empty ? "未命名" : _nodes.First().Name
-            : Path.GetFileNameWithoutExtension(_filePath);
-        return await DialogService.ShowDialog("是否保存修改？", "保存", "丢弃", "取消", description: $"「{fileName}」未保存修改");
-    }
-
-    /// <summary> 处理节点修改操作相关 UI 更新 </summary>
-    /// <remarks> 委托方法</remarks>
-    private void NodeChangeAction(NbtNode node, NodeChangeType type)
-    {
-        switch (type)
-        {
-            case NodeChangeType.Rename:
-                break;
-            case NodeChangeType.Remove:
-                node.Visibility = Visibility.Collapsed;
-                foreach (var child in node.Children) child.Visibility = Visibility.Collapsed;
-                node.UpdateChildrenCount();
-                Nodes.Remove(node);
-                break;
-            case NodeChangeType.Revalue:
-                break;
-            default:
-                throw new Exception("无法确定节点修改操作类型");
-        }
-
-        IsApplyEnabled = true;
-    }
 
     #region Properties
 
@@ -353,7 +262,7 @@ public sealed partial class TreeViewPageViewModel : INotifyPropertyChanged
 
     private string _filePath = string.Empty;
     private bool _isBedrockLevelDat;
-    private GameEditionEnum _gameEdition;
+    private GameEdition _gameEdition;
     public IAsyncRelayCommand<string> LoadFileCommand { get; }
     public IAsyncRelayCommand SaveFileCommand { get; }
     public IAsyncRelayCommand ApplyFileCommand { get; }
@@ -424,6 +333,109 @@ public sealed partial class TreeViewPageViewModel : INotifyPropertyChanged
     }
 
     #endregion
+}
+
+/// <summary>
+/// 界面更新、
+/// </summary>
+public sealed partial class TreeViewPageViewModel
+{
+    /// <summary> 应用节点筛选</summary>
+    private void ApplyFilter()
+    {
+        // 一、应用节点筛选
+        var filterEnum = _nodeFilterIndex switch
+        {
+            1 => NbtTagEnum.Byte,
+            2 => NbtTagEnum.Short,
+            3 => NbtTagEnum.Int,
+            4 => NbtTagEnum.Long,
+            5 => NbtTagEnum.Float,
+            6 => NbtTagEnum.Double,
+            7 => NbtTagEnum.String,
+            _ => NbtTagEnum.Unknown
+        };
+        var childrenAll = Nodes.First().GetChildrenAll();
+        switch (filterEnum)
+        {
+            // 情景一：选择了「全部」筛选标签
+            case NbtTagEnum.Unknown:
+                // 全部显示
+                foreach (var child in childrenAll)
+                    child.Visibility = Visibility.Visible;
+                break;
+            // 情景二：选择了其他筛选标签
+            default:
+                // 隐藏所有非目标节点（列表、字典除外）
+                foreach (var child in childrenAll)
+                {
+                    if (child.TagEnum is NbtTagEnum.Dictionary or NbtTagEnum.List) continue;
+                    child.Visibility = child.TagEnum != filterEnum ? Visibility.Collapsed : Visibility.Visible;
+                }
+
+                break;
+        }
+
+        // 二、应用节点搜索
+        foreach (var child in childrenAll.Where(child =>
+                     !string.IsNullOrWhiteSpace(SearchBoxText) && !child.Name.Contains(SearchBoxText) &&
+                     child.TagEnum is not (NbtTagEnum.Dictionary or NbtTagEnum.List)))
+            child.Visibility = Visibility.Collapsed;
+
+
+        // 三、 隐藏空的列表、字典
+        foreach (var child in childrenAll)
+            if (child.TagEnum is NbtTagEnum.Dictionary or NbtTagEnum.List && child.GetVisibleChildrenCount() <= 0)
+                child.Visibility = Visibility.Collapsed;
+
+
+        // 四、更新子项数量（方法自动过滤非列表、字典节点）
+        foreach (var child in childrenAll) child.UpdateChildrenCount();
+    }
+
+    /// <summary> 展示 NBT 文件信息 </summary>
+    private async Task ShowFileInfo()
+    {
+        var content = new NbtFileInfoContent(_filePath, _nodes.First().Tag.GetBytes().Length, _gameEdition,
+            _nodes.First().Tag.IsBigEndian);
+        await DialogService.ShowDialog("文件信息", "确认", content: content);
+    }
+
+    /// <summary>确认是否丢弃 NBT 文件未保存的修改</summary>
+    private async Task<ContentDialogResult> VerifyAbandonChanges()
+    {
+        var fileName = _filePath == string.Empty
+            ? _nodes.First().Name == string.Empty ? "未命名" : _nodes.First().Name
+            : Path.GetFileNameWithoutExtension(_filePath);
+        return await DialogService.ShowDialog("是否保存修改？", "保存", "丢弃", "取消", description: $"「{fileName}」未保存修改");
+    }
+
+    /// <summary> 处理节点修改操作相关 UI 更新 </summary>
+    /// <remarks> 委托方法</remarks>
+    private void NodeChangeAction(NbtNode node, NodeChangeType type)
+    {
+        switch (type)
+        {
+            case NodeChangeType.Rename:
+                break;
+            case NodeChangeType.Remove:
+                node.Visibility = Visibility.Collapsed;
+                foreach (var child in node.Children) child.Visibility = Visibility.Collapsed;
+                node.UpdateChildrenCount();
+                Nodes.Remove(node);
+                break;
+            case NodeChangeType.Revalue:
+                break;
+            default:
+                throw new Exception("无法确定节点修改操作类型");
+        }
+
+        IsApplyEnabled = true;
+    }
+
+    public void ApplySort(SortType type)
+    {
+    }
 }
 
 /// <summary>

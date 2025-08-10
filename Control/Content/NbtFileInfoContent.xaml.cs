@@ -5,15 +5,15 @@ namespace NBT_Studio.Control.Content;
 
 public sealed partial class NbtFileInfoContent
 {
-    public NbtFileInfoContent(string filePath, int fileLength, GameEditionEnum gameEditionEnum, bool isBigEndian)
+    public NbtFileInfoContent(string filePath, int fileLength, GameEdition gameEdition, bool isBigEndian)
     {
         FilePath = filePath;
         FileLength = fileLength;
-        GameEdition = gameEditionEnum switch
+        GameEdition = gameEdition switch
         {
-            GameEditionEnum.Java => 0,
-            GameEditionEnum.Bedrock => 1,
-            _ => throw new ArgumentOutOfRangeException(nameof(gameEditionEnum), gameEditionEnum, null)
+            Enum.GameEdition.Java => 0,
+            Enum.GameEdition.Bedrock => 1,
+            _ => throw new ArgumentOutOfRangeException(nameof(gameEdition), gameEdition, null)
         };
         IsBigEndian = isBigEndian switch
         {
@@ -21,15 +21,15 @@ public sealed partial class NbtFileInfoContent
             false => 0
         };
         InitializeComponent();
-        switch (gameEditionEnum)
+        switch (gameEdition)
         {
-            case GameEditionEnum.Bedrock:
+            case Enum.GameEdition.Bedrock:
                 ItemJava.IsEnabled = false;
                 break;
-            case GameEditionEnum.Java:
+            case Enum.GameEdition.Java:
                 ItemBedrock.IsEnabled = false;
                 break;
-            default: throw new Exception($"未知游戏版本[{gameEditionEnum}]");
+            default: throw new Exception($"未知游戏版本[{gameEdition}]");
         }
 
         switch (isBigEndian)

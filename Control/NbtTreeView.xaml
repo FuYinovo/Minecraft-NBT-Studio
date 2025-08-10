@@ -92,10 +92,9 @@
 
     <Grid>
         <TreeView
-            x:Name="TreeView"
             ItemsSource="{x:Bind Nodes, Mode=TwoWay}"
             ItemTemplate="{StaticResource TreeNodeTemplate}"
             SelectionMode="Single"
-            CanDrag="False" CanDragItems="False" AllowDrop="False" />
+            CanDrag="False" CanDragItems="False" AllowDrop="False"/>
     </Grid>
 </UserControl>
