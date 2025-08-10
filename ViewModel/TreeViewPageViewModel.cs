@@ -207,7 +207,6 @@ public sealed partial class TreeViewPageViewModel : INotifyPropertyChanged
         IsSearchBoxEnabled = true;
     }
 
-
     /// <summary>写入 NBT 文件</summary>
     private async Task WriteFile(byte[] bytes, string path)
     {
@@ -388,8 +387,10 @@ public sealed partial class TreeViewPageViewModel
             if (child.TagEnum is NbtTagEnum.Dictionary or NbtTagEnum.List && child.GetVisibleChildrenCount() <= 0)
                 child.Visibility = Visibility.Collapsed;
 
+        // 四、显示根节点
+        Nodes.First().Visibility = Visibility.Visible;
 
-        // 四、更新子项数量（方法自动过滤非列表、字典节点）
+        // 四、更新子项数量
         foreach (var child in childrenAll) child.UpdateChildrenCount();
     }
 
@@ -421,7 +422,7 @@ public sealed partial class TreeViewPageViewModel
             case NodeChangeType.Remove:
                 node.Visibility = Visibility.Collapsed;
                 foreach (var child in node.Children) child.Visibility = Visibility.Collapsed;
-                node.UpdateChildrenCount();
+                foreach (var child in Nodes.First().GetChildrenAll()) child.UpdateChildrenCount(); // 更新子项数量显示
                 Nodes.Remove(node);
                 break;
             case NodeChangeType.Revalue:
