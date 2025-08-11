@@ -22,6 +22,8 @@ using NBT_Studio.Message;
 using NBT_Studio.Model;
 using NBT_Studio.Service;
 using WinRT.Interop;
+using AddNodeContent = NBT_Studio.Control.Dialog.AddNodeContent;
+using FileInfoContent = NBT_Studio.Control.Dialog.FileInfoContent;
 
 namespace NBT_Studio.ViewModel;
 
@@ -443,10 +445,14 @@ public sealed partial class TreeViewPageViewModel
             case NodeChangeType.Rename:
                 break;
             case NodeChangeType.Remove:
-                node.Visibility = Visibility.Collapsed;
-                foreach (var child in node.Children) child.Visibility = Visibility.Collapsed;
-                foreach (var child in Nodes.First().GetChildrenAll()) child.UpdateChildrenCount(); // 更新子项数量显示
                 Nodes.Remove(node);
+                // 隐藏自身及其子项
+                node.Visibility = Visibility.Collapsed;
+                if (node.Children.Count > 0)
+                    foreach (var child in node.Children)
+                        child.Visibility = Visibility.Collapsed;
+                // 更新其父节点的子项数量显示
+                foreach (var child in Nodes.First().GetChildrenAll()) child.UpdateChildrenCount();
                 break;
             case NodeChangeType.Revalue:
                 break;

@@ -1,4 +1,4 @@
-namespace NBT_Studio.Control.Content;
+namespace NBT_Studio.Control.Dialog;
 
 public sealed partial class RenameNodeContent
 {

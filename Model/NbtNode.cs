@@ -13,6 +13,7 @@ using NBT_Studio.Enum;
 using NBT_Studio.Library.NBT_Parser.Class;
 using NBT_Studio.Library.NBT_Parser.Enum;
 using NBT_Studio.Service;
+using RenameNodeContent = NBT_Studio.Control.Dialog.RenameNodeContent;
 
 namespace NBT_Studio.Model;
 

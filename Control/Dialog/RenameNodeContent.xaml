@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <UserControl
-    x:Class="NBT_Studio.Control.Content.RenameNodeContent"
+    x:Class="NBT_Studio.Control.Dialog.RenameNodeContent"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -10,7 +10,7 @@
 
     <Grid>
         <StackPanel Spacing="16">
-            <TextBox Header="名称" PlaceholderText="输入新的名称" Text="{x:Bind NewName, Mode=TwoWay}" />
+            <TextBox Header="名称" PlaceholderText="可选" Text="{x:Bind NewName, Mode=TwoWay}" />
         </StackPanel>
     </Grid>
 </UserControl>

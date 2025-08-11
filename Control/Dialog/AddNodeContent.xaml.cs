@@ -1,36 +1,38 @@
 using System;
 using System.Text.RegularExpressions;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using NBT_Studio.Library.NBT_Parser.Enum;
 
-namespace NBT_Studio.Control.Content;
+namespace NBT_Studio.Control.Dialog;
 
 public sealed partial class AddNodeContent
 {
     private readonly NbtTagEnum _tagEnum;
     public Action<bool>? DialogOkButtonEnabledSetter;
+    public string NodeName { get; set; } = string.Empty;
+    public object NodeValue { get; set; } = string.Empty;
+    public NbtTagEnum ChildrenTag { get; set; } = NbtTagEnum.Unknown;
 
     public AddNodeContent(NbtTagEnum tagEnum)
     {
         _tagEnum = tagEnum;
+        if (tagEnum is NbtTagEnum.Dictionary or NbtTagEnum.List) GenericValueInput.Visibility = Visibility.Collapsed;
         InitializeComponent();
     }
 
-    public string NodeName { get; set; } = string.Empty;
-    public object NodeValue { get; set; } = string.Empty;
-    public NbtTagEnum ChildrenTag { get; set; } = NbtTagEnum.Unknown;
 
     private void TextBox_OnTextChanged(object sender, TextChangedEventArgs e)
     {
         if (sender is not TextBox textBox) return;
         if (!IsValid(_tagEnum, textBox.Text))
         {
-            ValueTextBox.BorderBrush = RedBorder.BorderBrush;
+            GenericValueInput.BorderBrush = RedBorder.BorderBrush;
             DialogOkButtonEnabledSetter?.Invoke(false);
         }
         else
         {
-            ValueTextBox.BorderBrush = DefaultBorder.BorderBrush;
+            GenericValueInput.BorderBrush = DefaultBorder.BorderBrush;
             DialogOkButtonEnabledSetter?.Invoke(true);
         }
     }
@@ -52,23 +54,16 @@ public sealed partial class AddNodeContent
 
     private static bool IsNumberValid(NbtTagEnum tagEnum, string value)
     {
-        try
+        if (!Regex.IsMatch(value, @"^[+-]?(\d+\.?\d*|\.\d+)$")) return false; // 是否数字
+        return tagEnum switch
         {
-            if (!Regex.IsMatch(value, @"^[+-]?(\d+\.?\d*|\.\d+)$")) return false; // 是否数字
-            return tagEnum switch
-            {
-                NbtTagEnum.Byte => value is "0" or "1",
-                NbtTagEnum.Short => short.TryParse(value, out _),
-                NbtTagEnum.Int => int.TryParse(value, out _),
-                NbtTagEnum.Long => long.TryParse(value, out _),
-                NbtTagEnum.Float => float.TryParse(value, out _),
-                NbtTagEnum.Double => double.TryParse(value, out _),
-                _ => throw new ArgumentOutOfRangeException(nameof(tagEnum), tagEnum, null)
-            };
-        }
-        catch (Exception)
-        {
-            return false;
-        }
+            NbtTagEnum.Byte => value is "0" or "1",
+            NbtTagEnum.Short => short.TryParse(value, out _),
+            NbtTagEnum.Int => int.TryParse(value, out _),
+            NbtTagEnum.Long => long.TryParse(value, out _),
+            NbtTagEnum.Float => float.TryParse(value, out _),
+            NbtTagEnum.Double => double.TryParse(value, out _),
+            _ => throw new ArgumentOutOfRangeException(nameof(tagEnum), tagEnum, null)
+        };
     }
 }

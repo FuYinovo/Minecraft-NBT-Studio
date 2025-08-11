@@ -1,7 +1,7 @@
 using System;
 using NBT_Studio.Enum;
 
-namespace NBT_Studio.Control.Content;
+namespace NBT_Studio.Control.Dialog;
 
 public sealed partial class FileInfoContent
 {
