@@ -65,7 +65,7 @@ public sealed partial class AddNodeContent
         if (!Regex.IsMatch(value, @"^[+-]?(\d+\.?\d*|\.\d+)$")) return false; // 是否数字
         return tagEnum switch
         {
-            NbtTagEnum.Byte => value is "0" or "1",
+            NbtTagEnum.Byte => byte.TryParse(value, out _),
             NbtTagEnum.Short => short.TryParse(value, out _),
             NbtTagEnum.Int => int.TryParse(value, out _),
             NbtTagEnum.Long => long.TryParse(value, out _),

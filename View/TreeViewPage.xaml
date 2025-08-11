@@ -208,31 +208,7 @@
 
         <!-- 右侧详情区 -->
         <Grid Grid.Column="2">
-            <Border Visibility="Collapsed">
-                <Border Background="{ThemeResource AccentAAFillColorDefaultBrush}">
-                    <TextBlock HorizontalAlignment="Center"
-                               VerticalAlignment="Center"
-                               Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}"
-                               Text="选择节点查看详情"
-                               FontSize="32"
-                               FontWeight="Black"
-                               Opacity=".6" />
-                </Border>
-            </Border>
-
-            <community:TabbedCommandBar Visibility="Visible">
-                <community:TabbedCommandBar.MenuItems>
-                    <community:TabbedCommandBarItem Header="数据编辑器">
-                        <AppBarElementContainer />
-                    </community:TabbedCommandBarItem>
-                    <community:TabbedCommandBarItem Header="物品编辑器" IsContextual="True">
-                        <AppBarElementContainer />
-                    </community:TabbedCommandBarItem>
-                    <community:TabbedCommandBarItem Header="地图编辑器" IsContextual="True">
-                        <AppBarElementContainer />
-                    </community:TabbedCommandBarItem>
-                </community:TabbedCommandBar.MenuItems>
-            </community:TabbedCommandBar>
+            <control:NodeValueEditor />
         </Grid>
     </Grid>
 </Page>

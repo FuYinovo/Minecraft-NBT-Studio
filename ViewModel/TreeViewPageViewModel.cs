@@ -392,7 +392,7 @@ public sealed partial class TreeViewPageViewModel
                 // 隐藏所有非目标节点（列表、字典除外）
                 foreach (var child in childrenAll)
                 {
-                    if (child.TagEnum is NbtTagEnum.Dictionary or NbtTagEnum.List) continue;
+                    if (NbtTagEnumExtensions.IsCollection(child.TagEnum)) continue;
                     child.Visibility = child.TagEnum != filterEnum ? Visibility.Collapsed : Visibility.Visible;
                 }
 
@@ -402,13 +402,12 @@ public sealed partial class TreeViewPageViewModel
         // 二、应用节点搜索
         foreach (var child in childrenAll.Where(child =>
                      !string.IsNullOrWhiteSpace(SearchBoxText) && !child.Name.Contains(SearchBoxText) &&
-                     child.TagEnum is not (NbtTagEnum.Dictionary or NbtTagEnum.List)))
+                     !NbtTagEnumExtensions.IsCollection(child.TagEnum)))
             child.Visibility = Visibility.Collapsed;
-
 
         // 三、 隐藏空的列表、字典
         foreach (var child in childrenAll)
-            if (child.TagEnum is NbtTagEnum.Dictionary or NbtTagEnum.List && child.GetVisibleChildrenCount() <= 0)
+            if (NbtTagEnumExtensions.IsCollection(child.TagEnum)  && child.GetVisibleChildrenCount() <= 0)
                 child.Visibility = Visibility.Collapsed;
 
         // 四、显示根节点
@@ -485,7 +484,7 @@ public sealed partial class TreeViewPageViewModel
         }
 
         // 确认父类目标（若「选中」是列表或字典，则为自身添加子项，否则为父节点添加子项）
-        var parent = ((NbtNode)_selectedNode.Content).TagEnum is NbtTagEnum.Dictionary or NbtTagEnum.List
+        var parent = NbtTagEnumExtensions.IsCollection(((NbtNode)_selectedNode.Content).TagEnum)
             ? (NbtNode)_selectedNode.Content
             : (NbtNode)_selectedNode.Parent.Content;
 
@@ -501,7 +500,7 @@ public sealed partial class TreeViewPageViewModel
         var content = new AddNodeContent(tagEnum);
         var dialog = DialogService.GetDialog($"添加「{tagEnum}」节点", "确认", close: "取消", content: content);
         content.DialogOkButtonEnabledSetter = b => dialog.IsPrimaryButtonEnabled = b;
-        dialog.IsPrimaryButtonEnabled = tagEnum is NbtTagEnum.List or NbtTagEnum.Dictionary;
+        dialog.IsPrimaryButtonEnabled = NbtTagEnumExtensions.IsCollection(tagEnum);
 
         // 获取输入的名称、值
         var choice = await dialog.ShowAsync();

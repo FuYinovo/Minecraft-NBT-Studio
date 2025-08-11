@@ -33,7 +33,7 @@ public sealed partial class NbtNode : INotifyPropertyChanged
         // NBT 标签
         Tag = nbtTag;
         TagEnum = Tag.Tag;
-        _isRootNode = isRootNode;
+        IsRootNode = isRootNode;
         // 名称
         Name = nbtTag.Name ?? TagEnum.ToString();
         // 值
@@ -53,7 +53,7 @@ public sealed partial class NbtNode : INotifyPropertyChanged
         // 子项数量
         DisplayChildrenCount = $"<{Children.Count.ToString()}>";
         // 是否显示子项数量
-        if (TagEnum is NbtTagEnum.Dictionary or NbtTagEnum.List) ChildrenCountVisibility = Visibility.Visible;
+        if (NbtTagEnumExtensions.IsCollection(TagEnum)) ChildrenCountVisibility = Visibility.Visible;
         // 是否显示等号
         if (ChildrenCountVisibility == Visibility.Collapsed) EqualMarkVisibility = Visibility.Visible;
 
@@ -87,7 +87,7 @@ public sealed partial class NbtNode : INotifyPropertyChanged
     public string Value { get; }
     public string Icon { get; }
     private readonly Action<NbtNode, NodeChangeType>? _applyNodeChangeWithUiRequest;
-    private readonly bool _isRootNode;
+    public readonly bool IsRootNode;
     private string _name = string.Empty;
 
     private string _displayChildrenCount = string.Empty;
@@ -161,7 +161,7 @@ public sealed partial class NbtNode
     /// </summary>
     public void UpdateChildrenCount()
     {
-        if (TagEnum is not (NbtTagEnum.Dictionary or NbtTagEnum.List)) return;
+        if (!NbtTagEnumExtensions.IsCollection(TagEnum)) return;
         DisplayChildrenCount = $"<{GetVisibleChildrenCount()}>";
     }
 
@@ -195,7 +195,7 @@ public sealed partial class NbtNode
     /// </summary>
     private async Task Delete()
     {
-        if (_isRootNode)
+        if (IsRootNode)
         {
             await DialogService.ShowDialog("删除失败", "确认", description: "不允许删除根节点");
             return;
