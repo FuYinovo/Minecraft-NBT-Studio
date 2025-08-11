@@ -68,7 +68,7 @@ public static class DialogService
     {
         var dialogContent = content switch
         {
-            null => new ContentControl { Content = new Grid { Children = { new TextBlock { Text = description } } }, },
+            null => new ContentControl { Content = new Grid { Children = { new TextBlock { Text = description } } } },
             _ => content
         };
         if (App.MainWindow != null)

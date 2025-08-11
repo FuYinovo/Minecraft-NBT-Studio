@@ -95,6 +95,6 @@
             ItemTemplate="{StaticResource TreeNodeTemplate}"
             SelectionMode="Single"
             CanDrag="False" CanDragItems="False" AllowDrop="False"
-            SelectionChanged="UpdateSelectedNode"/>
+            SelectionChanged="UpdateSelectedNode" />
     </Grid>
 </UserControl>

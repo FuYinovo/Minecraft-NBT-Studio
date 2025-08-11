@@ -13,16 +13,16 @@ using NBT_Studio.Message;
 
 namespace NBT_Studio.ViewModel;
 
-public sealed partial class SettingsViewModel : INotifyPropertyChanged
+public sealed class SettingsFlyoutViewModel : INotifyPropertyChanged
 {
-    public SettingsViewModel()
+    public SettingsFlyoutViewModel()
     {
         _nameToValueSetter = GetValueSetters();
         _ = LoadSettingsFile();
     }
 
     /// <summary>
-    /// 加载配置文件
+    ///     加载配置文件
     /// </summary>
     private async Task LoadSettingsFile()
     {
@@ -32,13 +32,12 @@ public sealed partial class SettingsViewModel : INotifyPropertyChanged
         _settings = JsonSerializer.Deserialize<Dictionary<string, int>>(jsonCent, _jsonSerializerOptions) ?? [];
         // 还原值
         foreach (var key in _settings.Keys)
-        {
-            if (_nameToValueSetter.TryGetValue(key, out var value)) value(_settings[key]);
-        }
+            if (_nameToValueSetter.TryGetValue(key, out var value))
+                value(_settings[key]);
     }
 
     /// <summary>
-    /// 更新配置文件
+    ///     更新配置文件
     /// </summary>
     private async Task UpdateSettingsFile()
     {
@@ -48,14 +47,14 @@ public sealed partial class SettingsViewModel : INotifyPropertyChanged
     }
 
     /// <summary>
-    /// 获取「名称」到「[方法]设置值」的字典
+    ///     获取「名称」到「[方法]设置值」的字典
     /// </summary>
     private Dictionary<string, Action<int>> GetValueSetters()
     {
         return new Dictionary<string, Action<int>>
         {
             { nameof(Theme), v => Theme = (Theme)v },
-            { nameof(SortType), v => SortType = (SortType)v },
+            { nameof(Sort), v => Sort = (Sort)v }
         };
     }
 
@@ -81,7 +80,7 @@ public sealed partial class SettingsViewModel : INotifyPropertyChanged
 
     private readonly JsonSerializerOptions _jsonSerializerOptions = new() { WriteIndented = true };
     private static readonly Uri SettingsFileUri = new("ms-appx:///Assets/Config/Settings.json");
-    private SortType _sortType = SortType.Default;
+    private Sort _sort = Sort.Default;
     private Theme _theme = Theme.Default;
     private Dictionary<string, int> _settings = new();
     private readonly Dictionary<string, Action<int>> _nameToValueSetter;
@@ -90,13 +89,13 @@ public sealed partial class SettingsViewModel : INotifyPropertyChanged
 
     #region Public Properties
 
-    public SortType SortType
+    public Sort Sort
     {
-        get => _sortType;
+        get => _sort;
         set
         {
-            SetField(ref _sortType, value);
-            WeakReferenceMessenger.Default.Send(new SettingsValueChangedMessage<SortType>(value));
+            SetField(ref _sort, value);
+            WeakReferenceMessenger.Default.Send(new SettingsValueChangedMessage<Sort>(value));
             _ = UpdateSettingsFile();
         }
     }

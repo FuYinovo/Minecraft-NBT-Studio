@@ -12,6 +12,7 @@ using NBT_Studio.Control.Content;
 using NBT_Studio.Enum;
 using NBT_Studio.Library.NBT_Parser.Class;
 using NBT_Studio.Library.NBT_Parser.Enum;
+using NBT_Studio.Service;
 
 namespace NBT_Studio.Model;
 
@@ -144,10 +145,11 @@ public sealed partial class NbtNode
         {
             case NbtTagEnum.Dictionary:
                 count += Children.Count(child =>
-                    child.TagEnum != NbtTagEnum.End && child is { Visibility: Visibility.Visible, Tag.IsRemoved: false });
+                    child.TagEnum != NbtTagEnum.End && child is
+                        { Visibility: Visibility.Visible, Tag.IsRemoved: false });
                 break;
             case NbtTagEnum.List:
-                count += Children.Count(child => child is {Visibility:Visibility.Visible, Tag.IsRemoved:false});
+                count += Children.Count(child => child is { Visibility: Visibility.Visible, Tag.IsRemoved: false });
                 break;
         }
 
@@ -189,13 +191,13 @@ public sealed partial class NbtNode
 public sealed partial class NbtNode
 {
     /// <summary>
-    /// 删除节点
+    ///     删除节点
     /// </summary>
     private async Task Delete()
     {
         if (_isRootNode)
         {
-            await Service.DialogService.ShowDialog("删除失败", "确认", description: "不允许删除根节点");
+            await DialogService.ShowDialog("删除失败", "确认", description: "不允许删除根节点");
             return;
         }
 
@@ -204,12 +206,12 @@ public sealed partial class NbtNode
     }
 
     /// <summary>
-    /// 重命名节点
+    ///     重命名节点
     /// </summary>
     private async Task Rename()
     {
         var content = new RenameNodeContent();
-        var choice = await Service.DialogService.ShowDialog("重命名", "确认", close: "取消", content: content);
+        var choice = await DialogService.ShowDialog("重命名", "确认", close: "取消", content: content);
         if (choice != ContentDialogResult.Primary) return;
 
         Tag.SetName(content.NewName);

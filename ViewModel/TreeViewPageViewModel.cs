@@ -9,6 +9,8 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Windows.Storage.Pickers;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Messaging.Messages;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using NBT_Studio.Control.Content;
@@ -16,20 +18,31 @@ using NBT_Studio.Enum;
 using NBT_Studio.Library.NBT_Parser.Class;
 using NBT_Studio.Library.NBT_Parser.Enum;
 using NBT_Studio.Library.NBT_Parser.Utils;
+using NBT_Studio.Message;
 using NBT_Studio.Model;
 using NBT_Studio.Service;
 using WinRT.Interop;
-using CommunityToolkit.Mvvm.Messaging.Messages;
-using CommunityToolkit.Mvvm.Messaging;
-using NBT_Studio.Message;
 
 namespace NBT_Studio.ViewModel;
 
 /// <summary>
-/// 属性、构造方法
+///     属性、构造方法
 /// </summary>
 public sealed partial class TreeViewPageViewModel : INotifyPropertyChanged
 {
+    private string _filePath = string.Empty;
+    private GameEdition _gameEdition;
+    private bool _isApplyEnabled;
+    private bool _isBedrockLevelDat;
+    private bool _isFilterEnabled;
+    private bool _isInfoEnabled;
+    private bool _isSaveEnabled;
+    private bool _isSearchBoxEnabled;
+    private int _nodeFilterIndex;
+    private ObservableCollection<NbtNode> _nodes = [];
+    private string _searchBoxText = string.Empty;
+    private TreeViewNode? _selectedNode;
+
     public TreeViewPageViewModel()
     {
         RegisterMessages();
@@ -42,30 +55,6 @@ public sealed partial class TreeViewPageViewModel : INotifyPropertyChanged
         AddNodeCommand = new AsyncRelayCommand<NbtTagEnum>(AddNode);
     }
 
-    /// <summary>
-    /// 注册消息队列
-    /// </summary>
-    private void RegisterMessages()
-    {
-        // 「选中节点改动」消息
-        WeakReferenceMessenger.Default.Register<ValueChangedMessage<TreeViewNode>>(this,
-            (_, v) => _selectedNode = v.Value);
-        // 「排序方式改动」消息
-        WeakReferenceMessenger.Default.Register<SettingsValueChangedMessage<SortType>>(this,
-            (_, v) => ApplySort(v.Value));
-    }
-
-
-    public event PropertyChangedEventHandler? PropertyChanged;
-    private ObservableCollection<NbtNode> _nodes = [];
-    private bool _isSaveEnabled;
-    private bool _isApplyEnabled;
-    private bool _isInfoEnabled;
-    private bool _isFilterEnabled;
-    private bool _isSearchBoxEnabled;
-    private int _nodeFilterIndex;
-    private string _searchBoxText = string.Empty;
-
     public int NodeFilterIndex
     {
         get => _nodeFilterIndex;
@@ -76,10 +65,6 @@ public sealed partial class TreeViewPageViewModel : INotifyPropertyChanged
         }
     }
 
-    private string _filePath = string.Empty;
-    private bool _isBedrockLevelDat;
-    private TreeViewNode? _selectedNode;
-    private GameEdition _gameEdition;
     public IAsyncRelayCommand<string> LoadFileCommand { get; }
     public IAsyncRelayCommand SaveFileCommand { get; }
     public IAsyncRelayCommand ApplyFileCommand { get; }
@@ -134,6 +119,22 @@ public sealed partial class TreeViewPageViewModel : INotifyPropertyChanged
     }
 
 
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    /// <summary>
+    ///     注册消息队列
+    /// </summary>
+    private void RegisterMessages()
+    {
+        // 「选中节点改动」消息
+        WeakReferenceMessenger.Default.Register<ValueChangedMessage<TreeViewNode>>(this,
+            (_, v) => _selectedNode = v.Value);
+        // 「排序方式改动」消息
+        WeakReferenceMessenger.Default.Register<SettingsValueChangedMessage<Sort>>(this,
+            (_, v) => ApplySort(v.Value));
+    }
+
+
     #region INotifyPropertyChanged
 
     private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
@@ -152,7 +153,7 @@ public sealed partial class TreeViewPageViewModel : INotifyPropertyChanged
 }
 
 /// <summary>
-/// 文件操作、
+///     文件操作、
 /// </summary>
 public sealed partial class TreeViewPageViewModel
 {
@@ -357,7 +358,7 @@ public sealed partial class TreeViewPageViewModel
 }
 
 /// <summary>
-/// 界面更新、
+///     界面更新、
 /// </summary>
 public sealed partial class TreeViewPageViewModel
 {
@@ -419,7 +420,7 @@ public sealed partial class TreeViewPageViewModel
     /// <summary> 展示 NBT 文件信息 </summary>
     private async Task ShowFileInfo()
     {
-        var content = new NbtFileInfoContent(_filePath, _nodes.First().Tag.GetBytes().Length, _gameEdition,
+        var content = new FileInfoContent(_filePath, _nodes.First().Tag.GetBytes().Length, _gameEdition,
             _nodes.First().Tag.IsBigEndian);
         await DialogService.ShowDialog("文件信息", "确认", content: content);
     }
@@ -456,25 +457,25 @@ public sealed partial class TreeViewPageViewModel
         IsApplyEnabled = true;
     }
 
-    private void ApplySort(SortType type)
+    private void ApplySort(Sort type)
     {
         // TODO)) 节点筛选
     }
 }
 
 /// <summary>
-/// 数据操作
+///     数据操作
 /// </summary>
 public sealed partial class TreeViewPageViewModel
 {
     /// <summary>
-    /// 添加节点
+    ///     添加节点
     /// </summary>
     private async Task AddNode(NbtTagEnum tagEnum)
     {
         if (_selectedNode == null)
         {
-            await DialogService.ShowDialog("添加失败", primary: "确认", description: "选择一个父节点或其子项");
+            await DialogService.ShowDialog("添加失败", "确认", description: "选择一个父节点或其子项");
             return;
         }
 
@@ -522,7 +523,7 @@ public sealed partial class TreeViewPageViewModel
         parentTag.AppendChild(tag, []);
 
         // 二、向节点树添加节点(UI)
-        ((NbtNode)parent.Content).Children.Add(new NbtNode(tag));
+        ((NbtNode)parent.Content).Children.Add(new NbtNode(tag, false, NodeChangeAction));
         OnPropertyChanged(nameof(Nodes));
 
         if (_filePath != string.Empty) IsApplyEnabled = true;

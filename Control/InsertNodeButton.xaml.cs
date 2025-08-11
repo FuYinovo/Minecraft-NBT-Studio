@@ -4,18 +4,18 @@ using NBT_Studio.Library.NBT_Parser.Enum;
 
 namespace NBT_Studio.Control;
 
-public sealed partial class NbtInsertButton
+public sealed partial class InsertNodeButton
 {
     private readonly DependencyProperty _buttonCommandDependencyProperty = DependencyProperty.Register(
-        nameof(ButtonCommand), typeof(ICommand), typeof(NbtInsertButton), new PropertyMetadata(null));
+        nameof(ButtonCommand), typeof(ICommand), typeof(InsertNodeButton), new PropertyMetadata(null));
 
     private readonly DependencyProperty _iconUriDependencyProperty = DependencyProperty.Register(
-        nameof(IconUri), typeof(string), typeof(NbtInsertButton), new PropertyMetadata(""));
+        nameof(IconUri), typeof(string), typeof(InsertNodeButton), new PropertyMetadata(""));
 
     private readonly DependencyProperty _labelDependencyProperty = DependencyProperty.Register(
-        nameof(Label), typeof(string), typeof(NbtInsertButton), new PropertyMetadata(""));
+        nameof(Label), typeof(string), typeof(InsertNodeButton), new PropertyMetadata(""));
 
-    public NbtInsertButton()
+    public InsertNodeButton()
     {
         InitializeComponent();
     }

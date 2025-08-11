@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <UserControl
-    x:Class="NBT_Studio.Control.Settings"
+    x:Class="NBT_Studio.Control.SettingsFlyout"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:community="using:CommunityToolkit.WinUI.Controls"
@@ -13,7 +13,7 @@
 
 
     <Grid>
-        <StackPanel Spacing="4" Width="360" DataContext="{x:Bind _viewModel}">
+        <StackPanel Spacing="4" Width="360" DataContext="{x:Bind _flyoutViewModel}">
             <community:SettingsExpander Header="界面" HeaderIcon="{ui:FontIcon Glyph=&#xE790;}">
                 <community:SettingsExpander.Items>
                     <community:SettingsCard Header="主题"
@@ -21,9 +21,9 @@
                                             Padding="20,20,160,20"
                                             Width="500">
                         <ComboBox SelectedValue="{Binding Theme, Mode=TwoWay}" SelectedValuePath="Tag">
-                            <ComboBoxItem Tag="{x:Bind enum:Theme.Default}" Content="系统"></ComboBoxItem>
-                            <ComboBoxItem Tag="{x:Bind enum:Theme.Dark}" Content="深色"></ComboBoxItem>
-                            <ComboBoxItem Tag="{x:Bind enum:Theme.Light}" Content="浅色"></ComboBoxItem>
+                            <ComboBoxItem Tag="{x:Bind enum:Theme.Default}" Content="系统" />
+                            <ComboBoxItem Tag="{x:Bind enum:Theme.Dark}" Content="深色" />
+                            <ComboBoxItem Tag="{x:Bind enum:Theme.Light}" Content="浅色" />
                         </ComboBox>
                     </community:SettingsCard>
                 </community:SettingsExpander.Items>
@@ -36,10 +36,10 @@
                                             Description="节点的排序方式"
                                             Padding="20,20,160,20"
                                             Width="500">
-                        <ComboBox SelectedValue="{Binding SortType, Mode=TwoWay}" SelectedValuePath="Tag">
-                            <ComboBoxItem Tag="{x:Bind enum:SortType.Default}" Content="默认"></ComboBoxItem>
-                            <ComboBoxItem Tag="{x:Bind enum:SortType.Alphabetical}" Content="首字母"></ComboBoxItem>
-                            <ComboBoxItem Tag="{x:Bind enum:SortType.ByType}" Content="类型"></ComboBoxItem>
+                        <ComboBox SelectedValue="{Binding Sort, Mode=TwoWay}" SelectedValuePath="Tag">
+                            <ComboBoxItem Tag="{x:Bind enum:Sort.Default}" Content="默认" />
+                            <ComboBoxItem Tag="{x:Bind enum:Sort.Alphabetical}" Content="首字母" />
+                            <ComboBoxItem Tag="{x:Bind enum:Sort.ByType}" Content="类型" />
                         </ComboBox>
                     </community:SettingsCard>
                 </community:SettingsExpander.Items>

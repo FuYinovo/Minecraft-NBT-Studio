@@ -6,7 +6,7 @@ namespace NBT_Studio.Control.Converter;
 /// <summary>
 ///     将一个长度大于 50 的字符串截断
 /// </summary>
-public partial class StringTruncateConverter : IValueConverter
+public class StringTruncateConverter : IValueConverter
 {
     private const int MaxLength = 50;
 

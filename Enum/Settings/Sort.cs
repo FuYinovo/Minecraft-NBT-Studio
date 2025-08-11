@@ -1,6 +1,6 @@
 ﻿namespace NBT_Studio.Enum;
 
-public enum SortType
+public enum Sort
 {
     Default,
     Alphabetical,

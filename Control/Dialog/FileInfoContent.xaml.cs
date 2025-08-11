@@ -3,9 +3,9 @@ using NBT_Studio.Enum;
 
 namespace NBT_Studio.Control.Content;
 
-public sealed partial class NbtFileInfoContent
+public sealed partial class FileInfoContent
 {
-    public NbtFileInfoContent(string filePath, int fileLength, GameEdition gameEdition, bool isBigEndian)
+    public FileInfoContent(string filePath, int fileLength, GameEdition gameEdition, bool isBigEndian)
     {
         FilePath = filePath;
         FileLength = fileLength;

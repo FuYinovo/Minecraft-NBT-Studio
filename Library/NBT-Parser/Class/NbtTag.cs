@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using NBT_Studio.Library.NBT_Parser.Enum;
@@ -18,7 +17,6 @@ public class NbtTag : ICloneable
     public readonly NbtTagEnum Tag;
     private Memory<byte> _bytes; // 不包含子元素 (终止于「首个子元素头部 - 1」)
     private string _floatValueTemp = string.Empty;
-    public bool IsRemoved { get; private set; }
     internal List<NbtTag> Children;
     public bool IsListDirectElement; // 便于构造树形结构，避免单元素(伪)列表)
     public string? Name;
@@ -75,6 +73,8 @@ public class NbtTag : ICloneable
         IsListDirectElement = isListDirectElement;
     }
 
+    public bool IsRemoved { get; private set; }
+
     /// <summary>
     ///     拷贝自身
     /// </summary>
@@ -95,7 +95,7 @@ public class NbtTag : ICloneable
     ///     DictB{ List[Int, Int] }
     ///     DictC{ IntArray }
     /// }
-    ///
+    /// 
     /// </code>
     ///     若要获取 IntArray 标签
     ///     <code>
@@ -129,7 +129,7 @@ public class NbtTag : ICloneable
     ///     DictB{ List[Int, Int] }
     ///     DictC{ IntArray }
     /// }
-    ///
+    /// 
     /// </code>
     ///     若要移除 IntArray 标签
     ///     <code>
@@ -162,7 +162,7 @@ public class NbtTag : ICloneable
     }
 
     /// <summary>
-    /// 移除自身
+    ///     移除自身
     /// </summary>
     /// <remarks>仅将 IsRemoved 设为 true </remarks>
     public void RemoveSelf()
@@ -181,7 +181,7 @@ public class NbtTag : ICloneable
     ///     DictB{ List[Int, Int] }
     ///     DictC{ IntArray }
     /// }
-    ///
+    /// 
     /// </code>
     ///     若要向 DictC 添加 LongArray 标签
     ///     <code>

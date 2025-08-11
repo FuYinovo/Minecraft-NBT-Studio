@@ -1,18 +1,12 @@
 using System;
-using System.Diagnostics;
 using System.Text.RegularExpressions;
-using Windows.UI;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Media;
 using NBT_Studio.Library.NBT_Parser.Enum;
 
 namespace NBT_Studio.Control.Content;
 
 public sealed partial class AddNodeContent
 {
-    public string NodeName { get; set; } = string.Empty;
-    public object NodeValue { get; set; } = string.Empty;
-    public NbtTagEnum ChildrenTag { get; set; } = NbtTagEnum.Unknown;
     private readonly NbtTagEnum _tagEnum;
     public Action<bool>? DialogOkButtonEnabledSetter;
 
@@ -21,6 +15,10 @@ public sealed partial class AddNodeContent
         _tagEnum = tagEnum;
         InitializeComponent();
     }
+
+    public string NodeName { get; set; } = string.Empty;
+    public object NodeValue { get; set; } = string.Empty;
+    public NbtTagEnum ChildrenTag { get; set; } = NbtTagEnum.Unknown;
 
     private void TextBox_OnTextChanged(object sender, TextChangedEventArgs e)
     {

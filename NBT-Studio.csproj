@@ -45,7 +45,7 @@
     <ItemGroup>
         <PackageReference Include="CommunityToolkit.Labs.WinUI.TokenView" Version="0.1.250731-build.2197"/>
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0"/>
-        <PackageReference Include="CommunityToolkit.WinUI.Controls.SettingsControls" Version="8.2.250402" />
+        <PackageReference Include="CommunityToolkit.WinUI.Controls.SettingsControls" Version="8.2.250402"/>
         <PackageReference Include="CommunityToolkit.WinUI.Controls.Sizers" Version="8.2.250402"/>
         <PackageReference Include="CommunityToolkit.WinUI.Controls.TabbedCommandBar" Version="8.2.250402"/>
         <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.4654"/>
@@ -55,18 +55,18 @@
         <Folder Include="Library\"/>
     </ItemGroup>
     <ItemGroup>
-        <Page Update="Control\Content\NbtFileInfoContent.xaml">
+        <Page Update="Control\Content\FileInfoContent.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
         <Page Update="Control\Content\RenameNodeContent.xaml">
-          <SubType>Designer</SubType>
+            <SubType>Designer</SubType>
         </Page>
         <Page Update="Control\Content\AddNodeContent.xaml">
-          <SubType>Designer</SubType>
+            <SubType>Designer</SubType>
         </Page>
     </ItemGroup>
     <ItemGroup>
-        <Page Update="Control\NbtInsertButton.xaml">
+        <Page Update="Control\InsertNodeButton.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
     </ItemGroup>

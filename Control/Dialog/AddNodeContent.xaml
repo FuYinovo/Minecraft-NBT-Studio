@@ -11,17 +11,17 @@
     <Grid>
         <StackPanel Spacing="16">
             <!-- 提供边框笔刷 -->
-            <TextBox Visibility="Collapsed" x:Name="RedBorder" BorderBrush="#FF5370"></TextBox>
-            <TextBox Visibility="Collapsed" x:Name="DefaultBorder"></TextBox>
+            <TextBox Visibility="Collapsed" x:Name="RedBorder" BorderBrush="#FF5370" />
+            <TextBox Visibility="Collapsed" x:Name="DefaultBorder" />
 
             <TextBox Header="名称"
                      PlaceholderText="可选"
-                     Text="{x:Bind NodeName, Mode=TwoWay}"></TextBox>
+                     Text="{x:Bind NodeName, Mode=TwoWay}" />
             <TextBox x:Name="ValueTextBox"
                      Header="值"
                      PlaceholderText="必须"
                      Text="{x:Bind NodeValue, Mode=TwoWay}"
-                     TextChanged="TextBox_OnTextChanged"></TextBox>
+                     TextChanged="TextBox_OnTextChanged" />
         </StackPanel>
     </Grid>
 </UserControl>

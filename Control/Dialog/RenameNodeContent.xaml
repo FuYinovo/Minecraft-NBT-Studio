@@ -10,7 +10,7 @@
 
     <Grid>
         <StackPanel Spacing="16">
-            <TextBox Header="名称" PlaceholderText="输入新的名称" Text="{x:Bind NewName, Mode=TwoWay}"></TextBox>
+            <TextBox Header="名称" PlaceholderText="输入新的名称" Text="{x:Bind NewName, Mode=TwoWay}" />
         </StackPanel>
     </Grid>
 </UserControl>
