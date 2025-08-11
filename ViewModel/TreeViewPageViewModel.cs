@@ -13,7 +13,6 @@ using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using NBT_Studio.Control.Content;
 using NBT_Studio.Enum;
 using NBT_Studio.Library.NBT_Parser.Class;
 using NBT_Studio.Library.NBT_Parser.Enum;
@@ -129,7 +128,7 @@ public sealed partial class TreeViewPageViewModel : INotifyPropertyChanged
     private void RegisterMessages()
     {
         // 「选中节点改动」消息
-        WeakReferenceMessenger.Default.Register<ValueChangedMessage<TreeViewNode>>(this,
+        WeakReferenceMessenger.Default.Register<SelectedNodeChangedMessage>(this,
             (_, v) => _selectedNode = v.Value);
         // 「排序方式改动」消息
         WeakReferenceMessenger.Default.Register<SettingsValueChangedMessage<Sort>>(this,
@@ -485,11 +484,24 @@ public sealed partial class TreeViewPageViewModel
             return;
         }
 
+        // 确认父类目标（若「选中」是列表或字典，则为自身添加子项，否则为父节点添加子项）
+        var parent = ((NbtNode)_selectedNode.Content).TagEnum is NbtTagEnum.Dictionary or NbtTagEnum.List
+            ? (NbtNode)_selectedNode.Content
+            : (NbtNode)_selectedNode.Parent.Content;
+
+        // 合法性判断
+        if (parent.TagEnum == NbtTagEnum.List && parent.Tag.ChildrenTag != tagEnum)
+        {
+            await DialogService.ShowDialog("添加失败", primary: "确认",
+                description: $"列表<{parent.Tag.ChildrenTag}> 不允许添加 <{tagEnum}> 节点");
+            return;
+        }
+
         // 初始化弹窗
         var content = new AddNodeContent(tagEnum);
         var dialog = DialogService.GetDialog($"添加「{tagEnum}」节点", "确认", close: "取消", content: content);
         content.DialogOkButtonEnabledSetter = b => dialog.IsPrimaryButtonEnabled = b;
-        dialog.IsPrimaryButtonEnabled = false;
+        dialog.IsPrimaryButtonEnabled = tagEnum is NbtTagEnum.List or NbtTagEnum.Dictionary;
 
         // 获取输入的名称、值
         var choice = await dialog.ShowAsync();
@@ -505,11 +517,6 @@ public sealed partial class TreeViewPageViewModel
                 GameEdition.Bedrock => false,
                 _ => throw new Exception($"未知游戏版本[{_gameEdition}]")
             });
-        // 若「选中」是列表或字典，则为自身添加子项，否则为父节点添加子项
-        var parent = ((NbtNode)_selectedNode.Content).TagEnum is NbtTagEnum.Dictionary or NbtTagEnum.List
-            ? _selectedNode
-            : _selectedNode.Parent;
-        var parentTag = ((NbtNode)parent.Content).Tag;
         var tag = tagEnum switch
         {
             NbtTagEnum.Byte => builder.Byte(name, byte.Parse((string)value)),
@@ -526,10 +533,10 @@ public sealed partial class TreeViewPageViewModel
             NbtTagEnum.LongArray => builder.LongArray(name, (long[])value),
             _ => throw new ArgumentOutOfRangeException(nameof(tagEnum), tagEnum, null)
         };
-        parentTag.AppendChild(tag, []);
+        parent.Tag.AppendChild(tag, []);
 
         // 二、向节点树添加节点(UI)
-        ((NbtNode)parent.Content).Children.Add(new NbtNode(tag, false, NodeChangeAction));
+        parent.Children.Add(new NbtNode(tag, false, NodeChangeAction));
         OnPropertyChanged(nameof(Nodes));
 
         if (_filePath != string.Empty) IsApplyEnabled = true;

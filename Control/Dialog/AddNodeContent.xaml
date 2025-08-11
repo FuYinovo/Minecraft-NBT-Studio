@@ -6,22 +6,40 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:enum="using:NBT_Studio.Library.NBT_Parser.Enum"
     mc:Ignorable="d">
 
     <Grid>
         <StackPanel Spacing="16">
             <!-- 提供边框笔刷 -->
-            <TextBox Visibility="Collapsed" x:Name="RedBorder" BorderBrush="#FF5370"/>
-            <TextBox Visibility="Collapsed" x:Name="DefaultBorder" />
+            <TextBox Visibility="Collapsed" x:Name="BorderRed" BorderBrush="#FF5370" />
+            <TextBox Visibility="Collapsed" x:Name="BorderDefault" />
 
             <TextBox Header="名称"
                      PlaceholderText="可选"
                      Text="{x:Bind NodeName, Mode=TwoWay}" />
-            <TextBox x:Name="GenericValueInput"
+            <TextBox x:Name="GenericValue"
                      Header="值"
                      PlaceholderText="必须"
                      Text="{x:Bind NodeValue, Mode=TwoWay}"
-                     TextChanged="TextBox_OnTextChanged"/>
+                     TextChanged="TextBox_OnTextChanged" />
+            <ComboBox
+                x:Name="ChildrenType"
+                SelectedItem="{x:Bind SelectedChildrenTagItem, Mode=TwoWay}"
+                Header="类型">
+                <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.Byte}">字节</ComboBoxItem>
+                <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.Short}">短整型</ComboBoxItem>
+                <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.Long}">长整型</ComboBoxItem>
+                <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.Float}">单精度浮点</ComboBoxItem>
+                <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.Double}">双精度浮点</ComboBoxItem>
+                <ComboBoxItem x:Name="DefaultChildrenTag"
+                              Tag="{x:Bind enum:NbtTagEnum.String}" >字符串</ComboBoxItem>
+                <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.ByteArray}">字节数组</ComboBoxItem>
+                <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.IntArray}">整型数组</ComboBoxItem>
+                <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.LongArray}">长整型数组</ComboBoxItem>
+                <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.List}">列表</ComboBoxItem>
+                <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.Dictionary}">字典</ComboBoxItem>
+            </ComboBox>
         </StackPanel>
     </Grid>
 </UserControl>

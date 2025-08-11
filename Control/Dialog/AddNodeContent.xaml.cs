@@ -8,35 +8,43 @@ namespace NBT_Studio.Control.Dialog;
 
 public sealed partial class AddNodeContent
 {
-    private readonly NbtTagEnum _tagEnum;
     public Action<bool>? DialogOkButtonEnabledSetter;
     public string NodeName { get; set; } = string.Empty;
     public object NodeValue { get; set; } = string.Empty;
-    public NbtTagEnum ChildrenTag { get; set; } = NbtTagEnum.Unknown;
+    public NbtTagEnum ChildrenTag => (NbtTagEnum)SelectedChildrenTagItem.Tag;
+    private ComboBoxItem SelectedChildrenTagItem { get; set; } = null!;
+    public NbtTagEnum SelectedChildrenTagValue { get; set; }
+
+    private readonly NbtTagEnum _tagEnum;
 
     public AddNodeContent(NbtTagEnum tagEnum)
     {
         _tagEnum = tagEnum;
-        if (tagEnum is NbtTagEnum.Dictionary or NbtTagEnum.List) GenericValueInput.Visibility = Visibility.Collapsed;
         InitializeComponent();
+        InitControls();
     }
 
+    private void InitControls()
+    {
+        SelectedChildrenTagItem = DefaultChildrenTag;
+        if (_tagEnum is NbtTagEnum.Dictionary or NbtTagEnum.List) GenericValue.Visibility = Visibility.Collapsed;
+        if (_tagEnum is not NbtTagEnum.List) ChildrenType.Visibility = Visibility.Collapsed;
+    }
 
     private void TextBox_OnTextChanged(object sender, TextChangedEventArgs e)
     {
         if (sender is not TextBox textBox) return;
         if (!IsValid(_tagEnum, textBox.Text))
         {
-            GenericValueInput.BorderBrush = RedBorder.BorderBrush;
+            GenericValue.BorderBrush = BorderRed.BorderBrush;
             DialogOkButtonEnabledSetter?.Invoke(false);
         }
         else
         {
-            GenericValueInput.BorderBrush = DefaultBorder.BorderBrush;
+            GenericValue.BorderBrush = BorderDefault.BorderBrush;
             DialogOkButtonEnabledSetter?.Invoke(true);
         }
     }
-
 
     private static bool IsValid(NbtTagEnum tagEnum, string value)
     {

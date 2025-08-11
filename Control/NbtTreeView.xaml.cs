@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.Messaging.Messages;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
+using NBT_Studio.Message;
 using NBT_Studio.Model;
 
 namespace NBT_Studio.Control;
@@ -30,7 +31,7 @@ public sealed partial class NbtTreeView
     private void UpdateSelectedNode(TreeView sender, TreeViewSelectionChangedEventArgs args)
     {
         WeakReferenceMessenger.Default.Send(
-            new ValueChangedMessage<TreeViewNode>(sender.SelectedNode));
+            new SelectedNodeChangedMessage(sender.SelectedNode));
     }
 
     #region Properties
