@@ -14,6 +14,7 @@ using CommunityToolkit.Mvvm.Messaging.Messages;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using NBT_Studio.Enum;
+using NBT_Studio.Enum.Settings;
 using NBT_Studio.Library.NBT_Parser.Class;
 using NBT_Studio.Library.NBT_Parser.Enum;
 using NBT_Studio.Library.NBT_Parser.Utils;
@@ -452,7 +453,7 @@ public sealed partial class TreeViewPageViewModel
                 // 更新其父节点的子项数量显示
                 foreach (var child in Nodes.First().GetChildrenAll()) child.UpdateChildrenCount();
                 break;
-            case NodeChangeType.Revalue:
+            case NodeChangeType.SetValue:
                 break;
             default:
                 throw new Exception("无法确定节点修改操作类型");

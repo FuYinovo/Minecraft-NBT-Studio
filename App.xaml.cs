@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
 using NBT_Studio.Enum;
+using NBT_Studio.Enum.Settings;
 using NBT_Studio.Message;
 
 namespace NBT_Studio;

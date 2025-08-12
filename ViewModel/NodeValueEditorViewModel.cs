@@ -28,46 +28,77 @@ public sealed partial class NodeValueEditorViewModel : INotifyPropertyChanged
     {
         if (value == null) return;
         var node = (NbtNode)value.Content;
+        TagEnum = node.TagEnum;
+        ChildrenTagEnum = node.Tag.ChildrenTag;
+
 
         Name = node.Name;
         Value = node.Value;
-        Type = node.TagEnum;
-        ChildrenType = node.Tag.ChildrenTag;
         Length = node.Value.Length;
-        AllowChildren = NbtTagEnumExtensions.IsCollection(node.TagEnum);
+        AllowChildren = NbtTagEnumExtensions.IsCollection(TagEnum);
         AllowDelete = !node.IsRootNode;
-        AllowNegative = NbtTagEnumExtensions.AllowNegative(node.TagEnum);
-        AllowDecimal = NbtTagEnumExtensions.AllowDecimal(node.TagEnum);
-        MaxValue = node.TagEnum switch
+        AllowNegative = NbtTagEnumExtensions.AllowNegative(TagEnum);
+        AllowDecimal = NbtTagEnumExtensions.AllowDecimal(TagEnum);
+        TypeIndex = GetNbtTagEnumComboBoxIndex(TagEnum);
+        ChildrenTypeIndex = GetNbtTagEnumComboBoxIndex(ChildrenTagEnum);
+        MaxValue = TagEnum switch
         {
-            NbtTagEnum.Byte => byte.MaxValue.ToString(),
+            NbtTagEnum.Byte
+                or NbtTagEnum.ByteArray => byte.MaxValue.ToString(),
+            NbtTagEnum.Int
+                or NbtTagEnum.IntArray => int.MaxValue.ToString(),
+            NbtTagEnum.Long
+                or NbtTagEnum.LongArray => long.MaxValue.ToString(),
             NbtTagEnum.Short => short.MaxValue.ToString(),
-            NbtTagEnum.Int => int.MaxValue.ToString(),
-            NbtTagEnum.Long => long.MaxValue.ToString(),
             NbtTagEnum.Float => float.MaxValue.ToString(),
             NbtTagEnum.Double => double.MaxValue.ToString(),
             _ => string.Empty
         };
 
-        MinValue = node.TagEnum switch
+        MinValue = TagEnum switch
         {
-            NbtTagEnum.Byte => byte.MinValue.ToString(),
+            NbtTagEnum.Byte
+                or NbtTagEnum.ByteArray => byte.MinValue.ToString(),
+            NbtTagEnum.Int
+                or NbtTagEnum.IntArray => int.MinValue.ToString(),
+            NbtTagEnum.Long
+                or NbtTagEnum.LongArray => long.MinValue.ToString(),
             NbtTagEnum.Short => short.MinValue.ToString(),
-            NbtTagEnum.Int => int.MinValue.ToString(),
-            NbtTagEnum.Long => long.MinValue.ToString(),
             NbtTagEnum.Float => float.MinValue.ToString(),
             NbtTagEnum.Double => double.MinValue.ToString(),
             _ => string.Empty
         };
 
 
-        IsChildrenTypeEnabled = NbtTagEnumExtensions.IsCollection(Type);
-        IsMaxValueEnabled = NbtTagEnumExtensions.IsNumber(Type);
-        IsMinValueEnabled = NbtTagEnumExtensions.IsNumber(Type);
-        IsAllowNegativeEnabled = NbtTagEnumExtensions.IsNumber(Type);
-        IsAllowDecimalEnabled = NbtTagEnumExtensions.IsNumber(Type);
+        var isNumber = NbtTagEnumExtensions.IsNumber(TagEnum) || NbtTagEnumExtensions.IsArray(TagEnum);
+        IsChildrenTypeEnabled = TagEnum == NbtTagEnum.List;
+        IsMaxValueEnabled = isNumber;
+        IsMinValueEnabled = isNumber;
+        IsAllowNegativeEnabled = isNumber;
+        IsAllowDecimalEnabled = isNumber;
 
-        UpdateValueSection(node.TagEnum);
+        UpdateValueSection(TagEnum);
+        return;
+
+        int GetNbtTagEnumComboBoxIndex(NbtTagEnum tag)
+        {
+            return tag switch
+            {
+                NbtTagEnum.Byte => 0,
+                NbtTagEnum.Short => 1,
+                NbtTagEnum.Int => 2,
+                NbtTagEnum.Long => 3,
+                NbtTagEnum.Float => 4,
+                NbtTagEnum.Double => 5,
+                NbtTagEnum.ByteArray => 7,
+                NbtTagEnum.String => 6,
+                NbtTagEnum.List => 10,
+                NbtTagEnum.Dictionary => 11,
+                NbtTagEnum.IntArray => 8,
+                NbtTagEnum.LongArray => 9,
+                _ => -1
+            };
+        }
     }
 
     private void UpdateValueSection(NbtTagEnum tagEnum)
@@ -93,6 +124,8 @@ public sealed partial class NodeValueEditorViewModel : INotifyPropertyChanged
     private Visibility _genericValueSectionVisibility = Visibility.Collapsed;
     private Visibility _arrayValueSectionVisibility = Visibility.Collapsed;
 
+    public NbtTagEnum TagEnum { get; private set; } = NbtTagEnum.Unknown;
+    public NbtTagEnum ChildrenTagEnum { get; private set; } = NbtTagEnum.Unknown;
 
     public Visibility GenericValueSectionVisibility
     {
@@ -105,6 +138,7 @@ public sealed partial class NodeValueEditorViewModel : INotifyPropertyChanged
         get => _unselectedScreenVisibility;
         private set => SetField(ref _unselectedScreenVisibility, value);
     }
+
     public Visibility SelectedScreenVisibility
     {
         get => _selectedScreenVisibility;
@@ -123,8 +157,8 @@ public sealed partial class NodeValueEditorViewModel : INotifyPropertyChanged
 
     private string _name = string.Empty;
     private string _value = string.Empty;
-    private NbtTagEnum _type = NbtTagEnum.Unknown;
-    private NbtTagEnum _childrenType = NbtTagEnum.Unknown;
+    private int _typeIndex = -1;
+    private int _childrenTypeIndex = -1;
     private int _length;
     private string _maxValue = string.Empty;
     private string _minValue = string.Empty;
@@ -145,16 +179,16 @@ public sealed partial class NodeValueEditorViewModel : INotifyPropertyChanged
         set => SetField(ref _value, value);
     }
 
-    public NbtTagEnum Type
+    public int TypeIndex
     {
-        get => _type;
-        set => SetField(ref _type, value);
+        get => _typeIndex;
+        set => SetField(ref _typeIndex, value);
     }
 
-    public NbtTagEnum ChildrenType
+    public int ChildrenTypeIndex
     {
-        get => _childrenType;
-        set => SetField(ref _childrenType, value);
+        get => _childrenTypeIndex;
+        set => SetField(ref _childrenTypeIndex, value);
     }
 
     public int Length

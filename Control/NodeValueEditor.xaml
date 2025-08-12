@@ -8,6 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:community="using:CommunityToolkit.WinUI.Controls"
     xmlns:enum="using:NBT_Studio.Library.NBT_Parser.Enum"
+    xmlns:struct="using:NBT_Studio.Struct"
     mc:Ignorable="d">
 
     <Grid DataContext="{x:Bind _viewModel}">
@@ -22,7 +23,7 @@
             </Border>
         </Border>
 
-        <community:TabbedCommandBar SizeChanged="CommandBarSizeChanged" >
+        <community:TabbedCommandBar SizeChanged="CommandBarSizeChanged">
             <community:TabbedCommandBar.MenuItems>
                 <community:TabbedCommandBarItem Header="数据编辑器" IsDynamicOverflowEnabled="False">
                     <AppBarElementContainer Visibility="{Binding SelectedScreenVisibility}">
@@ -41,10 +42,12 @@
 
                                     <Grid Grid.Column="0">
                                         <StackPanel Spacing="6">
-                                            <ComboBox Header="类型" Width="130" SelectedValue="{Binding Type}"
-                                                      SelectedValuePath="Tag">
+                                            <ComboBox Header="类型" Width="130"
+                                                      SelectedIndex="{Binding TypeIndex, Mode=TwoWay}"
+                                                      DropDownOpened="ComboBox_Type_Prohibit">
                                                 <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.Byte}">字节</ComboBoxItem>
                                                 <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.Short}">短整型</ComboBoxItem>
+                                                <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.Int}">整型</ComboBoxItem>
                                                 <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.Long}">长整型</ComboBoxItem>
                                                 <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.Float}">单精度浮点</ComboBoxItem>
                                                 <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.Double}">双精度浮点</ComboBoxItem>
@@ -55,10 +58,13 @@
                                                 <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.List}">列表</ComboBoxItem>
                                                 <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.Dictionary}">字典</ComboBoxItem>
                                             </ComboBox>
-                                            <ComboBox Header="子项类型" Width="130" SelectedValue="{Binding ChildrenType}"
-                                                      SelectedValuePath="Tag" IsEnabled="{Binding IsChildrenTypeEnabled}">
+                                            <ComboBox Header="子项类型" Width="130"
+                                                      SelectedIndex="{Binding ChildrenTypeIndex, Mode=TwoWay}"
+                                                      IsEnabled="{Binding IsChildrenTypeEnabled}"
+                                                      DropDownOpened="ComboBox_ChildrenType_Prohibit">
                                                 <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.Byte}">字节</ComboBoxItem>
                                                 <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.Short}">短整型</ComboBoxItem>
+                                                <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.Int}">整型</ComboBoxItem>
                                                 <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.Long}">长整型</ComboBoxItem>
                                                 <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.Float}">单精度浮点</ComboBoxItem>
                                                 <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.Double}">双精度浮点</ComboBoxItem>
@@ -81,7 +87,7 @@
                                             </TextBox>
                                             <TextBox Header="最小值" Width="130"
                                                      IsReadOnly="True"
-                                                     Margin="0,0,0,20" 
+                                                     Margin="0,0,0,20"
                                                      BorderThickness="0" Text="{Binding MinValue}"
                                                      IsEnabled="{Binding IsMinValueEnabled}">
                                             </TextBox>

@@ -1,4 +1,4 @@
-﻿namespace NBT_Studio.Enum;
+﻿namespace NBT_Studio.Enum.Settings;
 
 public enum Sort
 {

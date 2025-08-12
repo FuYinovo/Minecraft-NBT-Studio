@@ -4,5 +4,5 @@ public enum NodeChangeType
 {
     Rename,
     Remove,
-    Revalue
+    SetValue
 }
