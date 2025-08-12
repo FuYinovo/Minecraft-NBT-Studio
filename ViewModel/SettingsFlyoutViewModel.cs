@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Windows.Storage;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
 using NBT_Studio.Enum.Settings;
@@ -13,7 +13,7 @@ using NBT_Studio.Message;
 
 namespace NBT_Studio.ViewModel;
 
-public sealed class SettingsFlyoutViewModel : INotifyPropertyChanged
+public partial class SettingsFlyoutViewModel : ObservableObject
 {
     public SettingsFlyoutViewModel()
     {
@@ -59,69 +59,35 @@ public sealed class SettingsFlyoutViewModel : INotifyPropertyChanged
     }
 
 
-    #region ApplySettings
-
-    private static void ApplyTheme(Theme value)
-    {
-        if (App.MainWindow == null || App.MainWindow.Content is not FrameworkElement window) return;
-
-        window.RequestedTheme = value switch
-        {
-            Theme.Default => ElementTheme.Default,
-            Theme.Dark => ElementTheme.Dark,
-            Theme.Light => ElementTheme.Light,
-            _ => throw new ArgumentOutOfRangeException(nameof(value), value, null)
-        };
-    }
-
-    #endregion
-
     #region Private Properties
 
     private readonly JsonSerializerOptions _jsonSerializerOptions = new() { WriteIndented = true };
     private static readonly Uri SettingsFileUri = new("ms-appx:///Assets/Config/Settings.json");
-    private Sort _sort = Sort.Default;
-    private Theme _theme = Theme.Default;
     private Dictionary<string, int> _settings = new();
     private readonly Dictionary<string, Action<int>> _nameToValueSetter;
 
     #endregion
 
-    #region Public Properties
+    #region Settings Properties
+
+    private Sort _sort = Sort.Default;
+    private Theme _theme = Theme.Default;
 
     public Sort Sort
     {
         get => _sort;
-        set
-        {
-            SetField(ref _sort, value);
-            WeakReferenceMessenger.Default.Send(new SettingsValueChangedMessage<Sort>(value));
-            _ = UpdateSettingsFile();
-        }
+        set => SetFieldForSettings(ref _sort, value, Sort);
     }
 
     public Theme Theme
     {
         get => _theme;
-        set
-        {
-            SetField(ref _theme, value);
-            WeakReferenceMessenger.Default.Send(new SettingsValueChangedMessage<Theme>(value));
-            _ = UpdateSettingsFile();
-            ApplyTheme(value);
-        }
+        set => SetFieldForSettings(ref _theme, value, Theme);
     }
 
     #endregion
 
-    #region INotifyPropertyChanged
-
-    public event PropertyChangedEventHandler? PropertyChanged;
-
-    private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
+    # region INotifyPropertyChanged
 
     private void SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
     {
@@ -130,5 +96,13 @@ public sealed class SettingsFlyoutViewModel : INotifyPropertyChanged
         OnPropertyChanged(propertyName);
     }
 
-    #endregion INotifyPropertyChanged
+    private void SetFieldForSettings<T, TE>(ref T field, T value, TE settingsEnum,
+        [CallerMemberName] string? propertyName = null) where TE : System.Enum
+    {
+        SetField(ref field, value, propertyName);
+        WeakReferenceMessenger.Default.Send(new SettingsValueChangedMessage<TE>(settingsEnum));
+        _ = UpdateSettingsFile();
+    }
+
+    #endregion NotifyPropertyChanged
 }

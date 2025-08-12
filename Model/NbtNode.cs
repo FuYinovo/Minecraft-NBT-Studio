@@ -1,35 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using NBT_Studio.Enum;
 using NBT_Studio.Library.NBT_Parser.Class;
 using NBT_Studio.Library.NBT_Parser.Enum;
+using NBT_Studio.Message;
 using NBT_Studio.Service;
 using RenameNodeContent = NBT_Studio.Control.Dialog.RenameNodeContent;
 
 namespace NBT_Studio.Model;
 
 // 属性、构造方法
-public sealed partial class NbtNode : INotifyPropertyChanged
+[SuppressMessage("CommunityToolkit.Mvvm.SourceGenerators.ObservablePropertyGenerator",
+    "MVVMTK0045:Using [ObservableProperty] on fields is not AOT compatible for WinRT")]
+public sealed partial class NbtNode : ObservableObject
 {
     /// <summary>
     ///     初始化属性
     /// </summary>
-    public NbtNode(NbtTag nbtTag, bool isRootNode = false,
-        Action<NbtNode, NodeChangeType>? applyNodeChangeWithUiRequest = null)
+    public NbtNode(NbtTag nbtTag, bool isRootNode = false)
     {
-        _applyNodeChangeWithUiRequest = applyNodeChangeWithUiRequest;
-
-        // Command
-        DeleteCommand = new AsyncRelayCommand(Delete);
-        RenameCommand = new AsyncRelayCommand(Rename);
         // NBT 标签
         Tag = nbtTag;
         TagEnum = Tag.Tag;
@@ -49,7 +46,7 @@ public sealed partial class NbtNode : INotifyPropertyChanged
         Icon = GetIconUri(TagEnum);
         // 节点子项
         foreach (var child in nbtTag.Children.Where(child => child.Tag != NbtTagEnum.End))
-            Children.Add(new NbtNode(child, false, _applyNodeChangeWithUiRequest));
+            Children.Add(new NbtNode(child));
         // 子项数量
         DisplayChildrenCount = $"<{Children.Count.ToString()}>";
         // 是否显示子项数量
@@ -80,56 +77,17 @@ public sealed partial class NbtNode : INotifyPropertyChanged
     public Visibility ChildrenCountVisibility { get; } = Visibility.Collapsed;
     public Visibility EqualMarkVisibility { get; } = Visibility.Collapsed;
     public ObservableCollection<NbtNode> Children { get; } = [];
-    public IAsyncRelayCommand DeleteCommand { get; }
-    public IAsyncRelayCommand RenameCommand { get; }
     public NbtTag Tag { get; }
     public NbtTagEnum TagEnum { get; }
     public string Value { get; }
     public string Icon { get; }
-    private readonly Action<NbtNode, NodeChangeType>? _applyNodeChangeWithUiRequest;
     public readonly bool IsRootNode;
-    private string _name = string.Empty;
 
-    private string _displayChildrenCount = string.Empty;
-    private Visibility _visibility = Visibility.Visible;
-
-    public Visibility Visibility
-    {
-        get => _visibility;
-        set => SetField(ref _visibility, value);
-    }
-
-    public string DisplayChildrenCount
-    {
-        get => _displayChildrenCount;
-        private set => SetField(ref _displayChildrenCount, value);
-    }
-
-    public string Name
-    {
-        get => _name;
-        private set => SetField(ref _name, value);
-    }
+    [ObservableProperty] private string _name = string.Empty;
+    [ObservableProperty] private string _displayChildrenCount = string.Empty;
+    [ObservableProperty] private Visibility _visibility = Visibility.Visible;
 
     # endregion Property
-
-    # region INotifyPropertyChanged
-
-    public event PropertyChangedEventHandler? PropertyChanged;
-
-    private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
-
-    private void SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
-    {
-        if (EqualityComparer<T>.Default.Equals(field, value)) return;
-        field = value;
-        OnPropertyChanged(propertyName);
-    }
-
-    #endregion
 }
 
 // 特殊属性获取方法
@@ -193,6 +151,7 @@ public sealed partial class NbtNode
     /// <summary>
     ///     删除节点
     /// </summary>
+    [RelayCommand]
     private async Task Delete()
     {
         if (IsRootNode)
@@ -202,12 +161,13 @@ public sealed partial class NbtNode
         }
 
         Tag.RemoveSelf();
-        _applyNodeChangeWithUiRequest?.Invoke(this, NodeChangeType.Remove);
+        WeakReferenceMessenger.Default.Send(new NodeChangedMessage((this, NodeChangeType.Remove)));
     }
 
     /// <summary>
     ///     重命名节点
     /// </summary>
+    [RelayCommand]
     private async Task Rename()
     {
         var content = new RenameNodeContent();
@@ -216,6 +176,6 @@ public sealed partial class NbtNode
 
         Tag.SetName(content.NewName);
         Name = content.NewName;
-        _applyNodeChangeWithUiRequest?.Invoke(this, NodeChangeType.Rename);
+        WeakReferenceMessenger.Default.Send(new NodeChangedMessage((this, NodeChangeType.Rename)));
     }
 }

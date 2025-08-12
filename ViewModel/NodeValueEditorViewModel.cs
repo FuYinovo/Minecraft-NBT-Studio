@@ -1,6 +1,5 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
+﻿using System.Diagnostics.CodeAnalysis;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Controls;
 using NBT_Studio.Library.NBT_Parser.Enum;
@@ -9,7 +8,9 @@ using NBT_Studio.Model;
 
 namespace NBT_Studio.ViewModel;
 
-public sealed partial class NodeValueEditorViewModel : INotifyPropertyChanged
+[SuppressMessage("CommunityToolkit.Mvvm.SourceGenerators.ObservablePropertyGenerator",
+    "MVVMTK0045:Using [ObservableProperty] on fields is not AOT compatible for WinRT")]
+public sealed partial class NodeValueEditorViewModel : ObservableObject
 {
     public NodeValueEditorViewModel()
     {
@@ -105,145 +106,23 @@ public sealed partial class NodeValueEditorViewModel : INotifyPropertyChanged
     public NbtTagEnum TagEnum { get; private set; } = NbtTagEnum.Unknown;
     public NbtTagEnum ChildrenTagEnum { get; private set; } = NbtTagEnum.Unknown;
 
+    [ObservableProperty] private string _name = string.Empty;
+    [ObservableProperty] private string _value = string.Empty;
+    [ObservableProperty] private int _typeIndex = -1;
+    [ObservableProperty] private int _childrenTypeIndex = -1;
+    [ObservableProperty] private int _length;
+    [ObservableProperty] private string _maxValue = string.Empty;
+    [ObservableProperty] private string _minValue = string.Empty;
+    [ObservableProperty] private bool _allowNegative;
+    [ObservableProperty] private bool _allowDecimal;
+    [ObservableProperty] private bool _allowChildren;
+    [ObservableProperty] private bool _allowDelete;
+
+    [ObservableProperty] private bool _isChildrenTypeEnabled;
+    [ObservableProperty] private bool _isMaxValueEnabled;
+    [ObservableProperty] private bool _isMinValueEnabled;
+    [ObservableProperty] private bool _isAllowNegativeEnabled;
+    [ObservableProperty] private bool _isAllowDecimalEnabled;
+
     #endregion
-
-    # region NodeProperties
-
-    private string _name = string.Empty;
-    private string _value = string.Empty;
-    private int _typeIndex = -1;
-    private int _childrenTypeIndex = -1;
-    private int _length;
-    private string _maxValue = string.Empty;
-    private string _minValue = string.Empty;
-    private bool _allowNegative;
-    private bool _allowDecimal;
-    private bool _allowChildren;
-    private bool _allowDelete;
-
-    public string Name
-    {
-        get => _name;
-        set => SetField(ref _name, value);
-    }
-
-    public string Value
-    {
-        get => _value;
-        set => SetField(ref _value, value);
-    }
-
-    public int TypeIndex
-    {
-        get => _typeIndex;
-        set => SetField(ref _typeIndex, value);
-    }
-
-    public int ChildrenTypeIndex
-    {
-        get => _childrenTypeIndex;
-        set => SetField(ref _childrenTypeIndex, value);
-    }
-
-    public int Length
-    {
-        get => _length;
-        set => SetField(ref _length, value);
-    }
-
-    public string MaxValue
-    {
-        get => _maxValue;
-        set => SetField(ref _maxValue, value);
-    }
-
-    public string MinValue
-    {
-        get => _minValue;
-        set => SetField(ref _minValue, value);
-    }
-
-    public bool AllowNegative
-    {
-        get => _allowNegative;
-        set => SetField(ref _allowNegative, value);
-    }
-
-    public bool AllowDecimal
-    {
-        get => _allowDecimal;
-        set => SetField(ref _allowDecimal, value);
-    }
-
-    public bool AllowChildren
-    {
-        get => _allowChildren;
-        set => SetField(ref _allowChildren, value);
-    }
-
-    public bool AllowDelete
-    {
-        get => _allowDelete;
-        set => SetField(ref _allowDelete, value);
-    }
-
-    # endregion NodeProperties
-
-    #region NodeProperties: IsEnabled
-
-    private bool _isChildrenTypeEnabled;
-    private bool _isMaxValueEnabled;
-    private bool _isMinValueEnabled;
-    private bool _isAllowNegativeEnabled;
-    private bool _isAllowDecimalEnabled;
-
-    public bool IsChildrenTypeEnabled
-    {
-        get => _isChildrenTypeEnabled;
-        set => SetField(ref _isChildrenTypeEnabled, value);
-    }
-
-    public bool IsMaxValueEnabled
-    {
-        get => _isMaxValueEnabled;
-        set => SetField(ref _isMaxValueEnabled, value);
-    }
-
-    public bool IsMinValueEnabled
-    {
-        get => _isMinValueEnabled;
-        set => SetField(ref _isMinValueEnabled, value);
-    }
-
-    public bool IsAllowNegativeEnabled
-    {
-        get => _isAllowNegativeEnabled;
-        set => SetField(ref _isAllowNegativeEnabled, value);
-    }
-
-    public bool IsAllowDecimalEnabled
-    {
-        get => _isAllowDecimalEnabled;
-        set => SetField(ref _isAllowDecimalEnabled, value);
-    }
-
-    #endregion NodeProperties: IsEnabled
-
-    # region INotifyPropertyChanged
-
-    public event PropertyChangedEventHandler? PropertyChanged;
-
-    private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
-
-    private void SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
-    {
-        if (EqualityComparer<T>.Default.Equals(field, value)) return;
-        field = value;
-        OnPropertyChanged(propertyName);
-    }
-
-    # endregion
 }

@@ -2,12 +2,13 @@
 using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Windows.Storage.Pickers;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
@@ -29,33 +30,23 @@ namespace NBT_Studio.ViewModel;
 /// <summary>
 ///     属性、构造方法
 /// </summary>
-public sealed partial class TreeViewPageViewModel : INotifyPropertyChanged
+[SuppressMessage("CommunityToolkit.Mvvm.SourceGenerators.ObservablePropertyGenerator",
+    "MVVMTK0045:Using [ObservableProperty] on fields is not AOT compatible for WinRT")]
+public sealed partial class TreeViewPageViewModel : ObservableObject
 {
-    private string _filePath = string.Empty;
-    private GameEdition _gameEdition;
-    private bool _isApplyEnabled;
-    private bool _isBedrockLevelDat;
-    private bool _isFilterEnabled;
-    private bool _isInfoEnabled;
-    private bool _isSaveEnabled;
-    private bool _isSearchBoxEnabled;
-    private int _nodeFilterIndex;
-    private ObservableCollection<NbtNode> _nodes = [];
+    [ObservableProperty] private string _filePath = string.Empty;
+    [ObservableProperty] private GameEdition _gameEdition;
+    [ObservableProperty] private bool _isApplyEnabled;
+    [ObservableProperty] private bool _isBedrockLevelDat;
+    [ObservableProperty] private bool _isFilterEnabled;
+    [ObservableProperty] private bool _isInfoEnabled;
+    [ObservableProperty] private bool _isSaveEnabled;
+    [ObservableProperty] private bool _isSearchBoxEnabled;
+    [ObservableProperty] private ObservableCollection<NbtNode> _nodes = [];
+    [ObservableProperty] private TreeViewNode? _selectedNode;
+    [ObservableProperty] private bool _waitingToSelectMaskVisibility = true;
     private string _searchBoxText = string.Empty;
-    private TreeViewNode? _selectedNode;
-    private bool _waitingToSelectMaskVisibility = true;
-
-    public TreeViewPageViewModel()
-    {
-        RegisterMessages();
-
-        LoadFileCommand = new AsyncRelayCommand<string>(LoadFile);
-        SaveFileCommand = new AsyncRelayCommand(SaveFile);
-        ApplyFileCommand = new AsyncRelayCommand(ApplyFile);
-        ShowFileInfoCommand = new AsyncRelayCommand(ShowFileInfo);
-        CreateFileCommand = new AsyncRelayCommand<string>(CreateFile);
-        AddNodeCommand = new AsyncRelayCommand<NbtTagEnum>(AddNode);
-    }
+    private int _nodeFilterIndex;
 
     public int NodeFilterIndex
     {
@@ -65,49 +56,6 @@ public sealed partial class TreeViewPageViewModel : INotifyPropertyChanged
             SetField(ref _nodeFilterIndex, value);
             ApplyFilter();
         }
-    }
-
-    public IAsyncRelayCommand<string> LoadFileCommand { get; }
-    public IAsyncRelayCommand SaveFileCommand { get; }
-    public IAsyncRelayCommand ApplyFileCommand { get; }
-    public IAsyncRelayCommand ShowFileInfoCommand { get; }
-    public IAsyncRelayCommand<string> CreateFileCommand { get; }
-    public IAsyncRelayCommand<NbtTagEnum> AddNodeCommand { get; }
-
-    public ObservableCollection<NbtNode> Nodes
-    {
-        get => _nodes;
-        set => SetField(ref _nodes, value);
-    }
-
-    public bool IsSaveEnabled
-    {
-        get => _isSaveEnabled;
-        set => SetField(ref _isSaveEnabled, value);
-    }
-
-    public bool IsFilterEnabled
-    {
-        get => _isFilterEnabled;
-        set => SetField(ref _isFilterEnabled, value);
-    }
-
-    public bool IsApplyEnabled
-    {
-        get => _isApplyEnabled;
-        set => SetField(ref _isApplyEnabled, value);
-    }
-
-    public bool IsInfoEnabled
-    {
-        get => _isInfoEnabled;
-        set => SetField(ref _isInfoEnabled, value);
-    }
-
-    public bool IsSearchBoxEnabled
-    {
-        get => _isSearchBoxEnabled;
-        set => SetField(ref _isSearchBoxEnabled, value);
     }
 
     public string SearchBoxText
@@ -120,14 +68,10 @@ public sealed partial class TreeViewPageViewModel : INotifyPropertyChanged
         }
     }
 
-    public bool WaitingToSelectMaskVisibility
+    public TreeViewPageViewModel()
     {
-        get => _waitingToSelectMaskVisibility;
-        set => SetField(ref _waitingToSelectMaskVisibility, value);
+        RegisterMessages();
     }
-
-
-    public event PropertyChangedEventHandler? PropertyChanged;
 
     /// <summary>
     ///     注册消息队列
@@ -138,20 +82,15 @@ public sealed partial class TreeViewPageViewModel : INotifyPropertyChanged
         WeakReferenceMessenger.Default.Register<SelectedNodeChangedMessage>(this,
             (_, v) =>
             {
-                _selectedNode = v.Value;
+                SelectedNode = v.Value;
                 WaitingToSelectMaskVisibility = false;
             });
         // 「排序方式改动」消息
         WeakReferenceMessenger.Default.Register<SettingsValueChangedMessage<Sort>>(this,
             (_, v) => ApplySort(v.Value));
-    }
-
-
-    #region INotifyPropertyChanged
-
-    private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        // 「节点被修改」消息
+        WeakReferenceMessenger.Default.Register<NodeChangedMessage>(this,
+            (_, v) => NodeChangeAction(v.Value.node, v.Value.type));
     }
 
     private void SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
@@ -160,8 +99,6 @@ public sealed partial class TreeViewPageViewModel : INotifyPropertyChanged
         field = value;
         OnPropertyChanged(propertyName);
     }
-
-    #endregion
 }
 
 /// <summary>
@@ -170,6 +107,7 @@ public sealed partial class TreeViewPageViewModel : INotifyPropertyChanged
 public sealed partial class TreeViewPageViewModel
 {
     /// <summary>加载 NBT 文件</summary>
+    [RelayCommand]
     private async Task LoadFile(string? param)
     {
         // 确认是否丢弃修改
@@ -202,11 +140,9 @@ public sealed partial class TreeViewPageViewModel
         // 选择文件
         var file = await openPicker.PickSingleFileAsync();
         if (file == null) return;
-
-        // 读取文件
-        _filePath = file.Path;
+        FilePath = file.Path;
         var bytes = Tools.ReadBytes(file.Path);
-        _gameEdition = param?.ToLower() switch
+        GameEdition = param?.ToLower() switch
         {
             "java" => GameEdition.Java,
             "bedrock" => GameEdition.Bedrock,
@@ -214,7 +150,7 @@ public sealed partial class TreeViewPageViewModel
         };
         // Java | Bedrock 分类处理
         NbtTag rootTag;
-        switch (_gameEdition)
+        switch (GameEdition)
         {
             case GameEdition.Java:
                 var tag = await TryLoadJavaFile(bytes);
@@ -224,15 +160,15 @@ public sealed partial class TreeViewPageViewModel
             case GameEdition.Bedrock:
                 var result = await TryLoadBedrockFile(bytes);
                 if (result.tag == null) return;
-                _isBedrockLevelDat = result.isLevelDat;
+                IsBedrockLevelDat = result.isLevelDat;
                 rootTag = result.tag;
                 break;
             default:
-                throw new Exception($"未知游戏版本[{_gameEdition}]");
+                throw new Exception($"未知游戏版本[{GameEdition}]");
         }
 
         Nodes.Clear();
-        Nodes.Add(new NbtNode(rootTag, true, NodeChangeAction));
+        Nodes.Add(new NbtNode(rootTag, true));
 
         IsSaveEnabled = true;
         IsApplyEnabled = false;
@@ -272,6 +208,7 @@ public sealed partial class TreeViewPageViewModel
     }
 
     /// <summary>将 NBT 文件另存为</summary>
+    [RelayCommand]
     private async Task SaveFile()
     {
         // 获取字节数组
@@ -281,7 +218,7 @@ public sealed partial class TreeViewPageViewModel
         var savePicker = new FileSavePicker();
         savePicker.FileTypeChoices.Add("NBT Files", new List<string> { ".nbt", ".dat" });
         savePicker.SuggestedFileName =
-            string.IsNullOrWhiteSpace(_nodes.First().Name) ? "unnamed_nbt_file" : _nodes.First().Name;
+            string.IsNullOrWhiteSpace(Nodes.First().Name) ? "unnamed_nbt_file" : Nodes.First().Name;
         var hWnd = WindowNative.GetWindowHandle(App.MainWindow);
         InitializeWithWindow.Initialize(savePicker, hWnd);
 
@@ -289,21 +226,22 @@ public sealed partial class TreeViewPageViewModel
         var path = await savePicker.PickSaveFileAsync();
         if (path == null) return;
         await WriteFile(bytes, path.Path);
-
-        _filePath = path.Path;
+        FilePath = path.Path;
         IsApplyEnabled = false;
     }
 
     /// <summary>保存 NBT 文件</summary>
+    [RelayCommand]
     private async Task ApplyFile()
     {
         var bytes = Nodes.First().Tag.GetBytes();
-        await WriteFile(bytes, _filePath);
+        await WriteFile(bytes, FilePath);
 
         IsApplyEnabled = false;
     }
 
     /// <summary>创建 NBT 文件</summary>
+    [RelayCommand]
     private async Task CreateFile(string? param)
     {
         // 确认是否丢弃修改
@@ -319,19 +257,17 @@ public sealed partial class TreeViewPageViewModel
                     break; // 执行方法
             }
 
-        // 新建文件
-        _gameEdition = param?.ToLower() switch
+        GameEdition = param?.ToLower() switch
         {
             "java" => GameEdition.Java,
             "bedrock" => GameEdition.Bedrock,
             _ => throw new Exception("新建文件按钮在XAML中版本参数错误!")
         };
-        var builder = new NbtTagBuilder(_gameEdition == GameEdition.Java);
+        var builder = new NbtTagBuilder(GameEdition == GameEdition.Java);
         if (Nodes.Count > 0) Nodes.Clear();
         Nodes.Clear();
-        Nodes.Add(new NbtNode(builder.Dictionary("root", []), true, NodeChangeAction));
-
-        _filePath = string.Empty;
+        Nodes.Add(new NbtNode(builder.Dictionary("root", []), true));
+        FilePath = string.Empty;
         IsApplyEnabled = false;
         IsSaveEnabled = true;
         IsInfoEnabled = true;
@@ -343,13 +279,13 @@ public sealed partial class TreeViewPageViewModel
     private async Task WriteFile(byte[] bytes, string path)
     {
         var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write);
-        switch (_gameEdition)
+        switch (GameEdition)
         {
             case GameEdition.Java:
                 await fileStream.WriteAsync(bytes);
                 break;
             case GameEdition.Bedrock:
-                if (!_isBedrockLevelDat)
+                if (!IsBedrockLevelDat)
                 {
                     await fileStream.WriteAsync(bytes);
                     break;
@@ -429,19 +365,20 @@ public sealed partial class TreeViewPageViewModel
     }
 
     /// <summary> 展示 NBT 文件信息 </summary>
+    [RelayCommand]
     private async Task ShowFileInfo()
     {
-        var content = new FileInfoContent(_filePath, _nodes.First().Tag.GetBytes().Length, _gameEdition,
-            _nodes.First().Tag.IsBigEndian);
+        var content = new FileInfoContent(FilePath, Nodes.First().Tag.GetBytes().Length, GameEdition,
+            Nodes.First().Tag.IsBigEndian);
         await DialogService.ShowDialog("文件信息", "确认", content: content);
     }
 
     /// <summary>确认是否丢弃 NBT 文件未保存的修改</summary>
     private async Task<ContentDialogResult> VerifyAbandonChanges()
     {
-        var fileName = _filePath == string.Empty
-            ? _nodes.First().Name == string.Empty ? "未命名" : _nodes.First().Name
-            : Path.GetFileNameWithoutExtension(_filePath);
+        var fileName = FilePath == string.Empty
+            ? Nodes.First().Name == string.Empty ? "未命名" : Nodes.First().Name
+            : Path.GetFileNameWithoutExtension(FilePath);
         return await DialogService.ShowDialog("是否保存修改？", "保存", "丢弃", "取消", description: $"「{fileName}」未保存修改");
     }
 
@@ -457,9 +394,7 @@ public sealed partial class TreeViewPageViewModel
                 Nodes.Remove(node);
                 // 隐藏自身及其子项
                 node.Visibility = Visibility.Collapsed;
-                if (node.Children.Count > 0)
-                    foreach (var child in node.Children)
-                        child.Visibility = Visibility.Collapsed;
+                foreach (var child in node.Children) child.Visibility = Visibility.Collapsed;
                 // 更新其父节点的子项数量显示
                 foreach (var child in Nodes.First().GetChildrenAll()) child.UpdateChildrenCount();
                 break;
@@ -486,18 +421,19 @@ public sealed partial class TreeViewPageViewModel
     /// <summary>
     ///     添加节点
     /// </summary>
+    [RelayCommand]
     private async Task AddNode(NbtTagEnum tagEnum)
     {
-        if (_selectedNode == null)
+        if (SelectedNode == null)
         {
             await DialogService.ShowDialog("添加失败", "确认", description: "选择一个父节点或其子项");
             return;
         }
 
         // 确认父类目标（若「选中」是列表或字典，则为自身添加子项，否则为父节点添加子项）
-        var parent = NbtTagEnumExtensions.IsCollection(((NbtNode)_selectedNode.Content).TagEnum)
-            ? (NbtNode)_selectedNode.Content
-            : (NbtNode)_selectedNode.Parent.Content;
+        var parent = NbtTagEnumExtensions.IsCollection(((NbtNode)SelectedNode.Content).TagEnum)
+            ? (NbtNode)SelectedNode.Content
+            : (NbtNode)SelectedNode.Parent.Content;
 
         // 合法性判断
         if (parent.TagEnum == NbtTagEnum.List && parent.Tag.ChildrenTag != tagEnum)
@@ -520,13 +456,7 @@ public sealed partial class TreeViewPageViewModel
         var value = content.NodeValue;
 
         // 一、向 NBT 标签实例添加节点
-        var builder =
-            new NbtTagBuilder(_gameEdition switch
-            {
-                GameEdition.Java => true,
-                GameEdition.Bedrock => false,
-                _ => throw new Exception($"未知游戏版本[{_gameEdition}]")
-            });
+        var builder = new NbtTagBuilder(GameEdition == GameEdition.Java);
         var tag = tagEnum switch
         {
             NbtTagEnum.Byte => builder.Byte(name, byte.Parse((string)value)),
@@ -546,10 +476,10 @@ public sealed partial class TreeViewPageViewModel
         parent.Tag.AppendChild(tag, []);
 
         // 二、向节点树添加节点(UI)
-        parent.Children.Add(new NbtNode(tag, false, NodeChangeAction));
+        parent.Children.Add(new NbtNode(tag));
         OnPropertyChanged(nameof(Nodes));
 
-        if (_filePath != string.Empty) IsApplyEnabled = true;
+        if (FilePath != string.Empty) IsApplyEnabled = true;
         IsSaveEnabled = true;
     }
 }
