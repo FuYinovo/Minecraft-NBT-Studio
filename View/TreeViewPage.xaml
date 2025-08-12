@@ -8,9 +8,14 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:community="using:CommunityToolkit.WinUI.Controls"
+    xmlns:converter="using:NBT_Studio.Control.Converter"
     xmlns:labs="using:CommunityToolkit.Labs.WinUI"
     xmlns:tag="using:NBT_Studio.Library.NBT_Parser.Enum"
     mc:Ignorable="d">
+
+    <Page.Resources>
+        <converter:BoolNotConverter x:Key="BoolNotConverter" />
+    </Page.Resources>
 
     <Grid DataContext="{x:Bind _viewModel}" Padding="10,5">
         <Grid.ColumnDefinitions>
@@ -208,7 +213,37 @@
 
         <!-- 右侧详情区 -->
         <Grid Grid.Column="2">
-            <control:NodeValueEditor />
+            <Border Visibility="{Binding WaitingToSelectMaskVisibility}">
+                <Border>
+                    <TextBlock HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               Text="选择节点以查看详情"
+                               FontSize="32"
+                               FontWeight="Black"
+                               Opacity=".6" />
+                </Border>
+            </Border>
+
+            <community:TabbedCommandBar SizeChanged="DetailSectionSizeChanged">
+                <community:TabbedCommandBar.MenuItems>
+                    <community:TabbedCommandBarItem Header="数据编辑器" IsDynamicOverflowEnabled="False">
+                        <AppBarElementContainer
+                            Visibility="{Binding WaitingToSelectMaskVisibility, Converter={StaticResource BoolNotConverter}}">
+                            <control:NodeValueEditor />
+                        </AppBarElementContainer>
+                    </community:TabbedCommandBarItem>
+                    <community:TabbedCommandBarItem Header="物品编辑器" IsContextual="True">
+                        <AppBarElementContainer
+                            Visibility="{Binding !WaitingToSelectMaskVisibility, Converter={StaticResource BoolNotConverter}}">
+                        </AppBarElementContainer>
+                    </community:TabbedCommandBarItem>
+                    <community:TabbedCommandBarItem Header="地图编辑器" IsContextual="True">
+                        <AppBarElementContainer
+                            Visibility="{Binding !WaitingToSelectMaskVisibility, Converter={StaticResource BoolNotConverter}}">
+                        </AppBarElementContainer>
+                    </community:TabbedCommandBarItem>
+                </community:TabbedCommandBar.MenuItems>
+            </community:TabbedCommandBar>
         </Grid>
     </Grid>
 </Page>

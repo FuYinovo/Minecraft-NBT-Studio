@@ -2,7 +2,6 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using CommunityToolkit.Mvvm.Messaging;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using NBT_Studio.Library.NBT_Parser.Enum;
 using NBT_Studio.Message;
@@ -77,7 +76,6 @@ public sealed partial class NodeValueEditorViewModel : INotifyPropertyChanged
         IsAllowNegativeEnabled = isNumber;
         IsAllowDecimalEnabled = isNumber;
 
-        UpdateValueSection(TagEnum);
         return;
 
         int GetNbtTagEnumComboBoxIndex(NbtTagEnum tag)
@@ -101,55 +99,11 @@ public sealed partial class NodeValueEditorViewModel : INotifyPropertyChanged
         }
     }
 
-    private void UpdateValueSection(NbtTagEnum tagEnum)
-    {
-        UnselectedScreenVisibility = Visibility.Collapsed;
-        SelectedScreenVisibility = Visibility.Visible;
-        if (NbtTagEnumExtensions.IsArray(tagEnum))
-        {
-            ArrayValueSectionVisibility = Visibility.Visible;
-            GenericValueSectionVisibility = Visibility.Collapsed;
-        }
-        else
-        {
-            ArrayValueSectionVisibility = Visibility.Collapsed;
-            GenericValueSectionVisibility = Visibility.Visible;
-        }
-    }
 
     #region Properties
 
-    private Visibility _unselectedScreenVisibility = Visibility.Visible;
-    private Visibility _selectedScreenVisibility = Visibility.Collapsed;
-    private Visibility _genericValueSectionVisibility = Visibility.Collapsed;
-    private Visibility _arrayValueSectionVisibility = Visibility.Collapsed;
-
     public NbtTagEnum TagEnum { get; private set; } = NbtTagEnum.Unknown;
     public NbtTagEnum ChildrenTagEnum { get; private set; } = NbtTagEnum.Unknown;
-
-    public Visibility GenericValueSectionVisibility
-    {
-        get => _genericValueSectionVisibility;
-        set => SetField(ref _genericValueSectionVisibility, value);
-    }
-
-    public Visibility UnselectedScreenVisibility
-    {
-        get => _unselectedScreenVisibility;
-        private set => SetField(ref _unselectedScreenVisibility, value);
-    }
-
-    public Visibility SelectedScreenVisibility
-    {
-        get => _selectedScreenVisibility;
-        private set => SetField(ref _selectedScreenVisibility, value);
-    }
-
-    public Visibility ArrayValueSectionVisibility
-    {
-        get => _arrayValueSectionVisibility;
-        set => SetField(ref _arrayValueSectionVisibility, value);
-    }
 
     #endregion
 
@@ -235,7 +189,7 @@ public sealed partial class NodeValueEditorViewModel : INotifyPropertyChanged
 
     # endregion NodeProperties
 
-    #region NodePropertyIsEnableds
+    #region NodeProperties: IsEnabled
 
     private bool _isChildrenTypeEnabled;
     private bool _isMaxValueEnabled;
@@ -273,7 +227,7 @@ public sealed partial class NodeValueEditorViewModel : INotifyPropertyChanged
         set => SetField(ref _isAllowDecimalEnabled, value);
     }
 
-    #endregion NodePropertyIsEnableds
+    #endregion NodeProperties: IsEnabled
 
     # region INotifyPropertyChanged
 

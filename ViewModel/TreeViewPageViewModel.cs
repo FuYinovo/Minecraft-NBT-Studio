@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 using Windows.Storage.Pickers;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using CommunityToolkit.Mvvm.Messaging.Messages;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using NBT_Studio.Enum;
@@ -40,6 +39,7 @@ public sealed partial class TreeViewPageViewModel : INotifyPropertyChanged
     private bool _isInfoEnabled;
     private bool _isSaveEnabled;
     private bool _isSearchBoxEnabled;
+    private bool _waitingToSelectMaskVisibility = true;
     private int _nodeFilterIndex;
     private ObservableCollection<NbtNode> _nodes = [];
     private string _searchBoxText = string.Empty;
@@ -120,6 +120,12 @@ public sealed partial class TreeViewPageViewModel : INotifyPropertyChanged
         }
     }
 
+    public bool WaitingToSelectMaskVisibility
+    {
+        get => _waitingToSelectMaskVisibility;
+        set => SetField(ref _waitingToSelectMaskVisibility, value);
+    }
+
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -130,7 +136,11 @@ public sealed partial class TreeViewPageViewModel : INotifyPropertyChanged
     {
         // 「选中节点改动」消息
         WeakReferenceMessenger.Default.Register<SelectedNodeChangedMessage>(this,
-            (_, v) => _selectedNode = v.Value);
+            (_, v) =>
+            {
+                _selectedNode = v.Value;
+                WaitingToSelectMaskVisibility = false;
+            });
         // 「排序方式改动」消息
         WeakReferenceMessenger.Default.Register<SettingsValueChangedMessage<Sort>>(this,
             (_, v) => ApplySort(v.Value));
@@ -408,7 +418,7 @@ public sealed partial class TreeViewPageViewModel
 
         // 三、 隐藏空的列表、字典
         foreach (var child in childrenAll)
-            if (NbtTagEnumExtensions.IsCollection(child.TagEnum)  && child.GetVisibleChildrenCount() <= 0)
+            if (NbtTagEnumExtensions.IsCollection(child.TagEnum) && child.GetVisibleChildrenCount() <= 0)
                 child.Visibility = Visibility.Collapsed;
 
         // 四、显示根节点
@@ -464,7 +474,7 @@ public sealed partial class TreeViewPageViewModel
 
     private void ApplySort(Sort type)
     {
-        // TODO)) 节点筛选
+        // TODO)) 节点排序
     }
 }
 
