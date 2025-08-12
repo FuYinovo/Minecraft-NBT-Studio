@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using NBT_Studio.Message;
+using NBT_Studio.Utils;
 using NBT_Studio.ViewModel;
 
 namespace NBT_Studio.Control;
@@ -35,18 +36,18 @@ public sealed partial class NodeValueEditor
     private void CheckBox_Prohibit(object sender, RoutedEventArgs e)
     {
         if (sender is not CheckBox checkBox) return;
-        Utils.ControlDisabler.DisableCheckBox(checkBox);
+        ControlDisabler.DisableCheckBox(checkBox);
     }
 
     private void ComboBox_Type_Prohibit(object? sender, object e)
     {
         if (sender is not ComboBox comboBox) return;
-        Utils.ControlDisabler.DisableComboBoxItemsByTag(comboBox, _viewModel.TagEnum);
+        ControlDisabler.DisableComboBoxItemsByTag(comboBox, _viewModel.TagEnum);
     }
 
     private void ComboBox_ChildrenType_Prohibit(object? sender, object e)
     {
         if (sender is not ComboBox comboBox) return;
-        Utils.ControlDisabler.DisableComboBoxItemsByTag(comboBox, _viewModel.ChildrenTagEnum);
+        ControlDisabler.DisableComboBoxItemsByTag(comboBox, _viewModel.ChildrenTagEnum);
     }
 }

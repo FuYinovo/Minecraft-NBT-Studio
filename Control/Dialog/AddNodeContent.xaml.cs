@@ -8,14 +8,8 @@ namespace NBT_Studio.Control.Dialog;
 
 public sealed partial class AddNodeContent
 {
-    public Action<bool>? DialogOkButtonEnabledSetter;
-    public string NodeName { get; set; } = string.Empty;
-    public object NodeValue { get; set; } = string.Empty;
-    public NbtTagEnum ChildrenTag => (NbtTagEnum)SelectedChildrenTagItem.Tag;
-    private ComboBoxItem SelectedChildrenTagItem { get; set; } = null!;
-    public NbtTagEnum SelectedChildrenTagValue { get; set; }
-
     private readonly NbtTagEnum _tagEnum;
+    public Action<bool>? DialogOkButtonEnabledSetter;
 
     public AddNodeContent(NbtTagEnum tagEnum)
     {
@@ -23,6 +17,12 @@ public sealed partial class AddNodeContent
         InitializeComponent();
         InitControls();
     }
+
+    public string NodeName { get; set; } = string.Empty;
+    public object NodeValue { get; set; } = string.Empty;
+    public NbtTagEnum ChildrenTag => (NbtTagEnum)SelectedChildrenTagItem.Tag;
+    private ComboBoxItem SelectedChildrenTagItem { get; set; } = null!;
+    public NbtTagEnum SelectedChildrenTagValue { get; set; }
 
     private void InitControls()
     {

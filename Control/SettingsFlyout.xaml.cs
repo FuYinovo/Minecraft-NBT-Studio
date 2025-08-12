@@ -15,7 +15,7 @@ public sealed partial class SettingsFlyout
 
     private void Comb_Theme_OnLoaded(object sender, RoutedEventArgs e)
     {
-       ((ComboBox)sender).SelectedIndex = (int)_flyoutViewModel.Theme;
+        ((ComboBox)sender).SelectedIndex = (int)_flyoutViewModel.Theme;
     }
 
     private void Comb_Sort_OnLoaded(object sender, RoutedEventArgs e)

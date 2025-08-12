@@ -10,17 +10,16 @@
     mc:Ignorable="d">
 
 
-    <Grid DataContext="{x:Bind _viewModel}" x:Name="ControlGrid" Padding="-20, 20, 20, 20" ColumnSpacing="24" >
+    <Grid DataContext="{x:Bind _viewModel}" x:Name="ControlGrid" Padding="-20, 20, 20, 20" ColumnSpacing="24">
 
         <StackPanel Spacing="6">
             <TextBox
                 Header="名称"
-                Text="{Binding Name}">
-            </TextBox>
+                Text="{Binding Name}" />
             <Grid ColumnSpacing="24">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="auto"></ColumnDefinition>
-                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
                 <Grid Grid.Column="0">
@@ -61,35 +60,28 @@
 
                         <TextBox Header="长度" Width="130"
                                  IsReadOnly="True"
-                                 BorderThickness="0" Text="{Binding Length}">
-                        </TextBox>
+                                 BorderThickness="0" Text="{Binding Length}" />
                         <TextBox Header="最大值" Width="130"
                                  IsReadOnly="True"
                                  BorderThickness="0" Text="{Binding MaxValue}"
-                                 IsEnabled="{Binding IsMaxValueEnabled}">
-                        </TextBox>
+                                 IsEnabled="{Binding IsMaxValueEnabled}" />
                         <TextBox Header="最小值" Width="130"
                                  IsReadOnly="True"
                                  Margin="0,0,0,20"
                                  BorderThickness="0" Text="{Binding MinValue}"
-                                 IsEnabled="{Binding IsMinValueEnabled}">
-                        </TextBox>
+                                 IsEnabled="{Binding IsMinValueEnabled}" />
 
 
                         <CheckBox IsChecked="{Binding AllowNegative}" Content="可以为负值"
                                   IsEnabled="{Binding IsAllowNegativeEnabled}"
-                                  Click="CheckBox_Prohibit">
-                        </CheckBox>
+                                  Click="CheckBox_Prohibit" />
                         <CheckBox IsChecked="{Binding AllowDecimal}" Content="可以为小数"
                                   IsEnabled="{Binding IsAllowDecimalEnabled}"
-                                  Click="CheckBox_Prohibit">
-                        </CheckBox>
+                                  Click="CheckBox_Prohibit" />
                         <CheckBox IsChecked="{Binding AllowChildren}" Content="可以含子项"
-                                  Click="CheckBox_Prohibit">
-                        </CheckBox>
+                                  Click="CheckBox_Prohibit" />
                         <CheckBox IsChecked="{Binding AllowDelete}" Content="可以被删除"
-                                  Click="CheckBox_Prohibit">
-                        </CheckBox>
+                                  Click="CheckBox_Prohibit" />
                     </StackPanel>
                 </Grid>
 

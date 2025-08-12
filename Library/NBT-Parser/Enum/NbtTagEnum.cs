@@ -30,7 +30,7 @@ public static class NbtTagEnumExtensions
                 NbtTagEnum.Long or
                 NbtTagEnum.Float or
                 NbtTagEnum.Double => true,
-            _ => false,
+            _ => false
         };
     }
 

@@ -53,7 +53,7 @@
     </ItemGroup>
     <ItemGroup>
         <Folder Include="Library\"/>
-        <Folder Include="Struct\" />
+        <Folder Include="Struct\"/>
     </ItemGroup>
     <ItemGroup>
         <Page Update="Control\Content\FileInfoContent.xaml">

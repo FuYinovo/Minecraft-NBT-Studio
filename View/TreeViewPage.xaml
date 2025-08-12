@@ -234,13 +234,11 @@
                     </community:TabbedCommandBarItem>
                     <community:TabbedCommandBarItem Header="物品编辑器" IsContextual="True">
                         <AppBarElementContainer
-                            Visibility="{Binding !WaitingToSelectMaskVisibility, Converter={StaticResource BoolNotConverter}}">
-                        </AppBarElementContainer>
+                            Visibility="{Binding !WaitingToSelectMaskVisibility, Converter={StaticResource BoolNotConverter}}" />
                     </community:TabbedCommandBarItem>
                     <community:TabbedCommandBarItem Header="地图编辑器" IsContextual="True">
                         <AppBarElementContainer
-                            Visibility="{Binding !WaitingToSelectMaskVisibility, Converter={StaticResource BoolNotConverter}}">
-                        </AppBarElementContainer>
+                            Visibility="{Binding !WaitingToSelectMaskVisibility, Converter={StaticResource BoolNotConverter}}" />
                     </community:TabbedCommandBarItem>
                 </community:TabbedCommandBar.MenuItems>
             </community:TabbedCommandBar>

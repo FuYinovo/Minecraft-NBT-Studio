@@ -33,7 +33,9 @@
                 <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.Float}">单精度浮点</ComboBoxItem>
                 <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.Double}">双精度浮点</ComboBoxItem>
                 <ComboBoxItem x:Name="DefaultChildrenTag"
-                              Tag="{x:Bind enum:NbtTagEnum.String}" >字符串</ComboBoxItem>
+                              Tag="{x:Bind enum:NbtTagEnum.String}">
+                    字符串
+                </ComboBoxItem>
                 <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.ByteArray}">字节数组</ComboBoxItem>
                 <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.IntArray}">整型数组</ComboBoxItem>
                 <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.LongArray}">长整型数组</ComboBoxItem>

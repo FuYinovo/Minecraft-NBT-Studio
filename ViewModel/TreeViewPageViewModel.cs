@@ -39,11 +39,11 @@ public sealed partial class TreeViewPageViewModel : INotifyPropertyChanged
     private bool _isInfoEnabled;
     private bool _isSaveEnabled;
     private bool _isSearchBoxEnabled;
-    private bool _waitingToSelectMaskVisibility = true;
     private int _nodeFilterIndex;
     private ObservableCollection<NbtNode> _nodes = [];
     private string _searchBoxText = string.Empty;
     private TreeViewNode? _selectedNode;
+    private bool _waitingToSelectMaskVisibility = true;
 
     public TreeViewPageViewModel()
     {
@@ -502,7 +502,7 @@ public sealed partial class TreeViewPageViewModel
         // 合法性判断
         if (parent.TagEnum == NbtTagEnum.List && parent.Tag.ChildrenTag != tagEnum)
         {
-            await DialogService.ShowDialog("添加失败", primary: "确认",
+            await DialogService.ShowDialog("添加失败", "确认",
                 description: $"列表<{parent.Tag.ChildrenTag}> 不允许添加 <{tagEnum}> 节点");
             return;
         }
