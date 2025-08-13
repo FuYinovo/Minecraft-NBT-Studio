@@ -108,7 +108,7 @@ public sealed partial class TreeViewPageViewModel
 {
     /// <summary>加载 NBT 文件</summary>
     [RelayCommand]
-    private async Task LoadFile(string? param)
+    private async Task LoadFile()
     {
         // 确认是否丢弃修改
         if (IsApplyEnabled)
@@ -142,69 +142,70 @@ public sealed partial class TreeViewPageViewModel
         if (file == null) return;
         FilePath = file.Path;
         var bytes = Tools.ReadBytes(file.Path);
-        GameEdition = param?.ToLower() switch
+
+        // 分别尝试以 Java 版、基岩版加载
+        var javaResult = LoadJavaFile(bytes);
+        if (javaResult.isSuccessed)
         {
-            "java" => GameEdition.Java,
-            "bedrock" => GameEdition.Bedrock,
-            _ => throw new Exception("新建文件按钮在XAML中版本参数错误!")
-        };
-        // Java | Bedrock 分类处理
-        NbtTag rootTag;
-        switch (GameEdition)
-        {
-            case GameEdition.Java:
-                var tag = await TryLoadJavaFile(bytes);
-                if (tag == null) return;
-                rootTag = tag;
-                break;
-            case GameEdition.Bedrock:
-                var result = await TryLoadBedrockFile(bytes);
-                if (result.tag == null) return;
-                IsBedrockLevelDat = result.isLevelDat;
-                rootTag = result.tag;
-                break;
-            default:
-                throw new Exception($"未知游戏版本[{GameEdition}]");
+            GameEdition = GameEdition.Java;
+            LoadRootTag(javaResult.tag);
+            return;
         }
 
-        Nodes.Clear();
-        Nodes.Add(new NbtNode(rootTag, true));
+        var bedrockResult = LoadBedrockFile(bytes);
+        if (bedrockResult.isSuccessed)
+        {
+            GameEdition = GameEdition.Bedrock;
+            IsBedrockLevelDat = bedrockResult.isLevelDat;
+            LoadRootTag(bedrockResult.tag);
+            return;
+        }
 
-        IsSaveEnabled = true;
-        IsApplyEnabled = false;
-        IsInfoEnabled = true;
-        IsFilterEnabled = true;
-        IsSearchBoxEnabled = true;
-
+        await DialogService.ShowDialog("加载失败", "确认", description: "请检查 NBT 文件是否损坏");
         return;
 
+        # region Methods
+
+        void LoadRootTag(NbtTag rootTag)
+        {
+            Nodes.Clear();
+            Nodes.Add(new NbtNode(rootTag, true));
+
+            IsSaveEnabled = true;
+            IsApplyEnabled = false;
+            IsInfoEnabled = true;
+            IsFilterEnabled = true;
+            IsSearchBoxEnabled = true;
+        }
+
         // 对于基岩版文件，分别尝试从 0 、8 开始解析，若均失败，则弹窗失败
-        static async Task<(NbtTag? tag, bool isLevelDat)> TryLoadBedrockFile(byte[] bytes, int begin = 0, int tired = 1)
+        static (bool isSuccessed, NbtTag tag, bool isLevelDat ) LoadBedrockFile(byte[] bytes, int begin = 0,
+            int tired = 1)
         {
             try
             {
-                return (new NbtParser().Parse(bytes, false, begin), begin != 0);
+                return (true, new NbtParser().Parse(bytes, false, begin), begin != 0);
             }
             catch (Exception)
             {
-                if (tired <= 2) return await TryLoadBedrockFile(bytes, begin == 0 ? 8 : 0, tired + 1);
-                await DialogService.ShowDialog("加载失败", "确认", description: "请确保选择了正确的游戏版本");
-                return (null, false);
+                if (tired <= 2) return LoadBedrockFile(bytes, begin == 0 ? 8 : 0, tired + 1);
+                return (false, null, false)!;
             }
         }
 
-        static async Task<NbtTag?> TryLoadJavaFile(byte[] bytes)
+        static (bool isSuccessed, NbtTag tag) LoadJavaFile(byte[] bytes)
         {
             try
             {
-                return new NbtParser().Parse(bytes, true);
+                return (true, new NbtParser().Parse(bytes, true));
             }
             catch (Exception)
             {
-                await DialogService.ShowDialog("加载失败", "确认", description: "请确保选择了正确的游戏版本");
-                return null;
+                return (false, null)!;
             }
         }
+
+        #endregion
     }
 
     /// <summary>将 NBT 文件另存为</summary>
@@ -275,6 +276,15 @@ public sealed partial class TreeViewPageViewModel
         IsSearchBoxEnabled = true;
     }
 
+    /// <summary> 展示 NBT 文件信息 </summary>
+    [RelayCommand]
+    private async Task ShowFileInfo()
+    {
+        var content = new FileInfoContent(FilePath, Nodes.First().Tag.GetBytes().Length, GameEdition,
+            Nodes.First().Tag.IsBigEndian);
+        await DialogService.ShowDialog("文件信息", "确认", content: content);
+    }
+
     /// <summary>写入 NBT 文件</summary>
     private async Task WriteFile(byte[] bytes, string path)
     {
@@ -302,6 +312,15 @@ public sealed partial class TreeViewPageViewModel
         }
 
         fileStream.Close();
+    }
+
+    /// <summary>确认是否丢弃 NBT 文件未保存的修改</summary>
+    private async Task<ContentDialogResult> VerifyAbandonChanges()
+    {
+        var fileName = FilePath == string.Empty
+            ? Nodes.First().Name == string.Empty ? "未命名" : Nodes.First().Name
+            : Path.GetFileNameWithoutExtension(FilePath);
+        return await DialogService.ShowDialog("是否保存修改？", "保存", "丢弃", "取消", description: $"「{fileName}」未保存修改");
     }
 }
 
@@ -364,22 +383,10 @@ public sealed partial class TreeViewPageViewModel
         foreach (var child in childrenAll) child.UpdateChildrenCount();
     }
 
-    /// <summary> 展示 NBT 文件信息 </summary>
-    [RelayCommand]
-    private async Task ShowFileInfo()
+    /// <summary> 应用节点排序 </summary>
+    private void ApplySort(Sort type)
     {
-        var content = new FileInfoContent(FilePath, Nodes.First().Tag.GetBytes().Length, GameEdition,
-            Nodes.First().Tag.IsBigEndian);
-        await DialogService.ShowDialog("文件信息", "确认", content: content);
-    }
-
-    /// <summary>确认是否丢弃 NBT 文件未保存的修改</summary>
-    private async Task<ContentDialogResult> VerifyAbandonChanges()
-    {
-        var fileName = FilePath == string.Empty
-            ? Nodes.First().Name == string.Empty ? "未命名" : Nodes.First().Name
-            : Path.GetFileNameWithoutExtension(FilePath);
-        return await DialogService.ShowDialog("是否保存修改？", "保存", "丢弃", "取消", description: $"「{fileName}」未保存修改");
+        // TODO)) 节点排序
     }
 
     /// <summary> 处理节点修改操作相关 UI 更新 </summary>
@@ -405,11 +412,6 @@ public sealed partial class TreeViewPageViewModel
         }
 
         IsApplyEnabled = true;
-    }
-
-    private void ApplySort(Sort type)
-    {
-        // TODO)) 节点排序
     }
 }
 

@@ -74,21 +74,10 @@
                                     </MenuFlyout>
                                 </AppBarButton.Flyout>
                             </AppBarButton>
-                            <AppBarButton Label="加载"
-                                          IsCompact="True">
+                            <AppBarButton Label="加载" Command="{Binding LoadFileCommand}">
                                 <AppBarButton.Icon>
                                     <FontIcon Glyph="&#xE8E5;" />
                                 </AppBarButton.Icon>
-                                <AppBarButton.Flyout>
-                                    <MenuFlyout>
-                                        <MenuFlyoutItem Text="Java 版"
-                                                        Command="{Binding LoadFileCommand}"
-                                                        CommandParameter="Java" />
-                                        <MenuFlyoutItem Text="基岩版"
-                                                        Command="{Binding LoadFileCommand}"
-                                                        CommandParameter="Bedrock" />
-                                    </MenuFlyout>
-                                </AppBarButton.Flyout>
                             </AppBarButton>
                             <AppBarButton Label="保存"
                                           Command="{Binding ApplyFileCommand}"
