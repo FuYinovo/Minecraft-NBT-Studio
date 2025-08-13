@@ -10,11 +10,11 @@ using NBT_Studio.ViewModel;
 
 namespace NBT_Studio.Control;
 
-public sealed partial class NodeValueEditor
+public sealed partial class ValueEditor
 {
-    private readonly NodeValueEditorViewModel _viewModel = new();
+    private readonly ValueEditorViewModel _viewModel = new();
 
-    public NodeValueEditor()
+    public ValueEditor()
     {
         InitializeComponent();
         RegisterMessages();

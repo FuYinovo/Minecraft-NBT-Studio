@@ -218,18 +218,20 @@
                     <community:TabbedCommandBarItem Header="数据编辑器" IsDynamicOverflowEnabled="False">
                         <AppBarElementContainer
                             Visibility="{Binding WaitingToSelectMaskVisibility, Converter={StaticResource BoolNotConverter}}">
-                            <control:NodeValueEditor />
+                            <control:ValueEditor />
                         </AppBarElementContainer>
                     </community:TabbedCommandBarItem>
                     <community:TabbedCommandBarItem Header="物品编辑器" IsContextual="True">
                         <AppBarElementContainer
-                            Visibility="{Binding !WaitingToSelectMaskVisibility, Converter={StaticResource BoolNotConverter}}">
-                            <control:NodeItemEditor />
+                            Visibility="{Binding WaitingToSelectMaskVisibility, Converter={StaticResource BoolNotConverter}}">
+                            <control:ItemEditor />
                         </AppBarElementContainer>
                     </community:TabbedCommandBarItem>
                     <community:TabbedCommandBarItem Header="地图编辑器" IsContextual="True">
                         <AppBarElementContainer
-                            Visibility="{Binding !WaitingToSelectMaskVisibility, Converter={StaticResource BoolNotConverter}}" />
+                            Visibility="{Binding WaitingToSelectMaskVisibility, Converter={StaticResource BoolNotConverter}}">
+                            <control:MapEditor />
+                        </AppBarElementContainer>
                     </community:TabbedCommandBarItem>
                 </community:TabbedCommandBar.MenuItems>
             </community:TabbedCommandBar>

@@ -4,22 +4,22 @@ namespace NBT_Studio.Control.Dialog;
 
 public sealed partial class FileInfoContent
 {
-    public FileInfoContent(string filePath, int fileLength, GameEdition gameEdition, bool isBigEndian)
+    public FileInfoContent(string filePath, int fileLength, MinecraftEdition minecraftEdition, bool isBigEndian)
     {
         InitializeComponent();
 
         FilePath = filePath;
         FileLength = fileLength;
-        GameEdition = gameEdition == Enum.GameEdition.Java ? 0 : 1;
+        MinecraftEdition = minecraftEdition == Enum.MinecraftEdition.Java ? 0 : 1;
         IsBigEndian = isBigEndian ? 1 : 0;
-        ItemJava.IsEnabled = gameEdition == Enum.GameEdition.Java;
-        ItemBedrock.IsEnabled = gameEdition == Enum.GameEdition.Bedrock;
+        ItemJava.IsEnabled = minecraftEdition == Enum.MinecraftEdition.Java;
+        ItemBedrock.IsEnabled = minecraftEdition == Enum.MinecraftEdition.Bedrock;
         ItemBiggerEndian.IsEnabled = isBigEndian;
         ItemLittleEndian.IsEnabled = !isBigEndian;
     }
 
     private string FilePath { get; }
     private int FileLength { get; }
-    private int GameEdition { get; }
+    private int MinecraftEdition { get; }
     private int IsBigEndian { get; }
 }

@@ -5,11 +5,11 @@ using NBT_Studio.ViewModel;
 
 namespace NBT_Studio.Control;
 
-public sealed partial class NodeItemEditor
+public sealed partial class MapEditor
 {
-    private readonly NodeItemEditorViewModel _viewModel = new();
+    private readonly MapEditorViewModel _viewModel = new();
 
-    public NodeItemEditor()
+    public MapEditor()
     {
         InitializeComponent();
         RegisterMessages();

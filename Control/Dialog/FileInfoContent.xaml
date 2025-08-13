@@ -16,7 +16,7 @@
                 <ComboBoxItem x:Name="ItemLittleEndian" Content="小端序" />
                 <ComboBoxItem x:Name="ItemBiggerEndian" Content="大端序" />
             </ComboBox>
-            <ComboBox Header="游戏版本" SelectedIndex="{x:Bind GameEdition}" IsTabStop="False">
+            <ComboBox Header="游戏版本" SelectedIndex="{x:Bind MinecraftEdition}" IsTabStop="False">
                 <ComboBoxItem x:Name="ItemJava" Content="Java 版" />
                 <ComboBoxItem x:Name="ItemBedrock" Content="基岩版" />
             </ComboBox>

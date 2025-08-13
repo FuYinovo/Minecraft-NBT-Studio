@@ -13,9 +13,9 @@ namespace NBT_Studio.ViewModel;
 
 [SuppressMessage("CommunityToolkit.Mvvm.SourceGenerators.ObservablePropertyGenerator",
     "MVVMTK0045:Using [ObservableProperty] on fields is not AOT compatible for WinRT")]
-public sealed partial class NodeValueEditorViewModel : ObservableObject
+public sealed partial class ValueEditorViewModel : ObservableObject
 {
-    public NodeValueEditorViewModel()
+    public ValueEditorViewModel()
     {
         RegisterMessages();
     }

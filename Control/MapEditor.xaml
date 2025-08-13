@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<UserControl
+    x:Class="NBT_Studio.Control.MapEditor"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+
+    <Grid DataContext="{x:Bind _viewModel}" x:Name="ControlGrid" Padding="20, 20, -20, 20" ColumnSpacing="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+        </Grid>
+
+        <Grid Grid.Row="1">
+
+        </Grid>
+
+    </Grid>
+
+</UserControl>
