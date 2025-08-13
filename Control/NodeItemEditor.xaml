@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<UserControl
+    x:Class="NBT_Studio.Control.NodeItemEditor"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+
+    <Grid DataContext="{x:Bind _viewModel}" x:Name="ControlGrid" Padding="20, 20, -20, 20" ColumnSpacing="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <ItemsRepeater ItemsSource="{Binding Items}"></ItemsRepeater>
+        </Grid>
+
+        <Grid Grid.Row="1">
+            <StackPanel Orientation="Horizontal" Spacing="24">
+                <StackPanel Spacing="12">
+                    <TextBox Header="空间命名" IsReadOnly="True" Text="{Binding SelectedItem.IdName}"></TextBox>
+                    <TextBox Header="最大堆叠" IsReadOnly="True" Text="{Binding SelectedItem.Maximum}"></TextBox>
+                </StackPanel>
+                <StackPanel Spacing="12">
+                    <TextBox Header="名称" Text="{Binding SelectedItem.Name}"></TextBox>
+                    <NumberBox Header="数量"
+                               SpinButtonPlacementMode="Inline"
+                               SmallChange="1"
+                               LargeChange="16"
+                               Minimum="0"
+                               Maximum="{Binding SelectedItem.Maximum}"
+                               Value="{Binding SelectedItem.Count}"/>
+                </StackPanel>
+                
+            </StackPanel>
+        </Grid>
+
+    </Grid>
+
+</UserControl>

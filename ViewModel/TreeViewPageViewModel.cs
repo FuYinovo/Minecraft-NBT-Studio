@@ -91,6 +91,10 @@ public sealed partial class TreeViewPageViewModel : ObservableObject
         // 「节点被修改」消息
         WeakReferenceMessenger.Default.Register<NodeChangedMessage>(this,
             (_, v) => NodeChangeAction(v.Value.node, v.Value.type));
+        // 「添加一个节点」信息
+        WeakReferenceMessenger.Default.Register<AddNodeMessage>(this,
+            // ReSharper disable once AsyncVoidMethod
+            async void (_, v) => await AddNode(v.Value.invokedNode, v.Value.tagEnum));
     }
 
     private void SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
@@ -411,7 +415,7 @@ public sealed partial class TreeViewPageViewModel
                 throw new Exception("无法确定节点修改操作类型");
         }
 
-        IsApplyEnabled = true;
+        if (FilePath != string.Empty) IsApplyEnabled = true;
     }
 }
 
@@ -423,19 +427,12 @@ public sealed partial class TreeViewPageViewModel
     /// <summary>
     ///     添加节点
     /// </summary>
-    [RelayCommand]
-    private async Task AddNode(NbtTagEnum tagEnum)
+    private async Task AddNode(NbtNode invokedNode, NbtTagEnum tagEnum)
     {
-        if (SelectedNode == null)
-        {
-            await DialogService.ShowDialog("添加失败", "确认", description: "选择一个父节点或其子项");
-            return;
-        }
-
         // 确认父类目标（若「选中」是列表或字典，则为自身添加子项，否则为父节点添加子项）
-        var parent = NbtTagEnumExtensions.IsCollection(((NbtNode)SelectedNode.Content).TagEnum)
-            ? (NbtNode)SelectedNode.Content
-            : (NbtNode)SelectedNode.Parent.Content;
+        var parent = NbtTagEnumExtensions.IsCollection(invokedNode.TagEnum)
+            ? invokedNode
+            : invokedNode.Parent!;
 
         // 合法性判断
         if (parent.TagEnum == NbtTagEnum.List && parent.Tag.ChildrenTag != tagEnum)
@@ -483,5 +480,21 @@ public sealed partial class TreeViewPageViewModel
 
         if (FilePath != string.Empty) IsApplyEnabled = true;
         IsSaveEnabled = true;
+    }
+
+    /// <summary>
+    /// 从选择的 TreeViewNode 添加节点
+    /// </summary>
+    /// <remarks>调用 AddNode</remarks>
+    [RelayCommand]
+    private async Task AddNodeFromSelected(NbtTagEnum tagEnum)
+    {
+        if (SelectedNode == null)
+        {
+            await DialogService.ShowDialog("添加失败", "确认", description: "选择一个父节点或其子项");
+            return;
+        }
+
+        await AddNode((NbtNode)SelectedNode.Content, tagEnum);
     }
 }

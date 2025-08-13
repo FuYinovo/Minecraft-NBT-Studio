@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
+﻿using System.Diagnostics.CodeAnalysis;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Controls;
+using NBT_Studio.Library.NBT_Parser.Class;
 using NBT_Studio.Library.NBT_Parser.Enum;
 using NBT_Studio.Library.NBT_Parser.Utils;
 using NBT_Studio.Message;
@@ -24,7 +24,11 @@ public sealed partial class NodeValueEditorViewModel : ObservableObject
     {
         // 「选中节点修改」消息
         WeakReferenceMessenger.Default.Register<SelectedNodeChangedMessage>(this,
-            (_, v) => UpdateValueDisplay(v.Value));
+            (_, v) =>
+            {
+                UpdateValueDisplay(v.Value);
+                _selectedNode = (NbtNode)v.Value.Content;
+            });
     }
 
     private void UpdateValueDisplay(TreeViewNode? value)
@@ -54,11 +58,18 @@ public sealed partial class NodeValueEditorViewModel : ObservableObject
         IsAllowDecimalEnabled = isNumber;
     }
 
+    [RelayCommand]
+    private void SaveValueChanges()
+    {
+        _selectedNode?.SetValue(Value);
+    }
+
 
     #region Properties
 
-    private NbtTagEnum TagEnum { get; set; } = NbtTagEnum.Unknown;
+    public NbtTagEnum TagEnum { get; private set; } = NbtTagEnum.Unknown;
     private NbtTagEnum ChildrenTagEnum { get; set; } = NbtTagEnum.Unknown;
+    private NbtNode? _selectedNode;
 
     [ObservableProperty] private string _name = string.Empty;
     [ObservableProperty] private string _value = string.Empty;

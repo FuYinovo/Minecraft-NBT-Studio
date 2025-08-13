@@ -9,7 +9,7 @@
     mc:Ignorable="d">
 
 
-    <Grid DataContext="{x:Bind _viewModel}" x:Name="ControlGrid" Padding="-20, 20, 20, 20" ColumnSpacing="24">
+    <Grid DataContext="{x:Bind _viewModel}" x:Name="ControlGrid" Padding="-20, 20, 20, 0" ColumnSpacing="24">
 
         <StackPanel Spacing="6">
             <TextBox
@@ -58,15 +58,29 @@
 
                 <Grid Grid.Column="1">
                     <TextBox Header="数据"
-                             Text="{Binding Value}"
+                             Text="{Binding Value, Mode=TwoWay}"
+                             IsEnabled="False"
                              TextWrapping="Wrap"
-                             IsSpellCheckEnabled="False" />
+                             IsSpellCheckEnabled="False"
+                             TextChanged="TextBox_OnValueChanged"/>
                 </Grid>
             </Grid>
-
+            <Button 
+                x:Name="SaveButton" 
+                Margin="0,16,0,0"
+                Width="120"
+                Height="40"
+                HorizontalAlignment="Right"
+                Style="{ThemeResource AccentButtonStyle}" 
+                IsEnabled="False"
+                Content="保存修改"
+                Click="SaveButton_OnClick"
+                Command="{Binding SaveValueChangesCommand}"></Button>
         </StackPanel>
 
-
+        <!-- 提供边框笔刷 -->
+        <TextBox Visibility="Collapsed" x:Name="BorderRed" BorderBrush="#FF5370" />
+        <TextBox Visibility="Collapsed" x:Name="BorderDefault" />
     </Grid>
 
 </UserControl>

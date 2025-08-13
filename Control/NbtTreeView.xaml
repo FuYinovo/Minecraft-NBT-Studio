@@ -7,6 +7,7 @@
     xmlns:model="using:NBT_Studio.Model"
     xmlns:converter="using:NBT_Studio.Control.Converter"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:enum="using:NBT_Studio.Library.NBT_Parser.Enum"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
@@ -40,6 +41,89 @@
                 <!-- 右键菜单 -->
                 <TreeViewItem.ContextFlyout>
                     <MenuFlyout>
+                        <!-- 插入节点 -->
+                        <MenuFlyoutSubItem Text="插入节点">
+                            <MenuFlyoutSubItem.Icon>
+                                <FontIcon Glyph="&#xE710;" />
+                            </MenuFlyoutSubItem.Icon>
+                            <MenuFlyoutSubItem.KeyboardAccelerators>
+                                <KeyboardAccelerator Key="A" />
+                            </MenuFlyoutSubItem.KeyboardAccelerators>
+                            <MenuFlyoutItem Text="字节" Command="{Binding InsertCommand}"
+                                            CommandParameter="{x:Bind enum:NbtTagEnum.Byte}">
+                                <MenuFlyoutItem.KeyboardAccelerators>
+                                    <KeyboardAccelerator Key="B"></KeyboardAccelerator>
+                                </MenuFlyoutItem.KeyboardAccelerators>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutItem Text="短整型" Command="{Binding InsertCommand}"
+                                            CommandParameter="{x:Bind enum:NbtTagEnum.Short}">
+                                <MenuFlyoutItem.KeyboardAccelerators>
+                                    <KeyboardAccelerator Key="S"></KeyboardAccelerator>
+                                </MenuFlyoutItem.KeyboardAccelerators>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutItem Text="整型" Command="{Binding InsertCommand}"
+                                            CommandParameter="{x:Bind enum:NbtTagEnum.Int}">
+                                <MenuFlyoutItem.KeyboardAccelerators>
+                                    <KeyboardAccelerator Key="I"></KeyboardAccelerator>
+                                </MenuFlyoutItem.KeyboardAccelerators>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutItem Text="长整型" Command="{Binding InsertCommand}"
+                                            CommandParameter="{x:Bind enum:NbtTagEnum.Long}">
+                                <MenuFlyoutItem.KeyboardAccelerators>
+                                    <KeyboardAccelerator Key="L"></KeyboardAccelerator>
+                                </MenuFlyoutItem.KeyboardAccelerators>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutItem Text="单精度浮点" Command="{Binding InsertCommand}"
+                                            CommandParameter="{x:Bind enum:NbtTagEnum.Float}">
+                                <MenuFlyoutItem.KeyboardAccelerators>
+                                    <KeyboardAccelerator Key="F"></KeyboardAccelerator>
+                                </MenuFlyoutItem.KeyboardAccelerators>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutItem Text="双精度浮点" Command="{Binding InsertCommand}"
+                                            CommandParameter="{x:Bind enum:NbtTagEnum.Double}">
+                                <MenuFlyoutItem.KeyboardAccelerators>
+                                    <KeyboardAccelerator Key="D"></KeyboardAccelerator>
+                                </MenuFlyoutItem.KeyboardAccelerators>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutItem Text="字符串" Command="{Binding InsertCommand}"
+                                            CommandParameter="{x:Bind enum:NbtTagEnum.Short}">
+                                <MenuFlyoutItem.KeyboardAccelerators>
+                                    <KeyboardAccelerator Key="S"></KeyboardAccelerator>
+                                </MenuFlyoutItem.KeyboardAccelerators>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutSeparator />
+                            <MenuFlyoutItem Text="字节数组" Command="{Binding InsertCommand}"
+                                            CommandParameter="{x:Bind enum:NbtTagEnum.ByteArray}">
+                                <MenuFlyoutItem.KeyboardAccelerators>
+                                    <KeyboardAccelerator Modifiers="Control" Key="B"></KeyboardAccelerator>
+                                </MenuFlyoutItem.KeyboardAccelerators>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutItem Text="整型数组" Command="{Binding InsertCommand}"
+                                            CommandParameter="{x:Bind enum:NbtTagEnum.IntArray}">
+                                <MenuFlyoutItem.KeyboardAccelerators>
+                                    <KeyboardAccelerator Modifiers="Control" Key="I"></KeyboardAccelerator>
+                                </MenuFlyoutItem.KeyboardAccelerators>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutItem Text="长整型数组" Command="{Binding InsertCommand}"
+                                            CommandParameter="{x:Bind enum:NbtTagEnum.LongArray}">
+                                <MenuFlyoutItem.KeyboardAccelerators>
+                                    <KeyboardAccelerator Modifiers="Control" Key="L"></KeyboardAccelerator>
+                                </MenuFlyoutItem.KeyboardAccelerators>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutSeparator />
+                            <MenuFlyoutItem Text="字典" Command="{Binding InsertCommand}"
+                                            CommandParameter="{x:Bind enum:NbtTagEnum.Dictionary}">
+                                <MenuFlyoutItem.KeyboardAccelerators>
+                                    <KeyboardAccelerator Modifiers="Control" Key="D"></KeyboardAccelerator>
+                                </MenuFlyoutItem.KeyboardAccelerators>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutItem Text="列表" Command="{Binding InsertCommand}"
+                                            CommandParameter="{x:Bind enum:NbtTagEnum.List}">
+                                <MenuFlyoutItem.KeyboardAccelerators>
+                                    <KeyboardAccelerator Modifiers="Control" Key="L"></KeyboardAccelerator>
+                                </MenuFlyoutItem.KeyboardAccelerators>
+                            </MenuFlyoutItem>
+                        </MenuFlyoutSubItem>
                         <!-- 重命名 -->
                         <MenuFlyoutItem Text="重命名" Command="{Binding RenameCommand}">
                             <MenuFlyoutItem.Icon>
@@ -50,12 +134,13 @@
                             </MenuFlyoutItem.KeyboardAccelerators>
                         </MenuFlyoutItem>
                         <!-- 删除 -->
-                        <MenuFlyoutItem Text="删除" Command="{Binding DeleteCommand}">
+                        <MenuFlyoutItem Text="删除" Command="{Binding DeleteCommand}"
+                                        KeyboardAcceleratorTextOverride="Delete">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Glyph="&#xE74D;" Foreground="#ff7f8d" />
                             </MenuFlyoutItem.Icon>
                             <MenuFlyoutItem.KeyboardAccelerators>
-                                <KeyboardAccelerator Key="D" />
+                                <KeyboardAccelerator Key="Delete" />
                             </MenuFlyoutItem.KeyboardAccelerators>
                         </MenuFlyoutItem>
                     </MenuFlyout>
@@ -95,6 +180,6 @@
             ItemTemplate="{StaticResource TreeNodeTemplate}"
             SelectionMode="Single"
             CanDrag="False" CanDragItems="False" AllowDrop="False"
-            SelectionChanged="UpdateSelectedNode" />
+            SelectionChanged="SendSelectedNodeChangedMessage" />
     </Grid>
 </UserControl>

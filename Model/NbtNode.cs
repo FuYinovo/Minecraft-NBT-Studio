@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -25,9 +26,10 @@ public sealed partial class NbtNode : ObservableObject
     /// <summary>
     ///     初始化属性
     /// </summary>
-    public NbtNode(NbtTag nbtTag, bool isRootNode = false)
+    public NbtNode(NbtTag nbtTag, bool isRootNode = false, NbtNode? parent = null)
     {
         // NBT 标签
+        Parent = parent;
         Tag = nbtTag;
         TagEnum = Tag.Tag;
         IsRootNode = isRootNode;
@@ -46,7 +48,7 @@ public sealed partial class NbtNode : ObservableObject
         Icon = GetIconUri(TagEnum);
         // 节点子项
         foreach (var child in nbtTag.Children.Where(child => child.Tag != NbtTagEnum.End))
-            Children.Add(new NbtNode(child));
+            Children.Add(new NbtNode(child, false, this));
         // 子项数量
         DisplayChildrenCount = $"<{Children.Count.ToString()}>";
         // 是否显示子项数量
@@ -78,11 +80,11 @@ public sealed partial class NbtNode : ObservableObject
     public Visibility EqualMarkVisibility { get; } = Visibility.Collapsed;
     public ObservableCollection<NbtNode> Children { get; } = [];
     public NbtTag Tag { get; }
+    public NbtNode? Parent { get; }
     public NbtTagEnum TagEnum { get; }
-    public string Value { get; }
     public string Icon { get; }
     public readonly bool IsRootNode;
-
+    [ObservableProperty] private string _value;
     [ObservableProperty] private string _name = string.Empty;
     [ObservableProperty] private string _displayChildrenCount = string.Empty;
     [ObservableProperty] private Visibility _visibility = Visibility.Visible;
@@ -177,5 +179,40 @@ public sealed partial class NbtNode
         Tag.SetName(content.NewName);
         Name = content.NewName;
         WeakReferenceMessenger.Default.Send(new NodeChangedMessage((this, NodeChangeType.Rename)));
+    }
+
+    /// <summary>
+    ///     在自身或父类插入新节点
+    /// </summary>
+    [RelayCommand]
+    private void Insert(NbtTagEnum tagEnum)
+    {
+        WeakReferenceMessenger.Default.Send(new AddNodeMessage(this, tagEnum));
+    }
+
+    /// <summary>
+    ///     设置节点值
+    /// </summary>
+    /// <param name="newValue"></param>
+    public void SetValue(string newValue)
+    {
+        Tag.SetValue(TagEnum switch
+        {
+            //TODO)) 数组保存
+            NbtTagEnum.Byte => byte.Parse(newValue),
+            NbtTagEnum.Short => short.Parse(newValue),
+            NbtTagEnum.Int => int.Parse(newValue),
+            NbtTagEnum.Long => long.Parse(newValue),
+            NbtTagEnum.Float => float.Parse(newValue),
+            NbtTagEnum.Double => double.Parse(newValue),
+            NbtTagEnum.ByteArray => Array.Empty<byte>(),
+            NbtTagEnum.String => newValue,
+            NbtTagEnum.IntArray => Array.Empty<int>(),
+            NbtTagEnum.LongArray => Array.Empty<long>(),
+            _ => throw new ArgumentOutOfRangeException()
+        });
+
+        Value = newValue;
+        WeakReferenceMessenger.Default.Send(new NodeChangedMessage((this, NodeChangeType.SetValue)));
     }
 }
