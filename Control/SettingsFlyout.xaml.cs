@@ -11,15 +11,12 @@ public sealed partial class SettingsFlyout
     public SettingsFlyout()
     {
         InitializeComponent();
+        Loaded += UpdateBindings;
     }
 
-    private void Comb_Theme_OnLoaded(object sender, RoutedEventArgs e)
+    private void UpdateBindings(object sender, RoutedEventArgs e)
     {
-        ((ComboBox)sender).SelectedIndex = (int)_flyoutViewModel.Theme;
-    }
-
-    private void Comb_Sort_OnLoaded(object sender, RoutedEventArgs e)
-    {
-        ((ComboBox)sender).SelectedIndex = (int)_flyoutViewModel.Sort;
+        CombTheme.SelectedIndex = (int)_flyoutViewModel.Theme;
+        CombSort.SelectedIndex = (int)_flyoutViewModel.Sort;
     }
 }
