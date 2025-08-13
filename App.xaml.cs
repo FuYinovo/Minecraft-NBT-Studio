@@ -8,7 +8,7 @@ namespace NBT_Studio;
 
 public partial class App
 {
-    public static Window? MainWindow;
+    public static MainWindow? MainWindow;
 
     public App()
     {
