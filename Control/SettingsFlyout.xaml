@@ -8,7 +8,6 @@
     xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:settings="using:NBT_Studio.Enum.Settings"
     mc:Ignorable="d">
 
 
@@ -20,12 +19,9 @@
                                             Description="设置深浅色模式"
                                             Padding="20,20,160,20"
                                             Width="500">
-                        <ComboBox x:Name="CombTheme" SelectedValue="{Binding Theme, Mode=TwoWay}"
-                                  SelectedValuePath="Tag">
-                            <ComboBoxItem Tag="{x:Bind settings:Theme.Default}" Content="系统" />
-                            <ComboBoxItem Tag="{x:Bind settings:Theme.Dark}" Content="深色" />
-                            <ComboBoxItem Tag="{x:Bind settings:Theme.Light}" Content="浅色" />
-                        </ComboBox>
+                        <ComboBox SelectedItem="{Binding SelectedTheme, Mode=TwoWay}"
+                                  ItemsSource="{Binding ThemeItems}"
+                                  DisplayMemberPath="Content" />
                     </community:SettingsCard>
                 </community:SettingsExpander.Items>
             </community:SettingsExpander>
@@ -37,11 +33,10 @@
                                             Description="节点的排序方式"
                                             Padding="20,20,160,20"
                                             Width="500">
-                        <ComboBox x:Name="CombSort" SelectedValue="{Binding Sort, Mode=TwoWay}" SelectedValuePath="Tag">
-                            <ComboBoxItem Tag="{x:Bind settings:Sort.Default}" Content="默认" />
-                            <ComboBoxItem Tag="{x:Bind settings:Sort.Alphabetical}" Content="首字母" />
-                            <ComboBoxItem Tag="{x:Bind settings:Sort.ByType}" Content="类型" />
-                        </ComboBox>
+                        <ComboBox SelectedItem="{Binding SelectedSort, Mode=TwoWay}"
+                                  ItemsSource="{Binding SortItems}"
+                                  DisplayMemberPath="Content" />
+
                     </community:SettingsCard>
                 </community:SettingsExpander.Items>
             </community:SettingsExpander>

@@ -18,7 +18,7 @@ public static class ControlDisabler
         foreach (var item in comboBox.Items)
         {
             if (item is not ComboBoxItem { Tag: T itemEnum } comboBoxItem) return;
-            comboBoxItem.IsEnabled = itemEnum.ToString() == sourceEnum.ToString();
+            comboBoxItem.IsEnabled = itemEnum.Equals(sourceEnum);
         }
     }
 

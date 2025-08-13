@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
-using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using NBT_Studio.Enum.Settings;
 using NBT_Studio.Message;
 
@@ -17,6 +17,8 @@ public partial class SettingsFlyoutViewModel : ObservableObject
 {
     public SettingsFlyoutViewModel()
     {
+        _selectedSort = SortItems[0];
+        _selectedTheme = ThemeItems[0];
         _nameToValueSetter = GetValueSetters();
         _ = LoadSettingsFile();
     }
@@ -47,14 +49,14 @@ public partial class SettingsFlyoutViewModel : ObservableObject
     }
 
     /// <summary>
-    ///     获取「名称」到「[方法]设置值」的字典
+    ///     获取「名称」到「方法:设置值」的字典
     /// </summary>
     private Dictionary<string, Action<int>> GetValueSetters()
     {
         return new Dictionary<string, Action<int>>
         {
-            { nameof(Theme), v => Theme = (Theme)v },
-            { nameof(Sort), v => Sort = (Sort)v }
+            { nameof(Theme), i => SelectedTheme = ThemeItems[i] },
+            { nameof(Sort), i => SelectedSort = SortItems[i] }
         };
     }
 
@@ -70,20 +72,48 @@ public partial class SettingsFlyoutViewModel : ObservableObject
 
     #region Settings Properties
 
-    private Sort _sort = Sort.Default;
-    private Theme _theme = Theme.Default;
+    private ComboBoxItem _selectedSort;
+    private ComboBoxItem _selectedTheme;
 
-    public Sort Sort
+    public ComboBoxItem SelectedSort
     {
-        get => _sort;
-        set => SetFieldForSettings(ref _sort, value, Sort);
+        get => _selectedSort;
+        set
+        {
+            SetField(ref _selectedSort, value);
+            WeakReferenceMessenger.Default.Send(new SettingsValueChangedMessage<Sort>((Sort)value.Tag));
+            _ = UpdateSettingsFile();
+        }
     }
 
-    public Theme Theme
+    public ComboBoxItem SelectedTheme
     {
-        get => _theme;
-        set => SetFieldForSettings(ref _theme, value, Theme);
+        get => _selectedTheme;
+        set
+        {
+            SetField(ref _selectedTheme, value);
+            WeakReferenceMessenger.Default.Send(new SettingsValueChangedMessage<Theme>((Theme)value.Tag));
+            _ = UpdateSettingsFile();
+        }
     }
+
+    #endregion
+
+    # region Settings Items
+
+    public List<ComboBoxItem> SortItems { get; } =
+    [
+        new() { Tag = Sort.Default, Content = "默认" },
+        new() { Tag = Sort.Alphabetical, Content = "首字母" },
+        new() { Tag = Sort.ByType, Content = "类型" }
+    ];
+
+    public List<ComboBoxItem> ThemeItems { get; } =
+    [
+        new() { Tag = Theme.Default, Content = "系统" },
+        new() { Tag = Theme.Dark, Content = "深色" },
+        new() { Tag = Theme.Light, Content = "浅色" }
+    ];
 
     #endregion
 
@@ -94,14 +124,6 @@ public partial class SettingsFlyoutViewModel : ObservableObject
         if (EqualityComparer<T>.Default.Equals(field, value)) return;
         field = value;
         OnPropertyChanged(propertyName);
-    }
-
-    private void SetFieldForSettings<T, TE>(ref T field, T value, TE settingsEnum,
-        [CallerMemberName] string? propertyName = null) where TE : System.Enum
-    {
-        SetField(ref field, value, propertyName);
-        WeakReferenceMessenger.Default.Send(new SettingsValueChangedMessage<TE>(settingsEnum));
-        _ = UpdateSettingsFile();
     }
 
     #endregion NotifyPropertyChanged
