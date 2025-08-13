@@ -11,16 +11,13 @@
 
     <Grid DataContext="{x:Bind _viewModel}" x:Name="ControlGrid" Padding="20, 20, -20, 20" ColumnSpacing="24">
         <Grid.RowDefinitions>
-            <RowDefinition Height="auto"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0">
-        </Grid>
+        <Grid Grid.Row="0" />
 
-        <Grid Grid.Row="1">
-
-        </Grid>
+        <Grid Grid.Row="1" />
 
     </Grid>
 

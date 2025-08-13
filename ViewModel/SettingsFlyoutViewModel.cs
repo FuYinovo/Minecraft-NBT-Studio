@@ -60,6 +60,17 @@ public partial class SettingsFlyoutViewModel : ObservableObject
         };
     }
 
+    # region INotifyPropertyChanged
+
+    private void SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
+    {
+        if (EqualityComparer<T>.Default.Equals(field, value)) return;
+        field = value;
+        OnPropertyChanged(propertyName);
+    }
+
+    #endregion NotifyPropertyChanged
+
 
     #region Private Properties
 
@@ -116,15 +127,4 @@ public partial class SettingsFlyoutViewModel : ObservableObject
     ];
 
     #endregion
-
-    # region INotifyPropertyChanged
-
-    private void SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
-    {
-        if (EqualityComparer<T>.Default.Equals(field, value)) return;
-        field = value;
-        OnPropertyChanged(propertyName);
-    }
-
-    #endregion NotifyPropertyChanged
 }

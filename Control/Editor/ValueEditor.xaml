@@ -62,20 +62,20 @@
                              IsEnabled="False"
                              TextWrapping="Wrap"
                              IsSpellCheckEnabled="False"
-                             TextChanged="TextBox_OnValueChanged"/>
+                             TextChanged="TextBox_OnValueChanged" />
                 </Grid>
             </Grid>
-            <Button 
-                x:Name="SaveButton" 
+            <Button
+                x:Name="SaveButton"
                 Margin="0,16,0,0"
                 Width="120"
                 Height="40"
                 HorizontalAlignment="Right"
-                Style="{ThemeResource AccentButtonStyle}" 
+                Style="{ThemeResource AccentButtonStyle}"
                 IsEnabled="False"
                 Content="保存修改"
                 Click="SaveButton_OnClick"
-                Command="{Binding SaveValueChangesCommand}"></Button>
+                Command="{Binding SaveValueChangesCommand}" />
         </StackPanel>
 
         <!-- 提供边框笔刷 -->

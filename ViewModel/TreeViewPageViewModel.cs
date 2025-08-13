@@ -33,19 +33,24 @@ namespace NBT_Studio.ViewModel;
     "MVVMTK0045:Using [ObservableProperty] on fields is not AOT compatible for WinRT")]
 public sealed partial class TreeViewPageViewModel : ObservableObject
 {
+    private string _filePath = string.Empty;
     [ObservableProperty] private bool _isApplyEnabled;
     [ObservableProperty] private bool _isBedrockLevelDat;
     [ObservableProperty] private bool _isFilterEnabled;
     [ObservableProperty] private bool _isInfoEnabled;
     [ObservableProperty] private bool _isSaveEnabled;
     [ObservableProperty] private bool _isSearchBoxEnabled;
-    [ObservableProperty] private ObservableCollection<NbtNode> _nodes = [];
-    [ObservableProperty] private TreeViewNode? _selectedNode;
-    [ObservableProperty] private bool _waitingToSelectMaskVisibility = true;
-    private string _filePath = string.Empty;
-    private string _searchBoxText = string.Empty;
     private MinecraftEdition _minecraftEdition;
     private int _nodeFilterIndex;
+    [ObservableProperty] private ObservableCollection<NbtNode> _nodes = [];
+    private string _searchBoxText = string.Empty;
+    [ObservableProperty] private TreeViewNode? _selectedNode;
+    [ObservableProperty] private bool _waitingToSelectMaskVisibility = true;
+
+    public TreeViewPageViewModel()
+    {
+        RegisterMessages();
+    }
 
     public int NodeFilterIndex
     {
@@ -65,11 +70,6 @@ public sealed partial class TreeViewPageViewModel : ObservableObject
             SetField(ref _searchBoxText, value);
             ApplyFilter();
         }
-    }
-
-    public TreeViewPageViewModel()
-    {
-        RegisterMessages();
     }
 
     /// <summary>
@@ -482,7 +482,7 @@ public sealed partial class TreeViewPageViewModel
     }
 
     /// <summary>
-    /// 从选择的 TreeViewNode 添加节点
+    ///     从选择的 TreeViewNode 添加节点
     /// </summary>
     /// <remarks>调用 CreateNode</remarks>
     [RelayCommand]

@@ -34,6 +34,5 @@ public partial class ItemEditorViewModel : ObservableObject
         Name = string.Empty
     };
 
-
     #endregion
 }

@@ -11,31 +11,31 @@
 
     <Grid DataContext="{x:Bind _viewModel}" x:Name="ControlGrid" Padding="20, 20, -20, 20" ColumnSpacing="24">
         <Grid.RowDefinitions>
-            <RowDefinition Height="auto"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0">
-            <ItemsRepeater ItemsSource="{Binding Items}"></ItemsRepeater>
+            <ItemsRepeater ItemsSource="{Binding Items}" />
         </Grid>
 
         <Grid Grid.Row="1">
             <StackPanel Orientation="Horizontal" Spacing="24">
                 <StackPanel Spacing="12">
-                    <TextBox Header="空间命名" IsReadOnly="True" Text="{Binding SelectedItem.IdName}"></TextBox>
-                    <TextBox Header="最大堆叠" IsReadOnly="True" Text="{Binding SelectedItem.Maximum}"></TextBox>
+                    <TextBox Header="空间命名" IsReadOnly="True" Text="{Binding SelectedItem.IdName}" />
+                    <TextBox Header="最大堆叠" IsReadOnly="True" Text="{Binding SelectedItem.Maximum}" />
                 </StackPanel>
                 <StackPanel Spacing="12">
-                    <TextBox Header="名称" Text="{Binding SelectedItem.Name}"></TextBox>
+                    <TextBox Header="名称" Text="{Binding SelectedItem.Name}" />
                     <NumberBox Header="数量"
                                SpinButtonPlacementMode="Inline"
                                SmallChange="1"
                                LargeChange="16"
                                Minimum="0"
                                Maximum="{Binding SelectedItem.Maximum}"
-                               Value="{Binding SelectedItem.Count}"/>
+                               Value="{Binding SelectedItem.Count}" />
                 </StackPanel>
-                
+
             </StackPanel>
         </Grid>
 

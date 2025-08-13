@@ -2,6 +2,7 @@ using System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using NBT_Studio.Library.NBT_Parser.Enum;
+using NBT_Studio.Utils;
 
 namespace NBT_Studio.Control.Dialog;
 
@@ -33,7 +34,7 @@ public sealed partial class CreateNodeDialog
     private void TextBox_OnTextChanged(object sender, TextChangedEventArgs e)
     {
         if (sender is not TextBox textBox) return;
-        if (!Utils.NbtValueChecker.IsValid(_tagEnum, textBox.Text))
+        if (!NbtValueChecker.IsValid(_tagEnum, textBox.Text))
         {
             GenericValue.BorderBrush = BorderRed.BorderBrush;
             DialogOkButtonEnabledSetter?.Invoke(false);

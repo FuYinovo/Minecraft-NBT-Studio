@@ -38,6 +38,7 @@ public static class NbtTagEnumExtensions
             _ => null
         };
     }
+
     public static string? GetMinValue(NbtTagEnum tagEnum)
     {
         return tagEnum switch
@@ -54,6 +55,7 @@ public static class NbtTagEnumExtensions
             _ => null
         };
     }
+
     public static bool IsNumber(NbtTagEnum tagEnum)
     {
         return tagEnum switch

@@ -18,9 +18,4 @@ public partial class MapEditorViewModel : ObservableObject
     {
         WeakReferenceMessenger.Default.Register<SelectedNodeChangedMessage>(this, (_, v) => { });
     }
-
-    #region Properties
-
-
-    #endregion
 }
