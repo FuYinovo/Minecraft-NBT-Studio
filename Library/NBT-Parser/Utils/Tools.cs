@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
+using System.Reflection;
 
 namespace NBT_Studio.Library.NBT_Parser.Utils;
 
@@ -66,13 +68,9 @@ public static class Tools
         return bytes;
     }
 
-    public static (int begin, bool isBigEndian) GetNbtBytesInfo(byte[] bytes)
+    public static string? GetEnumDescription(System.Enum enumType)
     {
-        var sizeField = bytes.AsSpan(4, 4);
-        var sizeLittleEndian = BinaryPrimitives.ReadInt32LittleEndian(sizeField);
-        var sizeBiggerEndian = BinaryPrimitives.ReadInt32BigEndian(sizeField);
-        if (sizeLittleEndian + 8 == bytes.Length) return (8, false);
-        if (sizeBiggerEndian + 8 == bytes.Length) return (8, true);
-        return (0, true);
+        var field = enumType.GetType().GetField(enumType.ToString());
+        return field?.GetCustomAttribute<DescriptionAttribute>()?.Description;
     }
 }

@@ -6,7 +6,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:enum="using:NBT_Studio.Library.NBT_Parser.Enum"
+    xmlns:model="using:NBT_Studio.Model"
     mc:Ignorable="d">
 
 
@@ -24,40 +24,13 @@
 
                 <Grid Grid.Column="0">
                     <StackPanel Spacing="6">
-                        <ComboBox Header="类型" Width="130"
-                                  SelectedIndex="{Binding TypeIndex, Mode=TwoWay}"
-                                  DropDownOpened="ComboBox_Type_Prohibit">
-                            <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.Byte}">字节</ComboBoxItem>
-                            <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.Short}">短整型</ComboBoxItem>
-                            <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.Int}">整型</ComboBoxItem>
-                            <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.Long}">长整型</ComboBoxItem>
-                            <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.Float}">单精度浮点</ComboBoxItem>
-                            <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.Double}">双精度浮点</ComboBoxItem>
-                            <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.String}">字符串</ComboBoxItem>
-                            <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.ByteArray}">字节数组</ComboBoxItem>
-                            <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.IntArray}">整型数组</ComboBoxItem>
-                            <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.LongArray}">长整型数组</ComboBoxItem>
-                            <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.List}">列表</ComboBoxItem>
-                            <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.Dictionary}">字典</ComboBoxItem>
-                        </ComboBox>
-                        <ComboBox Header="子项类型" Width="130"
-                                  SelectedIndex="{Binding ChildrenTypeIndex, Mode=TwoWay}"
-                                  IsEnabled="{Binding IsChildrenTypeEnabled}"
-                                  DropDownOpened="ComboBox_ChildrenType_Prohibit">
-                            <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.Byte}">字节</ComboBoxItem>
-                            <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.Short}">短整型</ComboBoxItem>
-                            <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.Int}">整型</ComboBoxItem>
-                            <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.Long}">长整型</ComboBoxItem>
-                            <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.Float}">单精度浮点</ComboBoxItem>
-                            <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.Double}">双精度浮点</ComboBoxItem>
-                            <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.String}">字符串</ComboBoxItem>
-                            <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.ByteArray}">字节数组</ComboBoxItem>
-                            <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.IntArray}">整型数组</ComboBoxItem>
-                            <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.LongArray}">长整型数组</ComboBoxItem>
-                            <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.List}">列表</ComboBoxItem>
-                            <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.Dictionary}">字典</ComboBoxItem>
-                        </ComboBox>
-
+                        <TextBox Header="类型" Width="130"
+                                 IsReadOnly="True"
+                                 BorderThickness="0" Text="{Binding Type}" />
+                        <TextBox Header="子项类型" Width="130"
+                                 IsReadOnly="True"
+                                 IsEnabled="{Binding IsChildrenTypeEnabled}"
+                                 BorderThickness="0" Text="{Binding ChildrenType}" />
                         <TextBox Header="长度" Width="130"
                                  IsReadOnly="True"
                                  BorderThickness="0" Text="{Binding Length}" />
@@ -70,7 +43,6 @@
                                  Margin="0,0,0,20"
                                  BorderThickness="0" Text="{Binding MinValue}"
                                  IsEnabled="{Binding IsMinValueEnabled}" />
-
 
                         <CheckBox IsChecked="{Binding AllowNegative}" Content="可以为负值"
                                   IsEnabled="{Binding IsAllowNegativeEnabled}"

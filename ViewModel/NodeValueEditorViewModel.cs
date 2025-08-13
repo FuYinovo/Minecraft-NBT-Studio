@@ -1,8 +1,11 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Controls;
 using NBT_Studio.Library.NBT_Parser.Enum;
+using NBT_Studio.Library.NBT_Parser.Utils;
 using NBT_Studio.Message;
 using NBT_Studio.Model;
 
@@ -31,7 +34,6 @@ public sealed partial class NodeValueEditorViewModel : ObservableObject
         TagEnum = node.TagEnum;
         ChildrenTagEnum = node.Tag.ChildrenTag;
 
-
         Name = node.Name;
         Value = node.Value;
         Length = node.Value.Length;
@@ -39,36 +41,10 @@ public sealed partial class NodeValueEditorViewModel : ObservableObject
         AllowDelete = !node.IsRootNode;
         AllowNegative = NbtTagEnumExtensions.AllowNegative(TagEnum);
         AllowDecimal = NbtTagEnumExtensions.AllowDecimal(TagEnum);
-        TypeIndex = GetNbtTagEnumComboBoxIndex(TagEnum);
-        ChildrenTypeIndex = GetNbtTagEnumComboBoxIndex(ChildrenTagEnum);
-        MaxValue = TagEnum switch
-        {
-            NbtTagEnum.Byte
-                or NbtTagEnum.ByteArray => byte.MaxValue.ToString(),
-            NbtTagEnum.Int
-                or NbtTagEnum.IntArray => int.MaxValue.ToString(),
-            NbtTagEnum.Long
-                or NbtTagEnum.LongArray => long.MaxValue.ToString(),
-            NbtTagEnum.Short => short.MaxValue.ToString(),
-            NbtTagEnum.Float => float.MaxValue.ToString(),
-            NbtTagEnum.Double => double.MaxValue.ToString(),
-            _ => string.Empty
-        };
-
-        MinValue = TagEnum switch
-        {
-            NbtTagEnum.Byte
-                or NbtTagEnum.ByteArray => byte.MinValue.ToString(),
-            NbtTagEnum.Int
-                or NbtTagEnum.IntArray => int.MinValue.ToString(),
-            NbtTagEnum.Long
-                or NbtTagEnum.LongArray => long.MinValue.ToString(),
-            NbtTagEnum.Short => short.MinValue.ToString(),
-            NbtTagEnum.Float => float.MinValue.ToString(),
-            NbtTagEnum.Double => double.MinValue.ToString(),
-            _ => string.Empty
-        };
-
+        Type = Tools.GetEnumDescription(TagEnum) ?? string.Empty;
+        ChildrenType = Tools.GetEnumDescription(ChildrenTagEnum) ?? string.Empty;
+        MaxValue = NbtTagEnumExtensions.GetMaxValue(TagEnum) ?? string.Empty;
+        MinValue = NbtTagEnumExtensions.GetMinValue(TagEnum) ?? string.Empty;
 
         var isNumber = NbtTagEnumExtensions.IsNumber(TagEnum) || NbtTagEnumExtensions.IsArray(TagEnum);
         IsChildrenTypeEnabled = TagEnum == NbtTagEnum.List;
@@ -76,40 +52,18 @@ public sealed partial class NodeValueEditorViewModel : ObservableObject
         IsMinValueEnabled = isNumber;
         IsAllowNegativeEnabled = isNumber;
         IsAllowDecimalEnabled = isNumber;
-
-        return;
-
-        int GetNbtTagEnumComboBoxIndex(NbtTagEnum tag)
-        {
-            return tag switch
-            {
-                NbtTagEnum.Byte => 0,
-                NbtTagEnum.Short => 1,
-                NbtTagEnum.Int => 2,
-                NbtTagEnum.Long => 3,
-                NbtTagEnum.Float => 4,
-                NbtTagEnum.Double => 5,
-                NbtTagEnum.ByteArray => 7,
-                NbtTagEnum.String => 6,
-                NbtTagEnum.List => 10,
-                NbtTagEnum.Dictionary => 11,
-                NbtTagEnum.IntArray => 8,
-                NbtTagEnum.LongArray => 9,
-                _ => -1
-            };
-        }
     }
 
 
     #region Properties
 
-    public NbtTagEnum TagEnum { get; private set; } = NbtTagEnum.Unknown;
-    public NbtTagEnum ChildrenTagEnum { get; private set; } = NbtTagEnum.Unknown;
+    private NbtTagEnum TagEnum { get; set; } = NbtTagEnum.Unknown;
+    private NbtTagEnum ChildrenTagEnum { get; set; } = NbtTagEnum.Unknown;
 
     [ObservableProperty] private string _name = string.Empty;
     [ObservableProperty] private string _value = string.Empty;
-    [ObservableProperty] private int _typeIndex = -1;
-    [ObservableProperty] private int _childrenTypeIndex = -1;
+    [ObservableProperty] private string _type = string.Empty;
+    [ObservableProperty] private string _childrenType = string.Empty;
     [ObservableProperty] private int _length;
     [ObservableProperty] private string _maxValue = string.Empty;
     [ObservableProperty] private string _minValue = string.Empty;
@@ -117,7 +71,6 @@ public sealed partial class NodeValueEditorViewModel : ObservableObject
     [ObservableProperty] private bool _allowDecimal;
     [ObservableProperty] private bool _allowChildren;
     [ObservableProperty] private bool _allowDelete;
-
     [ObservableProperty] private bool _isChildrenTypeEnabled;
     [ObservableProperty] private bool _isMaxValueEnabled;
     [ObservableProperty] private bool _isMinValueEnabled;

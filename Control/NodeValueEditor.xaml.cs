@@ -38,16 +38,4 @@ public sealed partial class NodeValueEditor
         if (sender is not CheckBox checkBox) return;
         ControlDisabler.DisableCheckBox(checkBox);
     }
-
-    private void ComboBox_Type_Prohibit(object? sender, object e)
-    {
-        if (sender is not ComboBox comboBox) return;
-        ControlDisabler.DisableComboBoxItemsByTag(comboBox, _viewModel.TagEnum);
-    }
-
-    private void ComboBox_ChildrenType_Prohibit(object? sender, object e)
-    {
-        if (sender is not ComboBox comboBox) return;
-        ControlDisabler.DisableComboBoxItemsByTag(comboBox, _viewModel.ChildrenTagEnum);
-    }
 }
