@@ -1,17 +1,16 @@
 using System;
-using System.Text.RegularExpressions;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using NBT_Studio.Library.NBT_Parser.Enum;
 
 namespace NBT_Studio.Control.Dialog;
 
-public sealed partial class AddNodeContent
+public sealed partial class CreateNodeDialog
 {
     private readonly NbtTagEnum _tagEnum;
     public Action<bool>? DialogOkButtonEnabledSetter;
 
-    public AddNodeContent(NbtTagEnum tagEnum)
+    public CreateNodeDialog(NbtTagEnum tagEnum)
     {
         _tagEnum = tagEnum;
         InitializeComponent();
@@ -34,7 +33,7 @@ public sealed partial class AddNodeContent
     private void TextBox_OnTextChanged(object sender, TextChangedEventArgs e)
     {
         if (sender is not TextBox textBox) return;
-        if (!Utils.NbtTagValueChecker.IsValid(_tagEnum, textBox.Text))
+        if (!Utils.NbtValueChecker.IsValid(_tagEnum, textBox.Text))
         {
             GenericValue.BorderBrush = BorderRed.BorderBrush;
             DialogOkButtonEnabledSetter?.Invoke(false);

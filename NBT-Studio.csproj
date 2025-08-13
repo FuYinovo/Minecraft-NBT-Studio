@@ -63,12 +63,12 @@
         <Page Update="Control\Content\RenameNodeContent.xaml">
             <SubType>Designer</SubType>
         </Page>
-        <Page Update="Control\Content\AddNodeContent.xaml">
+        <Page Update="Control\Content\CreateNodeContent.xaml">
             <SubType>Designer</SubType>
         </Page>
     </ItemGroup>
     <ItemGroup>
-        <Page Update="Control\InsertNodeButton.xaml">
+        <Page Update="Control\CreateNodeButton.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
     </ItemGroup>

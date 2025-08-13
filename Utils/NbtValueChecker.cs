@@ -4,7 +4,7 @@ using NBT_Studio.Library.NBT_Parser.Enum;
 
 namespace NBT_Studio.Utils;
 
-public static class NbtTagValueChecker
+public static class NbtValueChecker
 {
     public static bool IsValid(NbtTagEnum tagEnum, string value)
     {

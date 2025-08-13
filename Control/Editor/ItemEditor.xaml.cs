@@ -3,7 +3,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using NBT_Studio.Message;
 using NBT_Studio.ViewModel;
 
-namespace NBT_Studio.Control;
+namespace NBT_Studio.Control.Editor;
 
 public sealed partial class ItemEditor
 {
@@ -17,7 +17,7 @@ public sealed partial class ItemEditor
 
     private void RegisterMessages()
     {
-        WeakReferenceMessenger.Default.Register<NodeValuePanelSizeChangedMessage>(this,
+        WeakReferenceMessenger.Default.Register<DetailPadSizeChangedMessage>(this,
             (_, v) => UpdateGridSize(v.Value));
     }
 

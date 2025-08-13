@@ -1,6 +1,6 @@
 ﻿namespace NBT_Studio.Enum;
 
-public enum NodeChangeType
+public enum NodeModify
 {
     Rename,
     Remove,

@@ -1,8 +1,8 @@
 namespace NBT_Studio.Control.Dialog;
 
-public sealed partial class RenameNodeContent
+public sealed partial class RenameNodeDialog
 {
-    public RenameNodeContent()
+    public RenameNodeDialog()
     {
         InitializeComponent();
     }

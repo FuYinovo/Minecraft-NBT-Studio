@@ -17,6 +17,6 @@ public sealed partial class TreeViewPage
     // 发送「节点详情区域大小更新」信息
     private void DetailSectionSizeChanged(object sender, SizeChangedEventArgs e)
     {
-        WeakReferenceMessenger.Default.Send(new NodeValuePanelSizeChangedMessage(e.NewSize));
+        WeakReferenceMessenger.Default.Send(new DetailPadSizeChangedMessage(e.NewSize));
     }
 }

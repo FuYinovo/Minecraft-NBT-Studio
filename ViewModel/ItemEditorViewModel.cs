@@ -31,7 +31,7 @@ public partial class ItemEditorViewModel : ObservableObject
         Maximum = 64,
         Slot = 0,
         IdName = string.Empty,
-        Name = string.Empty,
+        Name = string.Empty
     };
 
 

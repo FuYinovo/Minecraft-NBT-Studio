@@ -5,7 +5,7 @@ using CommunityToolkit.WinUI.Helpers;
 
 namespace NBT_Studio.Enum;
 
-public enum MinecraftMapColor
+public enum MinecraftMapColor : byte
 {
     None = 0,
     Grass = 1,
@@ -68,10 +68,10 @@ public enum MinecraftMapColor
     WarpedWartBlock = 58,
     Deepslate = 59,
     RawIron = 60,
-    GlowLichen = 61,
+    GlowLichen = 61
 }
 
-public enum MinecraftColorModify
+public enum MinecraftColorModify : byte
 {
     Low = 0,
     Normal = 1,

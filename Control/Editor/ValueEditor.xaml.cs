@@ -8,7 +8,7 @@ using NBT_Studio.Message;
 using NBT_Studio.Utils;
 using NBT_Studio.ViewModel;
 
-namespace NBT_Studio.Control;
+namespace NBT_Studio.Control.Editor;
 
 public sealed partial class ValueEditor
 {
@@ -22,7 +22,7 @@ public sealed partial class ValueEditor
 
     private void RegisterMessages()
     {
-        WeakReferenceMessenger.Default.Register<NodeValuePanelSizeChangedMessage>(this,
+        WeakReferenceMessenger.Default.Register<DetailPadSizeChangedMessage>(this,
             (_, v) => UpdateGridSize(v.Value));
     }
 
@@ -51,7 +51,7 @@ public sealed partial class ValueEditor
             return;
         }
 
-        SetState(NbtTagValueChecker.IsValid(_viewModel.TagEnum, textBox.Text));
+        SetState(NbtValueChecker.IsValid(_viewModel.TagEnum, textBox.Text));
 
 
         return;

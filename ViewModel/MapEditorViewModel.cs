@@ -1,9 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using NBT_Studio.Message;
-using NBT_Studio.Model;
 
 namespace NBT_Studio.ViewModel;
 

@@ -24,7 +24,7 @@ public partial class App
 
     private void RegisterMessages()
     {
-        WeakReferenceMessenger.Default.Register<SettingsValueChangedMessage<Theme>>(this, (_, v) => SetTheme(v.Value));
+        WeakReferenceMessenger.Default.Register<SettingsChangedMessage<Theme>>(this, (_, v) => SetTheme(v.Value));
     }
 
     private static void SetTheme(Theme theme)

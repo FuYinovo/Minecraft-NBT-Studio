@@ -81,7 +81,7 @@ public partial class SettingsFlyoutViewModel : ObservableObject
         set
         {
             SetField(ref _selectedSort, value);
-            WeakReferenceMessenger.Default.Send(new SettingsValueChangedMessage<Sort>((Sort)value.Tag));
+            WeakReferenceMessenger.Default.Send(new SettingsChangedMessage<Sort>((Sort)value.Tag));
             _ = UpdateSettingsFile();
         }
     }
@@ -92,7 +92,7 @@ public partial class SettingsFlyoutViewModel : ObservableObject
         set
         {
             SetField(ref _selectedTheme, value);
-            WeakReferenceMessenger.Default.Send(new SettingsValueChangedMessage<Theme>((Theme)value.Tag));
+            WeakReferenceMessenger.Default.Send(new SettingsChangedMessage<Theme>((Theme)value.Tag));
             _ = UpdateSettingsFile();
         }
     }

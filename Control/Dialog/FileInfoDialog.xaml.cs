@@ -2,9 +2,9 @@ using NBT_Studio.Enum;
 
 namespace NBT_Studio.Control.Dialog;
 
-public sealed partial class FileInfoContent
+public sealed partial class FileInfoDialog
 {
-    public FileInfoContent(string filePath, int fileLength, MinecraftEdition minecraftEdition, bool isBigEndian)
+    public FileInfoDialog(string filePath, int fileLength, MinecraftEdition minecraftEdition, bool isBigEndian)
     {
         InitializeComponent();
 

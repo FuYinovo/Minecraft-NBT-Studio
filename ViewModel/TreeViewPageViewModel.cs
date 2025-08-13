@@ -13,6 +13,7 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using NBT_Studio.Control.Dialog;
 using NBT_Studio.Enum;
 using NBT_Studio.Enum.Settings;
 using NBT_Studio.Library.NBT_Parser.Class;
@@ -22,8 +23,6 @@ using NBT_Studio.Message;
 using NBT_Studio.Model;
 using NBT_Studio.Service;
 using WinRT.Interop;
-using AddNodeContent = NBT_Studio.Control.Dialog.AddNodeContent;
-using FileInfoContent = NBT_Studio.Control.Dialog.FileInfoContent;
 
 namespace NBT_Studio.ViewModel;
 
@@ -86,15 +85,15 @@ public sealed partial class TreeViewPageViewModel : ObservableObject
                 WaitingToSelectMaskVisibility = false;
             });
         // 「排序方式改动」消息
-        WeakReferenceMessenger.Default.Register<SettingsValueChangedMessage<Sort>>(this,
+        WeakReferenceMessenger.Default.Register<SettingsChangedMessage<Sort>>(this,
             (_, v) => ApplySort(v.Value));
         // 「节点被修改」消息
-        WeakReferenceMessenger.Default.Register<NodeChangedMessage>(this,
+        WeakReferenceMessenger.Default.Register<ModifyNodeMessage>(this,
             (_, v) => NodeChangeAction(v.Value.node, v.Value.type));
         // 「添加一个节点」信息
-        WeakReferenceMessenger.Default.Register<AddNodeMessage>(this,
+        WeakReferenceMessenger.Default.Register<CreateNodeMessage>(this,
             // ReSharper disable once AsyncVoidMethod
-            async void (_, v) => await AddNode(v.Value.invokedNode, v.Value.tagEnum));
+            async void (_, v) => await CreateNode(v.Value.invokedNode, v.Value.tagEnum));
     }
 
     private void SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
@@ -284,7 +283,7 @@ public sealed partial class TreeViewPageViewModel
     [RelayCommand]
     private async Task ShowFileInfo()
     {
-        var content = new FileInfoContent(_filePath, Nodes.First().Tag.GetBytes().Length, _minecraftEdition,
+        var content = new FileInfoDialog(_filePath, Nodes.First().Tag.GetBytes().Length, _minecraftEdition,
             Nodes.First().Tag.IsBigEndian);
         await DialogService.ShowDialog("文件信息", "确认", content: content);
     }
@@ -395,13 +394,13 @@ public sealed partial class TreeViewPageViewModel
 
     /// <summary> 处理节点修改操作相关 UI 更新 </summary>
     /// <remarks> 委托方法</remarks>
-    private void NodeChangeAction(NbtNode node, NodeChangeType type)
+    private void NodeChangeAction(NbtNode node, NodeModify type)
     {
         switch (type)
         {
-            case NodeChangeType.Rename:
+            case NodeModify.Rename:
                 break;
-            case NodeChangeType.Remove:
+            case NodeModify.Remove:
                 Nodes.Remove(node);
                 // 隐藏自身及其子项
                 node.Visibility = Visibility.Collapsed;
@@ -409,7 +408,7 @@ public sealed partial class TreeViewPageViewModel
                 // 更新其父节点的子项数量显示
                 foreach (var child in Nodes.First().GetChildrenAll()) child.UpdateChildrenCount();
                 break;
-            case NodeChangeType.SetValue:
+            case NodeModify.SetValue:
                 break;
             default:
                 throw new Exception("无法确定节点修改操作类型");
@@ -427,7 +426,7 @@ public sealed partial class TreeViewPageViewModel
     /// <summary>
     ///     添加节点
     /// </summary>
-    private async Task AddNode(NbtNode invokedNode, NbtTagEnum tagEnum)
+    private async Task CreateNode(NbtNode invokedNode, NbtTagEnum tagEnum)
     {
         // 确认父类目标（若「选中」是列表或字典，则为自身添加子项，否则为父节点添加子项）
         var parent = NbtTagEnumExtensions.IsCollection(invokedNode.TagEnum)
@@ -443,7 +442,7 @@ public sealed partial class TreeViewPageViewModel
         }
 
         // 初始化弹窗
-        var content = new AddNodeContent(tagEnum);
+        var content = new CreateNodeDialog(tagEnum);
         var dialog = DialogService.GetDialog($"添加「{tagEnum}」节点", "确认", close: "取消", content: content);
         content.DialogOkButtonEnabledSetter = b => dialog.IsPrimaryButtonEnabled = b;
         dialog.IsPrimaryButtonEnabled = NbtTagEnumExtensions.IsCollection(tagEnum);
@@ -485,9 +484,9 @@ public sealed partial class TreeViewPageViewModel
     /// <summary>
     /// 从选择的 TreeViewNode 添加节点
     /// </summary>
-    /// <remarks>调用 AddNode</remarks>
+    /// <remarks>调用 CreateNode</remarks>
     [RelayCommand]
-    private async Task AddNodeFromSelected(NbtTagEnum tagEnum)
+    private async Task CreateNodeFromSelected(NbtTagEnum tagEnum)
     {
         if (SelectedNode == null)
         {
@@ -495,6 +494,6 @@ public sealed partial class TreeViewPageViewModel
             return;
         }
 
-        await AddNode((NbtNode)SelectedNode.Content, tagEnum);
+        await CreateNode((NbtNode)SelectedNode.Content, tagEnum);
     }
 }

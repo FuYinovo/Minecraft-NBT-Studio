@@ -1,8 +1,6 @@
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 using NBT_Studio.ViewModel;
 
-namespace NBT_Studio.Control;
+namespace NBT_Studio.Control.Flyout;
 
 public sealed partial class SettingsFlyout
 {

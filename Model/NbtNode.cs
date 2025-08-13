@@ -9,12 +9,12 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using NBT_Studio.Control.Dialog;
 using NBT_Studio.Enum;
 using NBT_Studio.Library.NBT_Parser.Class;
 using NBT_Studio.Library.NBT_Parser.Enum;
 using NBT_Studio.Message;
 using NBT_Studio.Service;
-using RenameNodeContent = NBT_Studio.Control.Dialog.RenameNodeContent;
 
 namespace NBT_Studio.Model;
 
@@ -147,12 +147,13 @@ public sealed partial class NbtNode
     }
 }
 
-// 节点操作方法
+// 数据测的节点操作
 public sealed partial class NbtNode
 {
     /// <summary>
     ///     删除节点
     /// </summary>
+    /// <remarks>数据测</remarks>
     [RelayCommand]
     private async Task Delete()
     {
@@ -163,37 +164,39 @@ public sealed partial class NbtNode
         }
 
         Tag.RemoveSelf();
-        WeakReferenceMessenger.Default.Send(new NodeChangedMessage((this, NodeChangeType.Remove)));
+        WeakReferenceMessenger.Default.Send(new ModifyNodeMessage((this, NodeModify.Remove)));
     }
 
     /// <summary>
     ///     重命名节点
     /// </summary>
+    /// <remarks>数据测</remarks>
     [RelayCommand]
     private async Task Rename()
     {
-        var content = new RenameNodeContent();
+        var content = new RenameNodeDialog();
         var choice = await DialogService.ShowDialog("重命名", "确认", close: "取消", content: content);
         if (choice != ContentDialogResult.Primary) return;
 
         Tag.SetName(content.NewName);
         Name = content.NewName;
-        WeakReferenceMessenger.Default.Send(new NodeChangedMessage((this, NodeChangeType.Rename)));
+        WeakReferenceMessenger.Default.Send(new ModifyNodeMessage((this, NodeModify.Rename)));
     }
 
     /// <summary>
     ///     在自身或父类插入新节点
     /// </summary>
+    /// <remarks>数据测与界面测实现均在 TreeViewPageViewModel </remarks>
     [RelayCommand]
-    private void Insert(NbtTagEnum tagEnum)
+    private void CreateChild(NbtTagEnum tagEnum)
     {
-        WeakReferenceMessenger.Default.Send(new AddNodeMessage(this, tagEnum));
+        WeakReferenceMessenger.Default.Send(new CreateNodeMessage(this, tagEnum));
     }
 
     /// <summary>
     ///     设置节点值
     /// </summary>
-    /// <param name="newValue"></param>
+    /// <remarks>数据测</remarks>
     public void SetValue(string newValue)
     {
         Tag.SetValue(TagEnum switch
@@ -213,6 +216,6 @@ public sealed partial class NbtNode
         });
 
         Value = newValue;
-        WeakReferenceMessenger.Default.Send(new NodeChangedMessage((this, NodeChangeType.SetValue)));
+        WeakReferenceMessenger.Default.Send(new ModifyNodeMessage((this, NodeModify.SetValue)));
     }
 }

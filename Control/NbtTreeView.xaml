@@ -49,75 +49,75 @@
                             <MenuFlyoutSubItem.KeyboardAccelerators>
                                 <KeyboardAccelerator Key="A" />
                             </MenuFlyoutSubItem.KeyboardAccelerators>
-                            <MenuFlyoutItem Text="字节" Command="{Binding InsertCommand}"
+                            <MenuFlyoutItem Text="字节" Command="{Binding CreateChildCommand}"
                                             CommandParameter="{x:Bind enum:NbtTagEnum.Byte}">
                                 <MenuFlyoutItem.KeyboardAccelerators>
                                     <KeyboardAccelerator Key="B"></KeyboardAccelerator>
                                 </MenuFlyoutItem.KeyboardAccelerators>
                             </MenuFlyoutItem>
-                            <MenuFlyoutItem Text="短整型" Command="{Binding InsertCommand}"
+                            <MenuFlyoutItem Text="短整型" Command="{Binding CreateChildCommand}"
                                             CommandParameter="{x:Bind enum:NbtTagEnum.Short}">
                                 <MenuFlyoutItem.KeyboardAccelerators>
                                     <KeyboardAccelerator Key="S"></KeyboardAccelerator>
                                 </MenuFlyoutItem.KeyboardAccelerators>
                             </MenuFlyoutItem>
-                            <MenuFlyoutItem Text="整型" Command="{Binding InsertCommand}"
+                            <MenuFlyoutItem Text="整型" Command="{Binding CreateChildCommand}"
                                             CommandParameter="{x:Bind enum:NbtTagEnum.Int}">
                                 <MenuFlyoutItem.KeyboardAccelerators>
                                     <KeyboardAccelerator Key="I"></KeyboardAccelerator>
                                 </MenuFlyoutItem.KeyboardAccelerators>
                             </MenuFlyoutItem>
-                            <MenuFlyoutItem Text="长整型" Command="{Binding InsertCommand}"
+                            <MenuFlyoutItem Text="长整型" Command="{Binding CreateChildCommand}"
                                             CommandParameter="{x:Bind enum:NbtTagEnum.Long}">
                                 <MenuFlyoutItem.KeyboardAccelerators>
                                     <KeyboardAccelerator Key="L"></KeyboardAccelerator>
                                 </MenuFlyoutItem.KeyboardAccelerators>
                             </MenuFlyoutItem>
-                            <MenuFlyoutItem Text="单精度浮点" Command="{Binding InsertCommand}"
+                            <MenuFlyoutItem Text="单精度浮点" Command="{Binding CreateChildCommand}"
                                             CommandParameter="{x:Bind enum:NbtTagEnum.Float}">
                                 <MenuFlyoutItem.KeyboardAccelerators>
                                     <KeyboardAccelerator Key="F"></KeyboardAccelerator>
                                 </MenuFlyoutItem.KeyboardAccelerators>
                             </MenuFlyoutItem>
-                            <MenuFlyoutItem Text="双精度浮点" Command="{Binding InsertCommand}"
+                            <MenuFlyoutItem Text="双精度浮点" Command="{Binding CreateChildCommand}"
                                             CommandParameter="{x:Bind enum:NbtTagEnum.Double}">
                                 <MenuFlyoutItem.KeyboardAccelerators>
                                     <KeyboardAccelerator Key="D"></KeyboardAccelerator>
                                 </MenuFlyoutItem.KeyboardAccelerators>
                             </MenuFlyoutItem>
-                            <MenuFlyoutItem Text="字符串" Command="{Binding InsertCommand}"
+                            <MenuFlyoutItem Text="字符串" Command="{Binding CreateChildCommand}"
                                             CommandParameter="{x:Bind enum:NbtTagEnum.Short}">
                                 <MenuFlyoutItem.KeyboardAccelerators>
                                     <KeyboardAccelerator Key="S"></KeyboardAccelerator>
                                 </MenuFlyoutItem.KeyboardAccelerators>
                             </MenuFlyoutItem>
                             <MenuFlyoutSeparator />
-                            <MenuFlyoutItem Text="字节数组" Command="{Binding InsertCommand}"
+                            <MenuFlyoutItem Text="字节数组" Command="{Binding CreateChildCommand}"
                                             CommandParameter="{x:Bind enum:NbtTagEnum.ByteArray}">
                                 <MenuFlyoutItem.KeyboardAccelerators>
                                     <KeyboardAccelerator Modifiers="Control" Key="B"></KeyboardAccelerator>
                                 </MenuFlyoutItem.KeyboardAccelerators>
                             </MenuFlyoutItem>
-                            <MenuFlyoutItem Text="整型数组" Command="{Binding InsertCommand}"
+                            <MenuFlyoutItem Text="整型数组" Command="{Binding CreateChildCommand}"
                                             CommandParameter="{x:Bind enum:NbtTagEnum.IntArray}">
                                 <MenuFlyoutItem.KeyboardAccelerators>
                                     <KeyboardAccelerator Modifiers="Control" Key="I"></KeyboardAccelerator>
                                 </MenuFlyoutItem.KeyboardAccelerators>
                             </MenuFlyoutItem>
-                            <MenuFlyoutItem Text="长整型数组" Command="{Binding InsertCommand}"
+                            <MenuFlyoutItem Text="长整型数组" Command="{Binding CreateChildCommand}"
                                             CommandParameter="{x:Bind enum:NbtTagEnum.LongArray}">
                                 <MenuFlyoutItem.KeyboardAccelerators>
                                     <KeyboardAccelerator Modifiers="Control" Key="L"></KeyboardAccelerator>
                                 </MenuFlyoutItem.KeyboardAccelerators>
                             </MenuFlyoutItem>
                             <MenuFlyoutSeparator />
-                            <MenuFlyoutItem Text="字典" Command="{Binding InsertCommand}"
+                            <MenuFlyoutItem Text="字典" Command="{Binding CreateChildCommand}"
                                             CommandParameter="{x:Bind enum:NbtTagEnum.Dictionary}">
                                 <MenuFlyoutItem.KeyboardAccelerators>
                                     <KeyboardAccelerator Modifiers="Control" Key="D"></KeyboardAccelerator>
                                 </MenuFlyoutItem.KeyboardAccelerators>
                             </MenuFlyoutItem>
-                            <MenuFlyoutItem Text="列表" Command="{Binding InsertCommand}"
+                            <MenuFlyoutItem Text="列表" Command="{Binding CreateChildCommand}"
                                             CommandParameter="{x:Bind enum:NbtTagEnum.List}">
                                 <MenuFlyoutItem.KeyboardAccelerators>
                                     <KeyboardAccelerator Modifiers="Control" Key="L"></KeyboardAccelerator>
