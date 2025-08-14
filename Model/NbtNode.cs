@@ -37,7 +37,7 @@ public sealed partial class NbtNode : ObservableObject
         Name = nbtTag.Name ?? TagEnum.ToString();
         // 值
         var value = nbtTag.Value;
-        Value = TagEnum switch
+        DisplayValue = TagEnum switch
         {
             NbtTagEnum.IntArray => string.Join(", ", (int[])value!),
             NbtTagEnum.ByteArray => string.Join(", ", (byte[])value!),
@@ -84,7 +84,7 @@ public sealed partial class NbtNode : ObservableObject
     public NbtTagEnum TagEnum { get; }
     public string Icon { get; }
     public readonly bool IsRootNode;
-    [ObservableProperty] private string _value;
+    [ObservableProperty] private string _displayValue;
     [ObservableProperty] private string _name = string.Empty;
     [ObservableProperty] private string _displayChildrenCount = string.Empty;
     [ObservableProperty] private Visibility _visibility = Visibility.Visible;
@@ -215,7 +215,7 @@ public sealed partial class NbtNode
             _ => throw new ArgumentOutOfRangeException()
         });
 
-        Value = newValue;
+        DisplayValue = newValue;
         WeakReferenceMessenger.Default.Send(new ModifyNodeMessage((this, NodeModify.SetValue)));
     }
 }

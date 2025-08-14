@@ -167,7 +167,7 @@
                                    Text="=" />
                         <!-- 值 -->
                         <TextBlock Style="{StaticResource TreeNodeText}"
-                                   Text="{Binding Value , Converter={StaticResource StringTruncateConverter}}" />
+                                   Text="{Binding DisplayValue , Converter={StaticResource StringTruncateConverter}}" />
                     </StackPanel>
                 </TreeViewItem.Content>
             </TreeViewItem>

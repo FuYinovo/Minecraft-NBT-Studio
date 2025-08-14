@@ -11,10 +11,6 @@
 
     <Grid>
         <StackPanel Spacing="16">
-            <!-- 提供边框笔刷 -->
-            <TextBox Visibility="Collapsed" x:Name="BorderRed" BorderBrush="#FF5370" />
-            <TextBox Visibility="Collapsed" x:Name="BorderDefault" />
-
             <TextBox Header="名称"
                      PlaceholderText="可选"
                      Text="{x:Bind NodeName, Mode=TwoWay}" />
@@ -32,10 +28,7 @@
                 <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.Long}">长整型</ComboBoxItem>
                 <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.Float}">单精度浮点</ComboBoxItem>
                 <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.Double}">双精度浮点</ComboBoxItem>
-                <ComboBoxItem x:Name="DefaultChildrenTag"
-                              Tag="{x:Bind enum:NbtTagEnum.String}">
-                    字符串
-                </ComboBoxItem>
+                <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.String}" x:Name="DefaultChildrenTag">字符串</ComboBoxItem>
                 <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.ByteArray}">字节数组</ComboBoxItem>
                 <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.IntArray}">整型数组</ComboBoxItem>
                 <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.LongArray}">长整型数组</ComboBoxItem>
@@ -43,5 +36,9 @@
                 <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.Dictionary}">字典</ComboBoxItem>
             </ComboBox>
         </StackPanel>
+        <!-- 提供边框笔刷 -->
+        <TextBox Visibility="Collapsed" x:Name="BorderRed" BorderBrush="#FF5370" />
+        <TextBox Visibility="Collapsed" x:Name="BorderDefault" />
     </Grid>
+
 </UserControl>

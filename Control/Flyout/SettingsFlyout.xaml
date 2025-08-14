@@ -13,8 +13,10 @@
 
     <Grid>
         <StackPanel Spacing="4" Width="360" DataContext="{x:Bind _flyoutViewModel}">
+            <!-- 界面区域 -->
             <community:SettingsExpander Header="界面" HeaderIcon="{ui:FontIcon Glyph=&#xE790;}">
                 <community:SettingsExpander.Items>
+                    <!-- 主题选项 -->
                     <community:SettingsCard Header="主题"
                                             Description="设置深浅色模式"
                                             Padding="20,20,160,20"
@@ -26,8 +28,9 @@
                 </community:SettingsExpander.Items>
             </community:SettingsExpander>
 
+            <!-- 普通区域 -->
             <community:SettingsExpander Header="普通" HeaderIcon="{ui:FontIcon Glyph=&#xE713;}">
-
+                <!-- 排序选项 -->
                 <community:SettingsExpander.Items>
                     <community:SettingsCard Header="排序"
                                             Description="节点的排序方式"

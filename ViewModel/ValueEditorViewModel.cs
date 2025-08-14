@@ -38,8 +38,8 @@ public sealed partial class ValueEditorViewModel : ObservableObject
         ChildrenTagEnum = node.Tag.ChildrenTag;
 
         Name = node.Name;
-        Value = node.Value;
-        Length = node.Value.Length;
+        Value = node.DisplayValue;
+        Length = node.DisplayValue.Length;
         AllowChildren = NbtTagEnumExtensions.IsCollection(TagEnum);
         AllowDelete = !node.IsRootNode;
         AllowNegative = NbtTagEnumExtensions.AllowNegative(TagEnum);

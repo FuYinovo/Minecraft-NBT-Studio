@@ -6,18 +6,44 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:graphic="using:Microsoft.Graphics.Canvas.UI.Xaml"
     mc:Ignorable="d">
 
+    <UserControl.Resources>
+        <!-- 地图背景色 -->
+        <Style x:Key="MapBackground" TargetType="Border">
+            <Setter Property="Background" Value="#40d2b48c"></Setter>
+        </Style>
+    </UserControl.Resources>
 
-    <Grid DataContext="{x:Bind _viewModel}" x:Name="ControlGrid" Padding="20, 20, -20, 20" ColumnSpacing="24">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
+    <Grid DataContext="{x:Bind _viewModel}" x:Name="ControlGrid" Padding="-40,20,20,20" ColumnSpacing="24">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="auto" />
+        </Grid.ColumnDefinitions>
 
-        <Grid Grid.Row="0" />
+        <!-- 工具栏 -->
+        <Grid Grid.Column="0">
 
-        <Grid Grid.Row="1" />
+        </Grid>
+
+        <!-- 地图预览 -->
+        <Grid Grid.Column="1">
+            <Border HorizontalAlignment="Right"
+                    Style="{StaticResource MapBackground}"
+                    x:Name="MapCanvasBorder"
+                    CornerRadius="12"
+                    Width="270"
+                    Height="270">
+                <graphic:CanvasControl
+                    x:Name="MapCanvas"
+                    Width="256"
+                    Height="256"
+                    AllowDrop="True"
+                    Draw="DrawMap">
+                </graphic:CanvasControl>
+            </Border>
+        </Grid>
 
     </Grid>
 

@@ -81,279 +81,283 @@ public enum MinecraftColorModify : byte
 
 public struct MinecraftMapColorExtensions
 {
+    /// <summary>
+    /// 获取颜色
+    /// </summary>
+    /// <param name="baseColor">基础色</param>
+    /// <param name="modifier">修饰色</param>
     public static Color GetColor(MinecraftMapColor baseColor, MinecraftColorModify modifier)
     {
         return modifier switch
         {
-            MinecraftColorModify.Low => LowColor[baseColor],
-            MinecraftColorModify.Normal => NormalColor[baseColor],
-            MinecraftColorModify.High => HighColor[baseColor],
-            MinecraftColorModify.Lowest => LowestColor[baseColor],
+            MinecraftColorModify.Low => Colors[baseColor].low,
+            MinecraftColorModify.Normal => Colors[baseColor].normal,
+            MinecraftColorModify.High => Colors[baseColor].high,
+            MinecraftColorModify.Lowest => Colors[baseColor].lowest,
             _ => throw new ArgumentOutOfRangeException(nameof(modifier), modifier, null)
         };
     }
 
-    private static readonly Dictionary<MinecraftMapColor, Color> HighColor = new()
+    /// <summary>
+    /// 获取颜色的十六进制
+    /// </summary>
+    /// <param name="baseColor">基础色</param>
+    /// <param name="modifier">修饰色</param>
+    public static string GetHexColor(MinecraftMapColor baseColor, MinecraftColorModify modifier)
     {
-        { MinecraftMapColor.None, "#00000000".ToColor() },
-        { MinecraftMapColor.Grass, "#7FB238".ToColor() },
-        { MinecraftMapColor.Sand, "#F7E9A3".ToColor() },
-        { MinecraftMapColor.Wool, "#C7C7C7".ToColor() },
-        { MinecraftMapColor.Fire, "#FF0000".ToColor() },
-        { MinecraftMapColor.Ice, "#A0A0FF".ToColor() },
-        { MinecraftMapColor.Metal, "#A7A7A7".ToColor() },
-        { MinecraftMapColor.Plant, "#007C00".ToColor() },
-        { MinecraftMapColor.Snow, "#FFFFFF".ToColor() },
-        { MinecraftMapColor.Clay, "#A4A8B8".ToColor() },
-        { MinecraftMapColor.Dirt, "#976D4D".ToColor() },
-        { MinecraftMapColor.Stone, "#707070".ToColor() },
-        { MinecraftMapColor.Water, "#4040FF".ToColor() },
-        { MinecraftMapColor.Wood, "#8F7748".ToColor() },
-        { MinecraftMapColor.Quartz, "#FFFCF5".ToColor() },
-        { MinecraftMapColor.ColorOrange, "#D87F33".ToColor() },
-        { MinecraftMapColor.ColorMagenta, "#B24CD8".ToColor() },
-        { MinecraftMapColor.ColorLightBlue, "#6699D8".ToColor() },
-        { MinecraftMapColor.ColorYellow, "#E5E533".ToColor() },
-        { MinecraftMapColor.ColorLightGreen, "#7FCC19".ToColor() },
-        { MinecraftMapColor.ColorPink, "#F27FA5".ToColor() },
-        { MinecraftMapColor.ColorGray, "#4C4C4C".ToColor() },
-        { MinecraftMapColor.ColorLightGray, "#999999".ToColor() },
-        { MinecraftMapColor.ColorCyan, "#4C7F99".ToColor() },
-        { MinecraftMapColor.ColorPurple, "#7F3FB2".ToColor() },
-        { MinecraftMapColor.ColorBlue, "#334CB2".ToColor() },
-        { MinecraftMapColor.ColorBrown, "#664C33".ToColor() },
-        { MinecraftMapColor.ColorGreen, "#667F33".ToColor() },
-        { MinecraftMapColor.ColorRed, "#993333".ToColor() },
-        { MinecraftMapColor.ColorBlack, "#191919".ToColor() },
-        { MinecraftMapColor.Gold, "#FAEE4D".ToColor() },
-        { MinecraftMapColor.Diamond, "#5CDBD5".ToColor() },
-        { MinecraftMapColor.Lapis, "#4A80FF".ToColor() },
-        { MinecraftMapColor.Emerald, "#00D93A".ToColor() },
-        { MinecraftMapColor.Podzol, "#815631".ToColor() },
-        { MinecraftMapColor.Nether, "#700200".ToColor() },
-        { MinecraftMapColor.TerracottaWhite, "#D1B1A1".ToColor() },
-        { MinecraftMapColor.TerracottaOrange, "#9F5224".ToColor() },
-        { MinecraftMapColor.TerracottaMagenta, "#95576C".ToColor() },
-        { MinecraftMapColor.TerracottaLightBlue, "#706C8A".ToColor() },
-        { MinecraftMapColor.TerracottaYellow, "#BA8524".ToColor() },
-        { MinecraftMapColor.TerracottaLightGreen, "#677535".ToColor() },
-        { MinecraftMapColor.TerracottaPink, "#A04D4E".ToColor() },
-        { MinecraftMapColor.TerracottaGray, "#392923".ToColor() },
-        { MinecraftMapColor.TerracottaLightGray, "#876B62".ToColor() },
-        { MinecraftMapColor.TerracottaCyan, "#575C5C".ToColor() },
-        { MinecraftMapColor.TerracottaPurple, "#7A4958".ToColor() },
-        { MinecraftMapColor.TerracottaBlue, "#4C3E5C".ToColor() },
-        { MinecraftMapColor.TerracottaBrown, "#4C3223".ToColor() },
-        { MinecraftMapColor.TerracottaGreen, "#4C522A".ToColor() },
-        { MinecraftMapColor.TerracottaRed, "#8E3C2E".ToColor() },
-        { MinecraftMapColor.TerracottaBlack, "#251610".ToColor() },
-        { MinecraftMapColor.CrimsonNylium, "#BD3031".ToColor() },
-        { MinecraftMapColor.CrimsonStem, "#943F61".ToColor() },
-        { MinecraftMapColor.CrimsonHyphae, "#5C191D".ToColor() },
-        { MinecraftMapColor.WarpedNylium, "#167E86".ToColor() },
-        { MinecraftMapColor.WarpedStem, "#3A8E8C".ToColor() },
-        { MinecraftMapColor.WarpedHyphae, "#562C3E".ToColor() },
-        { MinecraftMapColor.WarpedWartBlock, "#14B485".ToColor() },
-        { MinecraftMapColor.Deepslate, "#646464".ToColor() },
-        { MinecraftMapColor.RawIron, "#D8AF93".ToColor() },
-        { MinecraftMapColor.GlowLichen, "#7FA796".ToColor() }
-    };
+        return GetColor(baseColor, modifier).ToHex();
+    }
 
-    private static readonly Dictionary<MinecraftMapColor, Color> NormalColor = new()
-    {
-        { MinecraftMapColor.None, "00000000".ToColor() },
-        { MinecraftMapColor.Grass, "#6D9930".ToColor() },
-        { MinecraftMapColor.Sand, "#D5C98C".ToColor() },
-        { MinecraftMapColor.Wool, "#ABABAB".ToColor() },
-        { MinecraftMapColor.Fire, "#DC0000".ToColor() },
-        { MinecraftMapColor.Ice, "#8A8ADC".ToColor() },
-        { MinecraftMapColor.Metal, "#909090".ToColor() },
-        { MinecraftMapColor.Plant, "#006A00".ToColor() },
-        { MinecraftMapColor.Snow, "#DCDCDC".ToColor() },
-        { MinecraftMapColor.Clay, "#8D909E".ToColor() },
-        { MinecraftMapColor.Dirt, "#825E42".ToColor() },
-        { MinecraftMapColor.Stone, "#606060".ToColor() },
-        { MinecraftMapColor.Water, "#3737DC".ToColor() },
-        { MinecraftMapColor.Wood, "#7B663E".ToColor() },
-        { MinecraftMapColor.Quartz, "#DCD9D3".ToColor() },
-        { MinecraftMapColor.ColorOrange, "#BA6D2C".ToColor() },
-        { MinecraftMapColor.ColorMagenta, "#9941BA".ToColor() },
-        { MinecraftMapColor.ColorLightBlue, "#5884BA".ToColor() },
-        { MinecraftMapColor.ColorYellow, "#C5C52C".ToColor() },
-        { MinecraftMapColor.ColorLightGreen, "#6DB015".ToColor() },
-        { MinecraftMapColor.ColorPink, "#D06D8E".ToColor() },
-        { MinecraftMapColor.ColorGray, "#414141".ToColor() },
-        { MinecraftMapColor.ColorLightGray, "#848484".ToColor() },
-        { MinecraftMapColor.ColorCyan, "#416D84".ToColor() },
-        { MinecraftMapColor.ColorPurple, "#6D3699".ToColor() },
-        { MinecraftMapColor.ColorBlue, "#2C4199".ToColor() },
-        { MinecraftMapColor.ColorBrown, "#58412C".ToColor() },
-        { MinecraftMapColor.ColorGreen, "#586D2C".ToColor() },
-        { MinecraftMapColor.ColorRed, "#842C2C".ToColor() },
-        { MinecraftMapColor.ColorBlack, "#151515".ToColor() },
-        { MinecraftMapColor.Gold, "#D7CD42".ToColor() },
-        { MinecraftMapColor.Diamond, "#4FBCB7".ToColor() },
-        { MinecraftMapColor.Lapis, "#3F6EDC".ToColor() },
-        { MinecraftMapColor.Emerald, "#00BB32".ToColor() },
-        { MinecraftMapColor.Podzol, "#6F4A2A".ToColor() },
-        { MinecraftMapColor.Nether, "#600100".ToColor() },
-        { MinecraftMapColor.TerracottaWhite, "#B4988A".ToColor() },
-        { MinecraftMapColor.TerracottaOrange, "#89461F".ToColor() },
-        { MinecraftMapColor.TerracottaMagenta, "#804B5D".ToColor() },
-        { MinecraftMapColor.TerracottaLightBlue, "#605D77".ToColor() },
-        { MinecraftMapColor.TerracottaYellow, "#A0721F".ToColor() },
-        { MinecraftMapColor.TerracottaLightGreen, "#58642D".ToColor() },
-        { MinecraftMapColor.TerracottaPink, "#8A4243".ToColor() },
-        { MinecraftMapColor.TerracottaGray, "#31231E".ToColor() },
-        { MinecraftMapColor.TerracottaLightGray, "#745C54".ToColor() },
-        { MinecraftMapColor.TerracottaCyan, "#4B4F4F".ToColor() },
-        { MinecraftMapColor.TerracottaPurple, "#693E4B".ToColor() },
-        { MinecraftMapColor.TerracottaBlue, "#41354F".ToColor() },
-        { MinecraftMapColor.TerracottaBrown, "#412B1E".ToColor() },
-        { MinecraftMapColor.TerracottaGreen, "#414624".ToColor() },
-        { MinecraftMapColor.TerracottaRed, "#7A3327".ToColor() },
-        { MinecraftMapColor.TerracottaBlack, "#1F120D".ToColor() },
-        { MinecraftMapColor.CrimsonNylium, "#A3292A".ToColor() },
-        { MinecraftMapColor.CrimsonStem, "#7F3653".ToColor() },
-        { MinecraftMapColor.CrimsonHyphae, "#4F1519".ToColor() },
-        { MinecraftMapColor.WarpedNylium, "#126C73".ToColor() },
-        { MinecraftMapColor.WarpedStem, "#327A78".ToColor() },
-        { MinecraftMapColor.WarpedHyphae, "#4A2535".ToColor() },
-        { MinecraftMapColor.WarpedWartBlock, "#119B72".ToColor() },
-        { MinecraftMapColor.Deepslate, "#565656".ToColor() },
-        { MinecraftMapColor.RawIron, "#BA967E".ToColor() },
-        { MinecraftMapColor.GlowLichen, "#6D9081".ToColor() }
-    };
-
-    private static readonly Dictionary<MinecraftMapColor, Color> LowColor = new()
-    {
-        { MinecraftMapColor.None, "00000000".ToColor() },
-        { MinecraftMapColor.Grass, "#597D27".ToColor() },
-        { MinecraftMapColor.Sand, "#AEA473".ToColor() },
-        { MinecraftMapColor.Wool, "#8C8C8C".ToColor() },
-        { MinecraftMapColor.Fire, "#B40000".ToColor() },
-        { MinecraftMapColor.Ice, "#7070B4".ToColor() },
-        { MinecraftMapColor.Metal, "#757575".ToColor() },
-        { MinecraftMapColor.Plant, "#005700".ToColor() },
-        { MinecraftMapColor.Snow, "#B4B4B4".ToColor() },
-        { MinecraftMapColor.Clay, "#737681".ToColor() },
-        { MinecraftMapColor.Dirt, "#6A4C36".ToColor() },
-        { MinecraftMapColor.Stone, "#4F4F4F".ToColor() },
-        { MinecraftMapColor.Water, "#2D2DB4".ToColor() },
-        { MinecraftMapColor.Wood, "#645432".ToColor() },
-        { MinecraftMapColor.Quartz, "#B4B1AC".ToColor() },
-        { MinecraftMapColor.ColorOrange, "#985924".ToColor() },
-        { MinecraftMapColor.ColorMagenta, "#7D3598".ToColor() },
-        { MinecraftMapColor.ColorLightBlue, "#486C98".ToColor() },
-        { MinecraftMapColor.ColorYellow, "#A1A124".ToColor() },
-        { MinecraftMapColor.ColorLightGreen, "#599011".ToColor() },
-        { MinecraftMapColor.ColorPink, "#AA5974".ToColor() },
-        { MinecraftMapColor.ColorGray, "#353535".ToColor() },
-        { MinecraftMapColor.ColorLightGray, "#6C6C6C".ToColor() },
-        { MinecraftMapColor.ColorCyan, "#35596C".ToColor() },
-        { MinecraftMapColor.ColorPurple, "#592C7D".ToColor() },
-        { MinecraftMapColor.ColorBlue, "#24357D".ToColor() },
-        { MinecraftMapColor.ColorBrown, "#483524".ToColor() },
-        { MinecraftMapColor.ColorGreen, "#485924".ToColor() },
-        { MinecraftMapColor.ColorRed, "#6C2424".ToColor() },
-        { MinecraftMapColor.ColorBlack, "#111111".ToColor() },
-        { MinecraftMapColor.Gold, "#B0A836".ToColor() },
-        { MinecraftMapColor.Diamond, "#409A96".ToColor() },
-        { MinecraftMapColor.Lapis, "#345AB4".ToColor() },
-        { MinecraftMapColor.Emerald, "#009928".ToColor() },
-        { MinecraftMapColor.Podzol, "#5B3C22".ToColor() },
-        { MinecraftMapColor.Nether, "#4F0100".ToColor() },
-        { MinecraftMapColor.TerracottaWhite, "#937C71".ToColor() },
-        { MinecraftMapColor.TerracottaOrange, "#703919".ToColor() },
-        { MinecraftMapColor.TerracottaMagenta, "#693D4C".ToColor() },
-        { MinecraftMapColor.TerracottaLightBlue, "#4F4C61".ToColor() },
-        { MinecraftMapColor.TerracottaYellow, "#835D19".ToColor() },
-        { MinecraftMapColor.TerracottaLightGreen, "#485225".ToColor() },
-        { MinecraftMapColor.TerracottaPink, "#703637".ToColor() },
-        { MinecraftMapColor.TerracottaGray, "#281C18".ToColor() },
-        { MinecraftMapColor.TerracottaLightGray, "#5F4B45".ToColor() },
-        { MinecraftMapColor.TerracottaCyan, "#3D4040".ToColor() },
-        { MinecraftMapColor.TerracottaPurple, "#56333E".ToColor() },
-        { MinecraftMapColor.TerracottaBlue, "#352B40".ToColor() },
-        { MinecraftMapColor.TerracottaBrown, "#352318".ToColor() },
-        { MinecraftMapColor.TerracottaGreen, "#35391D".ToColor() },
-        { MinecraftMapColor.TerracottaRed, "#642A20".ToColor() },
-        { MinecraftMapColor.TerracottaBlack, "#1A0F0B".ToColor() },
-        { MinecraftMapColor.CrimsonNylium, "#852122".ToColor() },
-        { MinecraftMapColor.CrimsonStem, "#682C44".ToColor() },
-        { MinecraftMapColor.CrimsonHyphae, "#401114".ToColor() },
-        { MinecraftMapColor.WarpedNylium, "#0F585E".ToColor() },
-        { MinecraftMapColor.WarpedStem, "#286462".ToColor() },
-        { MinecraftMapColor.WarpedHyphae, "#3C1F2B".ToColor() },
-        { MinecraftMapColor.WarpedWartBlock, "#0E7F5D".ToColor() },
-        { MinecraftMapColor.Deepslate, "#464646".ToColor() },
-        { MinecraftMapColor.RawIron, "#987B67".ToColor() },
-        { MinecraftMapColor.GlowLichen, "#597569".ToColor() }
-    };
-
-    private static readonly Dictionary<MinecraftMapColor, Color> LowestColor = new()
-    {
-        { MinecraftMapColor.None, "00000000".ToColor() },
-        { MinecraftMapColor.Grass, "#435E1D".ToColor() },
-        { MinecraftMapColor.Sand, "#827B56".ToColor() },
-        { MinecraftMapColor.Wool, "#696969".ToColor() },
-        { MinecraftMapColor.Fire, "#870000".ToColor() },
-        { MinecraftMapColor.Ice, "#545487".ToColor() },
-        { MinecraftMapColor.Metal, "#585858".ToColor() },
-        { MinecraftMapColor.Plant, "#004100".ToColor() },
-        { MinecraftMapColor.Snow, "#878787".ToColor() },
-        { MinecraftMapColor.Clay, "#565861".ToColor() },
-        { MinecraftMapColor.Dirt, "#4F3928".ToColor() },
-        { MinecraftMapColor.Stone, "#3B3B3B".ToColor() },
-        { MinecraftMapColor.Water, "#212187".ToColor() },
-        { MinecraftMapColor.Wood, "#4B3F26".ToColor() },
-        { MinecraftMapColor.Quartz, "#878581".ToColor() },
-        { MinecraftMapColor.ColorOrange, "#72431B".ToColor() },
-        { MinecraftMapColor.ColorMagenta, "#5E2872".ToColor() },
-        { MinecraftMapColor.ColorLightBlue, "#365172".ToColor() },
-        { MinecraftMapColor.ColorYellow, "#79791B".ToColor() },
-        { MinecraftMapColor.ColorLightGreen, "#436C0D".ToColor() },
-        { MinecraftMapColor.ColorPink, "#804357".ToColor() },
-        { MinecraftMapColor.ColorGray, "#282828".ToColor() },
-        { MinecraftMapColor.ColorLightGray, "#515151".ToColor() },
-        { MinecraftMapColor.ColorCyan, "#284351".ToColor() },
-        { MinecraftMapColor.ColorPurple, "#43215E".ToColor() },
-        { MinecraftMapColor.ColorBlue, "#1B285E".ToColor() },
-        { MinecraftMapColor.ColorBrown, "#36281B".ToColor() },
-        { MinecraftMapColor.ColorGreen, "#36431B".ToColor() },
-        { MinecraftMapColor.ColorRed, "#511B1B".ToColor() },
-        { MinecraftMapColor.ColorBlack, "#0D0D0D".ToColor() },
-        { MinecraftMapColor.Gold, "#847E28".ToColor() },
-        { MinecraftMapColor.Diamond, "#307370".ToColor() },
-        { MinecraftMapColor.Lapis, "#274387".ToColor() },
-        { MinecraftMapColor.Emerald, "#00721E".ToColor() },
-        { MinecraftMapColor.Podzol, "#442D19".ToColor() },
-        { MinecraftMapColor.Nether, "#3B0100".ToColor() },
-        { MinecraftMapColor.TerracottaWhite, "#6E5D55".ToColor() },
-        { MinecraftMapColor.TerracottaOrange, "#542B13".ToColor() },
-        { MinecraftMapColor.TerracottaMagenta, "#4E2E39".ToColor() },
-        { MinecraftMapColor.TerracottaLightBlue, "#3B3949".ToColor() },
-        { MinecraftMapColor.TerracottaYellow, "#624613".ToColor() },
-        { MinecraftMapColor.TerracottaLightGreen, "#363D1C".ToColor() },
-        { MinecraftMapColor.TerracottaPink, "#542829".ToColor() },
-        { MinecraftMapColor.TerracottaGray, "#1E1512".ToColor() },
-        { MinecraftMapColor.TerracottaLightGray, "#473833".ToColor() },
-        { MinecraftMapColor.TerracottaCyan, "#2E3030".ToColor() },
-        { MinecraftMapColor.TerracottaPurple, "#40262E".ToColor() },
-        { MinecraftMapColor.TerracottaBlue, "#282030".ToColor() },
-        { MinecraftMapColor.TerracottaBrown, "#281A12".ToColor() },
-        { MinecraftMapColor.TerracottaGreen, "#282B16".ToColor() },
-        { MinecraftMapColor.TerracottaRed, "#4B1F18".ToColor() },
-        { MinecraftMapColor.TerracottaBlack, "#130B08".ToColor() },
-        { MinecraftMapColor.CrimsonNylium, "#641919".ToColor() },
-        { MinecraftMapColor.CrimsonStem, "#4E2133".ToColor() },
-        { MinecraftMapColor.CrimsonHyphae, "#300D0F".ToColor() },
-        { MinecraftMapColor.WarpedNylium, "#0B4246".ToColor() },
-        { MinecraftMapColor.WarpedStem, "#1E4B4A".ToColor() },
-        { MinecraftMapColor.WarpedHyphae, "#2D1720".ToColor() },
-        { MinecraftMapColor.WarpedWartBlock, "#0A5F46".ToColor() },
-        { MinecraftMapColor.Deepslate, "#343434".ToColor() },
-        { MinecraftMapColor.RawIron, "#725C4D".ToColor() },
-        { MinecraftMapColor.GlowLichen, "#43584F".ToColor() }
-    };
+    private static readonly Dictionary<MinecraftMapColor, (Color lowest, Color low, Color normal, Color high )> Colors =
+        new()
+        {
+            {
+                MinecraftMapColor.None,
+                ("#00000000".ToColor(), "#00000000".ToColor(), "#00000000".ToColor(), "#00000000".ToColor())
+            },
+            {
+                MinecraftMapColor.Grass,
+                ("#435E1D".ToColor(), "#597D27".ToColor(), "#6D9930".ToColor(), "#7FB238".ToColor())
+            },
+            {
+                MinecraftMapColor.Sand,
+                ("#827B56".ToColor(), "#AEA473".ToColor(), "#D5C98C".ToColor(), "#F7E9A3".ToColor())
+            },
+            {
+                MinecraftMapColor.Wool,
+                ("#696969".ToColor(), "#8C8C8C".ToColor(), "#ABABAB".ToColor(), "#C7C7C7".ToColor())
+            },
+            {
+                MinecraftMapColor.Fire,
+                ("#870000".ToColor(), "#B40000".ToColor(), "#DC0000".ToColor(), "#FF0000".ToColor())
+            },
+            {
+                MinecraftMapColor.Ice,
+                ("#545487".ToColor(), "#7070B4".ToColor(), "#8A8ADC".ToColor(), "#A0A0FF".ToColor())
+            },
+            {
+                MinecraftMapColor.Metal,
+                ("#585858".ToColor(), "#757575".ToColor(), "#909090".ToColor(), "#A7A7A7".ToColor())
+            },
+            {
+                MinecraftMapColor.Plant,
+                ("#004100".ToColor(), "#005700".ToColor(), "#006A00".ToColor(), "#007C00".ToColor())
+            },
+            {
+                MinecraftMapColor.Snow,
+                ("#878787".ToColor(), "#B4B4B4".ToColor(), "#DCDCDC".ToColor(), "#FFFFFF".ToColor())
+            },
+            {
+                MinecraftMapColor.Clay,
+                ("#565861".ToColor(), "#737681".ToColor(), "#8D909E".ToColor(), "#A4A8B8".ToColor())
+            },
+            {
+                MinecraftMapColor.Dirt,
+                ("#4F3928".ToColor(), "#6A4C36".ToColor(), "#825E42".ToColor(), "#976D4D".ToColor())
+            },
+            {
+                MinecraftMapColor.Stone,
+                ("#3B3B3B".ToColor(), "#4F4F4F".ToColor(), "#606060".ToColor(), "#707070".ToColor())
+            },
+            {
+                MinecraftMapColor.Water,
+                ("#212187".ToColor(), "#2D2DB4".ToColor(), "#3737DC".ToColor(), "#4040FF".ToColor())
+            },
+            {
+                MinecraftMapColor.Wood,
+                ("#4B3F26".ToColor(), "#645432".ToColor(), "#7B663E".ToColor(), "#8F7748".ToColor())
+            },
+            {
+                MinecraftMapColor.Quartz,
+                ("#878581".ToColor(), "#B4B1AC".ToColor(), "#DCD9D3".ToColor(), "#FFFCF5".ToColor())
+            },
+            {
+                MinecraftMapColor.ColorOrange,
+                ("#72431B".ToColor(), "#985924".ToColor(), "#BA6D2C".ToColor(), "#D87F33".ToColor())
+            },
+            {
+                MinecraftMapColor.ColorMagenta,
+                ("#5E2872".ToColor(), "#7D3598".ToColor(), "#9941BA".ToColor(), "#B24CD8".ToColor())
+            },
+            {
+                MinecraftMapColor.ColorLightBlue,
+                ("#365172".ToColor(), "#486C98".ToColor(), "#5884BA".ToColor(), "#6699D8".ToColor())
+            },
+            {
+                MinecraftMapColor.ColorYellow,
+                ("#79791B".ToColor(), "#A1A124".ToColor(), "#C5C52C".ToColor(), "#E5E533".ToColor())
+            },
+            {
+                MinecraftMapColor.ColorLightGreen,
+                ("#436C0D".ToColor(), "#599011".ToColor(), "#6DB015".ToColor(), "#7FCC19".ToColor())
+            },
+            {
+                MinecraftMapColor.ColorPink,
+                ("#804357".ToColor(), "#AA5974".ToColor(), "#D06D8E".ToColor(), "#F27FA5".ToColor())
+            },
+            {
+                MinecraftMapColor.ColorGray,
+                ("#282828".ToColor(), "#353535".ToColor(), "#414141".ToColor(), "#4C4C4C".ToColor())
+            },
+            {
+                MinecraftMapColor.ColorLightGray,
+                ("#515151".ToColor(), "#6C6C6C".ToColor(), "#848484".ToColor(), "#999999".ToColor())
+            },
+            {
+                MinecraftMapColor.ColorCyan,
+                ("#284351".ToColor(), "#35596C".ToColor(), "#416D84".ToColor(), "#4C7F99".ToColor())
+            },
+            {
+                MinecraftMapColor.ColorPurple,
+                ("#43215E".ToColor(), "#592C7D".ToColor(), "#6D3699".ToColor(), "#7F3FB2".ToColor())
+            },
+            {
+                MinecraftMapColor.ColorBlue,
+                ("#1B285E".ToColor(), "#24357D".ToColor(), "#2C4199".ToColor(), "#334CB2".ToColor())
+            },
+            {
+                MinecraftMapColor.ColorBrown,
+                ("#36281B".ToColor(), "#483524".ToColor(), "#58412C".ToColor(), "#664C33".ToColor())
+            },
+            {
+                MinecraftMapColor.ColorGreen,
+                ("#36431B".ToColor(), "#485924".ToColor(), "#586D2C".ToColor(), "#667F33".ToColor())
+            },
+            {
+                MinecraftMapColor.ColorRed,
+                ("#511B1B".ToColor(), "#6C2424".ToColor(), "#842C2C".ToColor(), "#993333".ToColor())
+            },
+            {
+                MinecraftMapColor.ColorBlack,
+                ("#0D0D0D".ToColor(), "#111111".ToColor(), "#151515".ToColor(), "#191919".ToColor())
+            },
+            {
+                MinecraftMapColor.Gold,
+                ("#847E28".ToColor(), "#B0A836".ToColor(), "#D7CD42".ToColor(), "#FAEE4D".ToColor())
+            },
+            {
+                MinecraftMapColor.Diamond,
+                ("#307370".ToColor(), "#409A96".ToColor(), "#4FBCB7".ToColor(), "#5CDBD5".ToColor())
+            },
+            {
+                MinecraftMapColor.Lapis,
+                ("#274387".ToColor(), "#345AB4".ToColor(), "#3F6EDC".ToColor(), "#4A80FF".ToColor())
+            },
+            {
+                MinecraftMapColor.Emerald,
+                ("#00721E".ToColor(), "#009928".ToColor(), "#00BB32".ToColor(), "#00D93A".ToColor())
+            },
+            {
+                MinecraftMapColor.Podzol,
+                ("#442D19".ToColor(), "#5B3C22".ToColor(), "#6F4A2A".ToColor(), "#815631".ToColor())
+            },
+            {
+                MinecraftMapColor.Nether,
+                ("#3B0100".ToColor(), "#4F0100".ToColor(), "#600100".ToColor(), "#700200".ToColor())
+            },
+            {
+                MinecraftMapColor.TerracottaWhite,
+                ("#6E5D55".ToColor(), "#937C71".ToColor(), "#B4988A".ToColor(), "#D1B1A1".ToColor())
+            },
+            {
+                MinecraftMapColor.TerracottaOrange,
+                ("#542B13".ToColor(), "#703919".ToColor(), "#89461F".ToColor(), "#9F5224".ToColor())
+            },
+            {
+                MinecraftMapColor.TerracottaMagenta,
+                ("#4E2E39".ToColor(), "#693D4C".ToColor(), "#804B5D".ToColor(), "#95576C".ToColor())
+            },
+            {
+                MinecraftMapColor.TerracottaLightBlue,
+                ("#3B3949".ToColor(), "#4F4C61".ToColor(), "#605D77".ToColor(), "#706C8A".ToColor())
+            },
+            {
+                MinecraftMapColor.TerracottaYellow,
+                ("#624613".ToColor(), "#835D19".ToColor(), "#A0721F".ToColor(), "#BA8524".ToColor())
+            },
+            {
+                MinecraftMapColor.TerracottaLightGreen,
+                ("#363D1C".ToColor(), "#485225".ToColor(), "#58642D".ToColor(), "#677535".ToColor())
+            },
+            {
+                MinecraftMapColor.TerracottaPink,
+                ("#542829".ToColor(), "#703637".ToColor(), "#8A4243".ToColor(), "#A04D4E".ToColor())
+            },
+            {
+                MinecraftMapColor.TerracottaGray,
+                ("#1E1512".ToColor(), "#281C18".ToColor(), "#31231E".ToColor(), "#392923".ToColor())
+            },
+            {
+                MinecraftMapColor.TerracottaLightGray,
+                ("#473833".ToColor(), "#5F4B45".ToColor(), "#745C54".ToColor(), "#876B62".ToColor())
+            },
+            {
+                MinecraftMapColor.TerracottaCyan,
+                ("#2E3030".ToColor(), "#3D4040".ToColor(), "#4B4F4F".ToColor(), "#575C5C".ToColor())
+            },
+            {
+                MinecraftMapColor.TerracottaPurple,
+                ("#40262E".ToColor(), "#56333E".ToColor(), "#693E4B".ToColor(), "#7A4958".ToColor())
+            },
+            {
+                MinecraftMapColor.TerracottaBlue,
+                ("#282030".ToColor(), "#352B40".ToColor(), "#41354F".ToColor(), "#4C3E5C".ToColor())
+            },
+            {
+                MinecraftMapColor.TerracottaBrown,
+                ("#281A12".ToColor(), "#352318".ToColor(), "#412B1E".ToColor(), "#4C3223".ToColor())
+            },
+            {
+                MinecraftMapColor.TerracottaGreen,
+                ("#282B16".ToColor(), "#35391D".ToColor(), "#414624".ToColor(), "#4C522A".ToColor())
+            },
+            {
+                MinecraftMapColor.TerracottaRed,
+                ("#4B1F18".ToColor(), "#642A20".ToColor(), "#7A3327".ToColor(), "#8E3C2E".ToColor())
+            },
+            {
+                MinecraftMapColor.TerracottaBlack,
+                ("#130B08".ToColor(), "#1A0F0B".ToColor(), "#1F120D".ToColor(), "#251610".ToColor())
+            },
+            {
+                MinecraftMapColor.CrimsonNylium,
+                ("#641919".ToColor(), "#852122".ToColor(), "#A3292A".ToColor(), "#BD3031".ToColor())
+            },
+            {
+                MinecraftMapColor.CrimsonStem,
+                ("#4E2133".ToColor(), "#682C44".ToColor(), "#7F3653".ToColor(), "#943F61".ToColor())
+            },
+            {
+                MinecraftMapColor.CrimsonHyphae,
+                ("#300D0F".ToColor(), "#401114".ToColor(), "#4F1519".ToColor(), "#5C191D".ToColor())
+            },
+            {
+                MinecraftMapColor.WarpedNylium,
+                ("#0B4246".ToColor(), "#0F585E".ToColor(), "#126C73".ToColor(), "#167E86".ToColor())
+            },
+            {
+                MinecraftMapColor.WarpedStem,
+                ("#1E4B4A".ToColor(), "#286462".ToColor(), "#327A78".ToColor(), "#3A8E8C".ToColor())
+            },
+            {
+                MinecraftMapColor.WarpedHyphae,
+                ("#2D1720".ToColor(), "#3C1F2B".ToColor(), "#4A2535".ToColor(), "#562C3E".ToColor())
+            },
+            {
+                MinecraftMapColor.WarpedWartBlock,
+                ("#0A5F46".ToColor(), "#0E7F5D".ToColor(), "#119B72".ToColor(), "#14B485".ToColor())
+            },
+            {
+                MinecraftMapColor.Deepslate,
+                ("#343434".ToColor(), "#464646".ToColor(), "#565656".ToColor(), "#646464".ToColor())
+            },
+            {
+                MinecraftMapColor.RawIron,
+                ("#725C4D".ToColor(), "#987B67".ToColor(), "#BA967E".ToColor(), "#D8AF93".ToColor())
+            },
+            {
+                MinecraftMapColor.GlowLichen,
+                ("#43584F".ToColor(), "#597569".ToColor(), "#6D9081".ToColor(), "#7FA796".ToColor())
+            },
+        };
 }

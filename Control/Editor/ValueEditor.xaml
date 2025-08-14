@@ -12,6 +12,7 @@
     <Grid DataContext="{x:Bind _viewModel}" x:Name="ControlGrid" Padding="-20, 20, 20, 0" ColumnSpacing="24">
 
         <StackPanel Spacing="6">
+            <!-- 名称(占整行) -->
             <TextBox
                 Header="名称"
                 Text="{Binding Name}" />
@@ -21,6 +22,7 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
+                <!-- 左侧 -->
                 <Grid Grid.Column="0">
                     <StackPanel Spacing="6">
                         <TextBox Header="类型" Width="130"
@@ -56,6 +58,7 @@
                     </StackPanel>
                 </Grid>
 
+                <!-- 右侧 -->
                 <Grid Grid.Column="1">
                     <TextBox Header="数据"
                              Text="{Binding Value, Mode=TwoWay}"
@@ -65,6 +68,7 @@
                              TextChanged="TextBox_OnValueChanged" />
                 </Grid>
             </Grid>
+            <!-- 保存按钮 -->
             <Button
                 x:Name="SaveButton"
                 Margin="0,16,0,0"
