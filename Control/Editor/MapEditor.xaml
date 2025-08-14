@@ -7,6 +7,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:graphic="using:Microsoft.Graphics.Canvas.UI.Xaml"
+    xmlns:community="using:CommunityToolkit.WinUI.Controls"
+    xmlns:ui="using:CommunityToolkit.WinUI"
     mc:Ignorable="d">
 
     <UserControl.Resources>
@@ -14,31 +16,114 @@
         <Style x:Key="MapBackground" TargetType="Border">
             <Setter Property="Background" Value="#40d2b48c"></Setter>
         </Style>
+        <!-- 工具栏标签 -->
+        <Style x:Key="ToolsLabel" TargetType="TextBlock" BasedOn="{StaticResource CaptionTextBlockStyle}">
+            <Setter Property="HorizontalAlignment" Value="Center"></Setter>
+        </Style>
+        <Style x:Key="A" TargetType="AppBarSeparator">
+            <Setter Property="Margin" Value="0,-5,0,0"></Setter>
+        </Style>
     </UserControl.Resources>
 
-    <Grid DataContext="{x:Bind _viewModel}" x:Name="ControlGrid" Padding="-40,20,20,20" ColumnSpacing="24">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="auto" />
-        </Grid.ColumnDefinitions>
+
+    <Grid DataContext="{x:Bind _viewModel}" x:Name="ControlGrid" Padding="-32,20,20,20" RowSpacing="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
 
         <!-- 工具栏 -->
-        <Grid Grid.Column="0">
+        <Grid Grid.Row="0" Margin="0,0,0,0" CornerRadius="6">
+            <StackPanel Spacing="16"
+                        Padding="12,8,12,0"
+                        Height="82"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Stretch"
+                        Background="{ThemeResource CardBackgroundFillColorSecondary}">
 
+                <StackPanel Spacing="4">
+                    <ToggleButton
+                        Height="48"
+                        Background="Transparent">
+                        <FontIcon Glyph="&#xEF20;" FontSize="18"></FontIcon>
+                    </ToggleButton>
+                    <TextBlock Style="{StaticResource ToolsLabel}" Text="选择"></TextBlock>
+                </StackPanel>
+
+                <AppBarSeparator Margin="0,-5,0,0"></AppBarSeparator>
+
+                <StackPanel Spacing="2">
+                    <StackPanel Orientation="Horizontal" Spacing="4">
+                        <ToggleButton
+                            Height="26"
+                            Width="32"
+                            Padding="0"
+                            Background="Transparent">
+                            <FontIcon Glyph="&#xE75C;" FontSize="16"></FontIcon>
+                        </ToggleButton>
+                        <ToggleButton
+                            Height="26"
+                            Width="32"
+                            Padding="0"
+                            Background="Transparent">
+                            <FontIcon Glyph="&#xE8D2;" FontSize="16"></FontIcon>
+                        </ToggleButton>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Spacing="4">
+                        <ToggleButton
+                            Height="26"
+                            Width="32"
+                            Padding="0"
+                            Background="Transparent">
+                            <FontIcon Glyph="&#xEF3C;" FontSize="16"></FontIcon>
+                        </ToggleButton>
+                        <ToggleButton
+                            Height="26"
+                            Width="32"
+                            Padding="0"
+                            Background="Transparent">
+                            <FontIcon Glyph="&#xE8A3;" FontSize="16"></FontIcon>
+                        </ToggleButton>
+                    </StackPanel>
+                    <TextBlock Style="{StaticResource ToolsLabel}" Text="工具"></TextBlock>
+                </StackPanel>
+
+                <AppBarSeparator Margin="0,-5,0,0"></AppBarSeparator>
+
+
+                <StackPanel Spacing="4">
+                    <ToggleSplitButton Background="Transparent"
+                                       BorderBrush="{ThemeResource AppBarToggleButtonPointerOverBackgroundThemeBrush}"
+                                       Height="60"
+                                       Margin="0,-6,0,-6">
+                        <FontIcon Glyph="&#xE771;" FontSize="18"></FontIcon>
+                        <ToggleSplitButton.Flyout>
+                            <MenuFlyout>
+                                <RadioMenuFlyoutItem Text="像素"></RadioMenuFlyoutItem>
+                                <RadioMenuFlyoutItem Text="画笔"></RadioMenuFlyoutItem>
+                            </MenuFlyout>
+                        </ToggleSplitButton.Flyout>
+                    </ToggleSplitButton>
+                    <TextBlock Style="{StaticResource ToolsLabel}" Text="笔刷"></TextBlock>
+                </StackPanel>
+                <AppBarSeparator Margin="0,-5,0,0"></AppBarSeparator>
+
+
+            </StackPanel>
         </Grid>
 
         <!-- 地图预览 -->
-        <Grid Grid.Column="1">
-            <Border HorizontalAlignment="Right"
+        <Grid Grid.Row="1">
+            <Border HorizontalAlignment="Center"
+                    VerticalAlignment="Bottom"
                     Style="{StaticResource MapBackground}"
-                    x:Name="MapCanvasBorder"
                     CornerRadius="12"
-                    Width="270"
-                    Height="270">
+                    Width="{x:Bind BorderSize, Mode=OneWay}"
+                    Height="{x:Bind BorderSize, Mode=OneWay}">
                 <graphic:CanvasControl
                     x:Name="MapCanvas"
-                    Width="256"
-                    Height="256"
+                    Width="{x:Bind MapSize, Mode=OneWay}"
+                    Height="{x:Bind MapSize, Mode=OneWay}"
                     AllowDrop="True"
                     Draw="DrawMap">
                 </graphic:CanvasControl>

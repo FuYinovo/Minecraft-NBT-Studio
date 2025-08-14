@@ -15,7 +15,8 @@
             <!-- 名称(占整行) -->
             <TextBox
                 Header="名称"
-                Text="{Binding Name}" />
+                TextChanged="TextBox_OnNameChanged"
+                Text="{Binding Name, Mode=TwoWay}" />
             <Grid ColumnSpacing="24">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto" />

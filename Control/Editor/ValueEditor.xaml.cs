@@ -29,7 +29,7 @@ public sealed partial class ValueEditor
     // 自动调整内容 Grid 大小 ( CommunityToolKit 未实现 )
     private void UpdateGridSize(Size size)
     {
-        if (size.Width <= 60) return;
+        if (size.Width <= 60 || size.Height <=60) return;
         ControlGrid.Width = size.Width - 60;
         ControlGrid.Height = size.Height - 70;
     }
@@ -67,5 +67,11 @@ public sealed partial class ValueEditor
     private void SaveButton_OnClick(object sender, RoutedEventArgs e)
     {
         SaveButton.IsEnabled = false;
+    }
+
+    private void TextBox_OnNameChanged(object sender, TextChangedEventArgs e)
+    {
+        if (sender is not TextBox textBox) return;
+        if (textBox.FocusState != FocusState.Unfocused) SaveButton.IsEnabled = true;
     }
 }

@@ -157,14 +157,8 @@ public sealed partial class NbtNode
     [RelayCommand]
     private async Task Delete()
     {
-        if (IsRootNode)
-        {
-            await DialogService.ShowDialog("删除失败", "确认", description: "不允许删除根节点");
-            return;
-        }
-
-        Tag.RemoveSelf();
-        WeakReferenceMessenger.Default.Send(new ModifyNodeMessage((this, NodeModify.Remove)));
+        if (IsRootNode) await DialogService.ShowDialog("删除失败", "确认", description: "不允许删除根节点");
+        else Remove();
     }
 
     /// <summary>
@@ -178,9 +172,7 @@ public sealed partial class NbtNode
         var choice = await DialogService.ShowDialog("重命名", "确认", close: "取消", content: content);
         if (choice != ContentDialogResult.Primary) return;
 
-        Tag.SetName(content.NewName);
-        Name = content.NewName;
-        WeakReferenceMessenger.Default.Send(new ModifyNodeMessage((this, NodeModify.Rename)));
+        SetName(content.NewName);
     }
 
     /// <summary>
@@ -217,5 +209,21 @@ public sealed partial class NbtNode
 
         DisplayValue = newValue;
         WeakReferenceMessenger.Default.Send(new ModifyNodeMessage((this, NodeModify.SetValue)));
+    }
+
+    /// <summary>
+    /// 设置节点名称
+    /// </summary>
+    public void SetName(string name)
+    {
+        Tag.SetName(name);
+        Name = name;
+        WeakReferenceMessenger.Default.Send(new ModifyNodeMessage((this, NodeModify.Rename)));
+    }
+
+    public void Remove()
+    {
+        Tag.RemoveSelf();
+        WeakReferenceMessenger.Default.Send(new ModifyNodeMessage((this, NodeModify.Remove)));
     }
 }

@@ -61,6 +61,7 @@ public sealed partial class ValueEditorViewModel : ObservableObject
     private void SaveValueChanges()
     {
         _selectedNode?.SetValue(Value);
+        _selectedNode?.SetName(Name);
     }
 
 
