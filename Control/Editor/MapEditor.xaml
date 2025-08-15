@@ -7,8 +7,10 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:graphic="using:Microsoft.Graphics.Canvas.UI.Xaml"
-    xmlns:community="using:CommunityToolkit.WinUI.Controls"
-    xmlns:ui="using:CommunityToolkit.WinUI"
+    xmlns:converter="using:NBT_Studio.Control.Converter"
+    xmlns:model="using:NBT_Studio.Model"
+    xmlns:inter="using:Microsoft.Xaml.Interactivity"
+    xmlns:behavior="using:NBT_Studio.Behavior"
     mc:Ignorable="d">
 
     <UserControl.Resources>
@@ -20,11 +22,8 @@
         <Style x:Key="ToolsLabel" TargetType="TextBlock" BasedOn="{StaticResource CaptionTextBlockStyle}">
             <Setter Property="HorizontalAlignment" Value="Center"></Setter>
         </Style>
-        <Style x:Key="A" TargetType="AppBarSeparator">
-            <Setter Property="Margin" Value="0,-5,0,0"></Setter>
-        </Style>
+        <converter:EnumerableSliceConverter x:Key="EnumerableSliceConverter"></converter:EnumerableSliceConverter>
     </UserControl.Resources>
-
 
     <Grid DataContext="{x:Bind _viewModel}" x:Name="ControlGrid" Padding="-32,20,20,20" RowSpacing="24">
         <Grid.RowDefinitions>
@@ -40,73 +39,120 @@
                         Orientation="Horizontal"
                         HorizontalAlignment="Stretch"
                         Background="{ThemeResource CardBackgroundFillColorSecondary}">
-
+                <!-- 选择 -->
                 <StackPanel Spacing="4">
-                    <ToggleButton
-                        Height="48"
-                        Background="Transparent">
-                        <FontIcon Glyph="&#xEF20;" FontSize="18"></FontIcon>
-                    </ToggleButton>
+                    <ItemsControl ItemsSource="{Binding SelectionPanel}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="model:MutuallyToggleButton">
+                                <ToggleButton
+                                    Height="48"
+                                    Background="Transparent">
+                                    <FontIcon Glyph="{x:Bind FontIcon}" FontSize="18"></FontIcon>
+                                    <inter:Interaction.Behaviors>
+                                        <behavior:MutuallyToggleButtonsBehavior GroupName="MapEditorTools"
+                                            Value="{x:Bind Name}">
+                                        </behavior:MutuallyToggleButtonsBehavior>
+                                    </inter:Interaction.Behaviors>
+                                </ToggleButton>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
                     <TextBlock Style="{StaticResource ToolsLabel}" Text="选择"></TextBlock>
                 </StackPanel>
-
                 <AppBarSeparator Margin="0,-5,0,0"></AppBarSeparator>
 
+                <!-- 工具 -->
                 <StackPanel Spacing="2">
-                    <StackPanel Orientation="Horizontal" Spacing="4">
-                        <ToggleButton
-                            Height="26"
-                            Width="32"
-                            Padding="0"
-                            Background="Transparent">
-                            <FontIcon Glyph="&#xE75C;" FontSize="16"></FontIcon>
-                        </ToggleButton>
-                        <ToggleButton
-                            Height="26"
-                            Width="32"
-                            Padding="0"
-                            Background="Transparent">
-                            <FontIcon Glyph="&#xE8D2;" FontSize="16"></FontIcon>
-                        </ToggleButton>
+                    <!-- 第一行 -->
+                    <StackPanel>
+                        <ItemsControl
+                            ItemsSource="{Binding ToolsPanel,
+                            Converter={StaticResource EnumerableSliceConverter},
+                            ConverterParameter='0,1'}">  <!-- 前2个 -->
+                            <!-- 容器 -->
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal" Spacing="2"></StackPanel>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <!-- 内容 -->
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="model:MutuallyToggleButton">
+                                    <ToggleButton
+                                        Height="26"
+                                        Width="32"
+                                        Padding="0"
+                                        Background="Transparent">
+                                        <FontIcon Glyph="{x:Bind FontIcon}" FontSize="16"></FontIcon>
+                                        <inter:Interaction.Behaviors>
+                                            <behavior:MutuallyToggleButtonsBehavior GroupName="MapEditorTools"
+                                                Value="{x:Bind Name}">
+                                            </behavior:MutuallyToggleButtonsBehavior>
+                                        </inter:Interaction.Behaviors>
+                                    </ToggleButton>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal" Spacing="4">
-                        <ToggleButton
-                            Height="26"
-                            Width="32"
-                            Padding="0"
-                            Background="Transparent">
-                            <FontIcon Glyph="&#xEF3C;" FontSize="16"></FontIcon>
-                        </ToggleButton>
-                        <ToggleButton
-                            Height="26"
-                            Width="32"
-                            Padding="0"
-                            Background="Transparent">
-                            <FontIcon Glyph="&#xE8A3;" FontSize="16"></FontIcon>
-                        </ToggleButton>
+                    <!-- 第二行 -->
+                    <StackPanel>
+                        <ItemsControl
+                            ItemsSource="{Binding ToolsPanel,
+                            Converter={StaticResource EnumerableSliceConverter},
+                            ConverterParameter='2,3'}"> <!-- 前后2个 -->
+                            <!-- 容器 -->
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal" Spacing="2"></StackPanel>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <!-- 内容 -->
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="model:MutuallyToggleButton">
+                                    <ToggleButton
+                                        Height="26"
+                                        Width="32"
+                                        Padding="0"
+                                        Background="Transparent">
+                                        <FontIcon Glyph="{x:Bind FontIcon}" FontSize="16"></FontIcon>
+                                        <inter:Interaction.Behaviors>
+                                            <behavior:MutuallyToggleButtonsBehavior GroupName="MapEditorTools"
+                                                Value="{x:Bind Name}">
+                                            </behavior:MutuallyToggleButtonsBehavior>
+                                        </inter:Interaction.Behaviors>
+                                    </ToggleButton>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
                     </StackPanel>
+
                     <TextBlock Style="{StaticResource ToolsLabel}" Text="工具"></TextBlock>
                 </StackPanel>
-
                 <AppBarSeparator Margin="0,-5,0,0"></AppBarSeparator>
 
-
-                <StackPanel Spacing="4">
-                    <ToggleSplitButton Background="Transparent"
-                                       BorderBrush="{ThemeResource AppBarToggleButtonPointerOverBackgroundThemeBrush}"
-                                       Height="60"
-                                       Margin="0,-6,0,-6">
-                        <FontIcon Glyph="&#xE771;" FontSize="18"></FontIcon>
-                        <ToggleSplitButton.Flyout>
-                            <MenuFlyout>
-                                <RadioMenuFlyoutItem Text="像素"></RadioMenuFlyoutItem>
-                                <RadioMenuFlyoutItem Text="画笔"></RadioMenuFlyoutItem>
-                            </MenuFlyout>
-                        </ToggleSplitButton.Flyout>
-                    </ToggleSplitButton>
-                    <TextBlock Style="{StaticResource ToolsLabel}" Text="笔刷"></TextBlock>
-                </StackPanel>
-                <AppBarSeparator Margin="0,-5,0,0"></AppBarSeparator>
+                <!-- 笔刷 -->
+                <!-- <StackPanel Spacing="4"> -->
+                <!--     <ToggleSplitButton Background="Transparent" -->
+                <!--                        BorderBrush="{ThemeResource AppBarToggleButtonPointerOverBackgroundThemeBrush}" -->
+                <!--                        Height="60" -->
+                <!--                        Margin="0,-6,0,-6"> -->
+                <!--         <FontIcon Glyph="&#xE771;" FontSize="18"></FontIcon> -->
+                <!--         <inter:Interaction.Behaviors> -->
+                <!--             <behavior:MutuallyToggleSplitButtonsBehavior -->
+                <!--                 GroupName="MapEditorTools" -->
+                <!--                 Value="Brush"> -->
+                <!--             </behavior:MutuallyToggleSplitButtonsBehavior> -->
+                <!--         </inter:Interaction.Behaviors> -->
+                <!--         <ToggleSplitButton.Flyout > -->
+                <!--             <MenuFlyout> -->
+                <!--                 <RadioMenuFlyoutItem Text="像素" IsChecked="True"></RadioMenuFlyoutItem> -->
+                <!--                 <RadioMenuFlyoutItem Text="画笔"></RadioMenuFlyoutItem> -->
+                <!--             </MenuFlyout> -->
+                <!--         </ToggleSplitButton.Flyout> -->
+                <!--     </ToggleSplitButton> -->
+                <!--     <TextBlock Style="{StaticResource ToolsLabel}" Text="笔刷"></TextBlock> -->
+                <!-- </StackPanel> -->
+                <!-- <AppBarSeparator Margin="0,-5,0,0"></AppBarSeparator> -->
 
 
             </StackPanel>

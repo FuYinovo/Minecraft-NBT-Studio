@@ -7,6 +7,7 @@ using Windows.Foundation;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Graphics.Canvas.UI.Xaml;
 using NBT_Studio.Message;
+using NBT_Studio.Model;
 using NBT_Studio.ViewModel;
 
 namespace NBT_Studio.Control.Editor;
@@ -17,7 +18,6 @@ public sealed partial class MapEditor : INotifyPropertyChanged
     private const double MapScaleFactor = 0.7;
     private const int InitMapSize = 128;
     private float _mapScale = 1;
-
 
     # region UI Observable Properties
 
@@ -79,6 +79,8 @@ public sealed partial class MapEditor : INotifyPropertyChanged
         }
     }
 
+    # region INotifyPropertyChanged
+
     public event PropertyChangedEventHandler? PropertyChanged;
 
     private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
@@ -92,4 +94,6 @@ public sealed partial class MapEditor : INotifyPropertyChanged
         field = value;
         OnPropertyChanged(propertyName);
     }
+
+    #endregion
 }

@@ -19,6 +19,6 @@ public class StringTruncateConverter : IValueConverter
 
     public object ConvertBack(object value, Type targetType, object parameter, string language)
     {
-        return value;
+        throw new NotImplementedException();
     }
 }

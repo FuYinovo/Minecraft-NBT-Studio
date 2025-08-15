@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Controls;
 using NBT_Studio.Enum;
@@ -13,13 +12,14 @@ namespace NBT_Studio.ViewModel;
 
 [SuppressMessage("CommunityToolkit.Mvvm.SourceGenerators.ObservablePropertyGenerator",
     "MVVMTK0045:Using [ObservableProperty] on fields is not AOT compatible for WinRT")]
-public partial class MapEditorViewModel : ObservableObject
+public partial class MapEditorViewModel : MutuallyControlsViewModel
 {
     public MapEditorViewModel(int size)
     {
         _size = size;
         Pixels = new MinecraftMapPixel[_size, _size];
         RegisterMessages();
+        SetDefaultButtonGroupsSelection();
     }
 
     private void RegisterMessages()
@@ -78,6 +78,11 @@ public partial class MapEditorViewModel : ObservableObject
                 _dataTags[tagEnum] = child;
     }
 
+    private void SetDefaultButtonGroupsSelection()
+    {
+        SetSelectedValue("MapEditorTools", "All");
+    }
+
 
     #region Properties
 
@@ -86,4 +91,21 @@ public partial class MapEditorViewModel : ObservableObject
     private readonly Dictionary<MinecraftMapNecessaryTags, NbtTag> _dataTags = new();
 
     #endregion Properties
+
+    #region Tool ToggleButtons
+
+    public MutuallyToggleButton[] SelectionPanel { get; } =
+    [
+        new() { FontIcon = "\uEF20", Name = "All" },
+    ];
+
+    public MutuallyToggleButton[] ToolsPanel { get; } =
+    [
+        new() { FontIcon = "\uE75C", Name = "Eraser" },
+        new() { FontIcon = "\uE8D2", Name = "Text" },
+        new() { FontIcon = "\uEF3C", Name = "ColorPicker" },
+        new() { FontIcon = "\uE8A3", Name = "Zoom" }
+    ];
+
+    #endregion
 }
