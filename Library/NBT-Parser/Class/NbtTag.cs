@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using NBT_Studio.Library.NBT_Parser.Enum;
@@ -323,7 +324,7 @@ public class NbtTag : ICloneable
     /// <returns>名称长度段和名称段的字节数组</returns>
     private byte[] DeserializeName()
     {
-        if (Name is null) return [];
+        if (Name is null || IsListDirectElement) return [];
 
         var bytes = new List<byte>(16);
         // 名称长度段

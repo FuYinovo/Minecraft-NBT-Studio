@@ -244,7 +244,8 @@ public sealed partial class NbtNode
 
 
         // 初始化弹窗
-        var content = new CreateNodeDialog(tagEnum);
+        var isListElement = parent.TagEnum == NbtTagEnum.List;
+        var content = new CreateNodeDialog(tagEnum, isListElement);
         var dialog = DialogService.GetDialog($"添加「{tagEnum}」节点", "确认", close: "取消", content: content);
         content.DialogOkButtonEnabledSetter = b => dialog.IsPrimaryButtonEnabled = b;
         dialog.IsPrimaryButtonEnabled = NbtTagEnumExtensions.IsCollection(tagEnum);
@@ -255,7 +256,7 @@ public sealed partial class NbtNode
         var name = content.NodeName;
         var value = content.NodeValue;
 
-        AppendNewChild(tagEnum, name, value, content.ChildrenTag, parent);
+        AppendNewChild(tagEnum, name, value, isListElement, content.NodeChildrenType, parent);
     }
 }
 
@@ -313,13 +314,15 @@ public sealed partial class NbtNode
     /// <param name="tagEnum">插入的节点类型</param>
     /// <param name="name">节点名称></param>
     /// <param name="value">节点值</param>
+    /// <param name="isListElement">父项是否为列表</param>
     /// <param name="childrenEnum">插入的节点的子项类型（默认为 Unknown）</param>
     /// <param name="parentNode">目标节点（默认为自身）</param>
     private void AppendNewChild(NbtTagEnum tagEnum, string name,
-        object value, NbtTagEnum childrenEnum = NbtTagEnum.Unknown, NbtNode? parentNode = null)
+        object value, bool isListElement, NbtTagEnum childrenEnum = NbtTagEnum.Unknown, NbtNode? parentNode = null)
     {
         // 一、向 NBT 标签实例添加节点
-        var builder = new NbtTagBuilder((parentNode ?? this).Tag.IsBigEndian);
+        var parent = parentNode ?? this;
+        var builder = new NbtTagBuilder(parent.Tag.IsBigEndian);
         var tag = tagEnum switch
         {
             NbtTagEnum.Byte => builder.Byte(name, byte.Parse((string)value)),
@@ -336,7 +339,8 @@ public sealed partial class NbtNode
             NbtTagEnum.LongArray => builder.LongArray(name, (long[])value),
             _ => throw new ArgumentOutOfRangeException(nameof(tagEnum), tagEnum, null)
         };
-        (parentNode ?? this).Tag.AppendChild(tag, []);
+        tag.IsListDirectElement = isListElement;
+        parent.Tag.AppendChild(tag, []);
         OnChildAppended(tag);
         SendNodeModifiedMessage(this);
     }

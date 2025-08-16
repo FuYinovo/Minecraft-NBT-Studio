@@ -1,6 +1,11 @@
 using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
 using NBT_Studio.Library.NBT_Parser.Enum;
 using NBT_Studio.Utils;
 
@@ -8,41 +13,53 @@ namespace NBT_Studio.Control.Dialog;
 
 public sealed partial class CreateNodeDialog
 {
+    # region Private Properties
+
     private readonly NbtTagEnum _tagEnum;
+    private readonly Brush _validBrush;
+    private readonly Brush _invalidBrush;
+    private readonly bool _isListElement;
+    private Visibility NodeChildrenTypeVis { get; set; } = Visibility.Collapsed;
+    private Visibility NodeValueVis { get; set; } = Visibility.Collapsed;
+    private Visibility NodeNameVis { get; set; } = Visibility.Collapsed;
+    private ComboBoxItem SelectedChildrenTagItem { get; set; }
+
+    # endregion
+
+    # region Public Properties
+
     public Action<bool>? DialogOkButtonEnabledSetter;
 
-    public CreateNodeDialog(NbtTagEnum tagEnum)
-    {
-        _tagEnum = tagEnum;
-        InitializeComponent();
-        InitControls();
-    }
-
+    public NbtTagEnum NodeChildrenType => (NbtTagEnum)SelectedChildrenTagItem.Tag;
     public string NodeName { get; set; } = string.Empty;
     public object NodeValue { get; set; } = string.Empty;
-    public NbtTagEnum ChildrenTag => (NbtTagEnum)SelectedChildrenTagItem.Tag;
-    private ComboBoxItem SelectedChildrenTagItem { get; set; } = null!;
-    public NbtTagEnum SelectedChildrenTagValue { get; set; }
 
-    private void InitControls()
+    # endregion
+
+    public CreateNodeDialog(NbtTagEnum tagEnum, bool isListElement)
     {
-        SelectedChildrenTagItem = DefaultChildrenTag;
-        if (_tagEnum is NbtTagEnum.Dictionary or NbtTagEnum.List) GenericValue.Visibility = Visibility.Collapsed;
-        if (_tagEnum is not NbtTagEnum.List) ChildrenType.Visibility = Visibility.Collapsed;
+        InitializeComponent();
+        _tagEnum = tagEnum;
+        _isListElement = isListElement;
+        _validBrush = BorderDefault.BorderBrush;
+        _invalidBrush = BorderRed.BorderBrush;
+        SelectedChildrenTagItem = DefaultChildrenType;
+        InitVisibility();
     }
 
-    private void TextBox_OnTextChanged(object sender, TextChangedEventArgs e)
+
+    private void InitVisibility()
+    {
+        if (!NbtTagEnumExtensions.IsCollection(_tagEnum)) NodeValueVis = Visibility.Visible;
+        if (_tagEnum == NbtTagEnum.List) NodeChildrenTypeVis = Visibility.Visible;
+        if (!_isListElement) NodeNameVis = Visibility.Visible;
+    }
+
+    private void OnNodeValueChanged(object sender, TextChangedEventArgs e)
     {
         if (sender is not TextBox textBox) return;
-        if (!NbtValueChecker.IsValid(_tagEnum, textBox.Text))
-        {
-            GenericValue.BorderBrush = BorderRed.BorderBrush;
-            DialogOkButtonEnabledSetter?.Invoke(false);
-        }
-        else
-        {
-            GenericValue.BorderBrush = BorderDefault.BorderBrush;
-            DialogOkButtonEnabledSetter?.Invoke(true);
-        }
+        var isValid = NbtValueChecker.IsValid(_tagEnum, textBox.Text);
+        TNodeValue.BorderBrush = isValid ? _validBrush : _invalidBrush;
+        DialogOkButtonEnabledSetter?.Invoke(isValid);
     }
 }

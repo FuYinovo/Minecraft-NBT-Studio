@@ -13,22 +13,26 @@
         <StackPanel Spacing="16">
             <TextBox Header="名称"
                      PlaceholderText="可选"
+                     Visibility="{x:Bind NodeNameVis}"
                      Text="{x:Bind NodeName, Mode=TwoWay}" />
-            <TextBox x:Name="GenericValue"
-                     Header="值"
-                     PlaceholderText="必须"
-                     Text="{x:Bind NodeValue, Mode=TwoWay}"
-                     TextChanged="TextBox_OnTextChanged" />
+            <TextBox
+                x:Name="TNodeValue"
+                Header="值"
+                PlaceholderText="必须"
+                Text="{x:Bind NodeValue, Mode=TwoWay}"
+                Visibility="{x:Bind NodeValueVis, Mode=OneWay}"
+                TextChanged="OnNodeValueChanged" />
             <ComboBox
-                x:Name="ChildrenType"
                 SelectedItem="{x:Bind SelectedChildrenTagItem, Mode=TwoWay}"
+                Visibility="{x:Bind NodeChildrenTypeVis, Mode=OneWay}"
                 Header="类型">
-                <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.Byte}">字节</ComboBoxItem>
+                <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.Byte}"
+                              x:Name="DefaultChildrenType">字节</ComboBoxItem>
                 <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.Short}">短整型</ComboBoxItem>
                 <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.Long}">长整型</ComboBoxItem>
                 <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.Float}">单精度浮点</ComboBoxItem>
                 <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.Double}">双精度浮点</ComboBoxItem>
-                <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.String}" x:Name="DefaultChildrenTag">字符串</ComboBoxItem>
+                <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.String}">字符串</ComboBoxItem>
                 <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.ByteArray}">字节数组</ComboBoxItem>
                 <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.IntArray}">整型数组</ComboBoxItem>
                 <ComboBoxItem Tag="{x:Bind enum:NbtTagEnum.LongArray}">长整型数组</ComboBoxItem>
