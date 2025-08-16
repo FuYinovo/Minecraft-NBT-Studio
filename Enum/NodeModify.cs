@@ -4,5 +4,6 @@ public enum NodeModify
 {
     Rename,
     Remove,
-    SetValue
+    SetValue,
+    AppendChild
 }

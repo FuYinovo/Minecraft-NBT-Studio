@@ -1,33 +1,32 @@
 ﻿using System;
 using Microsoft.UI.Xaml;
 using NBT_Studio.Utils;
-using NBT_Studio.ViewModel;
 
 namespace NBT_Studio.Interface;
 
 public interface IMutuallyControlsBehavior
 {
-    MutuallyControlsViewModel? ManagerViewModel { get; set; }
+    IMutuallyControls? MutuallyControlsManager { get; set; }
     string GroupName { get; set; }
 
     object Value { get; set; }
     void UpdateState();
 
     /// <summary>
-    /// 获取页面的 MutuallyControlsViewModel 类型的 ManagerViewModel
+    /// 获取页面的 MutuallyControlsViewModel 类型的 MutuallyControlsManager
     /// </summary>
-    static MutuallyControlsViewModel GetViewModel(DependencyObject associatedObject)
+    static IMutuallyControls GetManager(DependencyObject associatedObject)
     {
-        if (TreeHelper.GetViewModel<MutuallyControlsViewModel>(associatedObject, out var managerViewModel))
+        if (TreeHelper.GetSpecificDataContext<IMutuallyControls>(associatedObject, out var managerViewModel))
             return managerViewModel;
         throw new InvalidOperationException(
-            $"[{associatedObject.GetType()}] 使用了 [{nameof(IMutuallyControlsBehavior)}]，这要求页面继承 [{nameof(MutuallyControlsViewModel)}] !");
+            $"[{associatedObject.GetType()}] 使用了 [{nameof(IMutuallyControlsBehavior)}]，这要求页面实现 [{nameof(IMutuallyControls)}] !");
     }
 
     void OnAssociatedObjectLoaded(object sender, RoutedEventArgs args)
     {
-        ManagerViewModel = GetViewModel((DependencyObject)sender);
-        ManagerViewModel.Register(this);
+        MutuallyControlsManager = GetManager((DependencyObject)sender);
+        MutuallyControlsManager.Register(this);
         UpdateState();
     }
 }

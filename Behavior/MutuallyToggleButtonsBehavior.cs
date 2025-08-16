@@ -1,9 +1,7 @@
-﻿using System;
-using Microsoft.UI.Xaml;
+﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.Xaml.Interactivity;
 using NBT_Studio.Interface;
-using NBT_Studio.ViewModel;
 
 namespace NBT_Studio.Behavior;
 
@@ -21,19 +19,19 @@ public class MutuallyToggleButtonsBehavior : Behavior<ToggleButton>, IMutuallyCo
     {
         AssociatedObject.Checked -= OnChecked;
         AssociatedObject.Unchecked -= OnUnchecked;
-        ManagerViewModel?.Unregister(this);
+        MutuallyControlsManager?.Unregister(this);
         base.OnDetaching();
     }
 
 
     /// <summary>
-    /// ToggleButton 选中时设置到 ManagerViewModel 中
+    /// ToggleButton 选中时设置到 MutuallyControlsManager 中
     /// </summary>
     private void OnChecked(object sender, RoutedEventArgs routedEventArgs)
     {
-        if (sender is not ToggleButton || ManagerViewModel is null) return;
-        var selectedValue = ManagerViewModel.GetSelectedValue(GroupName);
-        if (selectedValue != Value) ManagerViewModel.SetSelectedValue(GroupName, Value);
+        if (sender is not ToggleButton || MutuallyControlsManager is null) return;
+        var selectedValue = MutuallyControlsManager.GetSelectedValue(GroupName);
+        if (selectedValue != Value) MutuallyControlsManager.SetSelectedValue(GroupName, Value);
     }
 
     /// <summary>
@@ -41,8 +39,8 @@ public class MutuallyToggleButtonsBehavior : Behavior<ToggleButton>, IMutuallyCo
     /// </summary>
     private void OnUnchecked(object sender, RoutedEventArgs e)
     {
-        if (sender is not ToggleButton toggleButton || ManagerViewModel is null) return;
-        var selectedValue = ManagerViewModel.GetSelectedValue(GroupName);
+        if (sender is not ToggleButton toggleButton || MutuallyControlsManager is null) return;
+        var selectedValue = MutuallyControlsManager.GetSelectedValue(GroupName);
         if (selectedValue == Value) toggleButton.IsChecked = true;
     }
 
@@ -76,14 +74,13 @@ public class MutuallyToggleButtonsBehavior : Behavior<ToggleButton>, IMutuallyCo
         set => SetValue(_valueDependencyProperty, value);
     }
 
-    public MutuallyControlsViewModel? ManagerViewModel { get; set; }
-    public EventHandler<object>? OnBehaviorNoticed { get; set; }
+    public IMutuallyControls? MutuallyControlsManager { get; set; }
 
     public void UpdateState()
     {
-        if (ManagerViewModel is null) return;
+        if (MutuallyControlsManager is null) return;
 
-        var currentValue = ManagerViewModel.GetSelectedValue(GroupName);
+        var currentValue = MutuallyControlsManager.GetSelectedValue(GroupName);
         AssociatedObject.IsChecked = Equals(currentValue, Value);
     }
 

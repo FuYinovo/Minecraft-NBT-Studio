@@ -1,9 +1,7 @@
-﻿using System;
-using Microsoft.UI.Xaml;
+﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Xaml.Interactivity;
 using NBT_Studio.Interface;
-using NBT_Studio.ViewModel;
 
 namespace NBT_Studio.Behavior;
 
@@ -19,7 +17,7 @@ public class MutuallyToggleSplitButtonsBehavior : Behavior<ToggleSplitButton>, I
     protected override void OnDetaching()
     {
         AssociatedObject.IsCheckedChanged -= OnCheckedChanged;
-        ManagerViewModel?.Unregister(this);
+        MutuallyControlsManager?.Unregister(this);
         base.OnDetaching();
     }
 
@@ -28,13 +26,13 @@ public class MutuallyToggleSplitButtonsBehavior : Behavior<ToggleSplitButton>, I
     /// </summary>
     private void OnCheckedChanged(ToggleSplitButton sender, ToggleSplitButtonIsCheckedChangedEventArgs args)
     {
-        if (ManagerViewModel is null) return;
-        var selectedValue = ManagerViewModel.GetSelectedValue(GroupName);
+        if (MutuallyControlsManager is null) return;
+        var selectedValue = MutuallyControlsManager.GetSelectedValue(GroupName);
         switch (sender.IsChecked)
         {
-            // 尝试选中则设置到 ManagerViewModel
+            // 尝试选中则设置到 MutuallyControlsManager
             case true:
-                if (selectedValue != Value) ManagerViewModel.SetSelectedValue(GroupName, Value);
+                if (selectedValue != Value) MutuallyControlsManager.SetSelectedValue(GroupName, Value);
                 break;
             // 尝试取消选中则阻止
             case false:
@@ -76,14 +74,13 @@ public class MutuallyToggleSplitButtonsBehavior : Behavior<ToggleSplitButton>, I
 
     public void UpdateState()
     {
-        if (ManagerViewModel is null) return;
+        if (MutuallyControlsManager is null) return;
 
-        var currentValue = ManagerViewModel.GetSelectedValue(GroupName);
+        var currentValue = MutuallyControlsManager.GetSelectedValue(GroupName);
         AssociatedObject.IsChecked = Equals(currentValue, Value);
     }
 
-    public MutuallyControlsViewModel? ManagerViewModel { get; set; }
-    public EventHandler<object>? OnBehaviorNoticed { get; set; }
+    public IMutuallyControls? MutuallyControlsManager { get; set; }
 
     # endregion
 }

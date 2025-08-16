@@ -14,7 +14,7 @@ namespace NBT_Studio.Control.Editor;
 
 public sealed partial class MapEditor : INotifyPropertyChanged
 {
-    private readonly MapEditorViewModel _viewModel = new(InitMapSize);
+    private readonly ViewModel.MapEditor _viewModel = new(InitMapSize);
     private const double MapScaleFactor = 0.7;
     private const int InitMapSize = 128;
     private float _mapScale = 1;

@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Controls;
 using NBT_Studio.Enum;
+using NBT_Studio.Interface;
 using NBT_Studio.Library.NBT_Parser.Class;
 using NBT_Studio.Message;
 using NBT_Studio.Model;
@@ -12,9 +13,9 @@ namespace NBT_Studio.ViewModel;
 
 [SuppressMessage("CommunityToolkit.Mvvm.SourceGenerators.ObservablePropertyGenerator",
     "MVVMTK0045:Using [ObservableProperty] on fields is not AOT compatible for WinRT")]
-public partial class MapEditorViewModel : MutuallyControlsViewModel
+public class MapEditor : IMutuallyControls
 {
-    public MapEditorViewModel(int size)
+    public MapEditor(int size)
     {
         _size = size;
         Pixels = new MinecraftMapPixel[_size, _size];
@@ -80,7 +81,7 @@ public partial class MapEditorViewModel : MutuallyControlsViewModel
 
     private void SetDefaultButtonGroupsSelection()
     {
-        SetSelectedValue("MapEditorTools", "All");
+        ((IMutuallyControls)this).SetSelectedValue("MapEditorTools", "All");
     }
 
 
@@ -108,4 +109,11 @@ public partial class MapEditorViewModel : MutuallyControlsViewModel
     ];
 
     #endregion
+
+    # region IMutuallyControls
+
+    public Dictionary<string, object> GroupToValue { get; } = new();
+    public Dictionary<string, List<IMutuallyControlsBehavior>> RegisteredBehaviors { get; } = new();
+
+    # endregion
 }

@@ -88,12 +88,11 @@ public sealed partial class TreeViewPageViewModel : ObservableObject
         WeakReferenceMessenger.Default.Register<SettingsChangedMessage<Sort>>(this,
             (_, v) => ApplySort(v.Value));
         // 「节点被修改」消息
-        WeakReferenceMessenger.Default.Register<ModifyNodeMessage>(this,
-            (_, v) => NodeChangeAction(v.Value.node, v.Value.type));
-        // 「添加一个节点」信息
-        WeakReferenceMessenger.Default.Register<CreateNodeMessage>(this,
-            // ReSharper disable once AsyncVoidMethod
-            async void (_, v) => await CreateNode(v.Value.invokedNode, v.Value.tagEnum));
+        WeakReferenceMessenger.Default.Register<NodeModifiedMessage>(this,
+            (_, _) =>
+            {
+                if (_filePath != string.Empty) IsApplyEnabled = true;
+            });
     }
 
     private void SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
@@ -172,7 +171,7 @@ public sealed partial class TreeViewPageViewModel
         void LoadRootTag(NbtTag rootTag)
         {
             Nodes.Clear();
-            Nodes.Add(new NbtNode(rootTag, true));
+            Nodes.Add(new NbtNode(rootTag, null, true));
 
             IsSaveEnabled = true;
             IsApplyEnabled = false;
@@ -222,7 +221,7 @@ public sealed partial class TreeViewPageViewModel
         var savePicker = new FileSavePicker();
         savePicker.FileTypeChoices.Add("NBT Files", new List<string> { ".nbt", ".dat" });
         savePicker.SuggestedFileName =
-            string.IsNullOrWhiteSpace(Nodes.First().Name) ? "unnamed_nbt_file" : Nodes.First().Name;
+            string.IsNullOrWhiteSpace(Nodes.First().DisplayName) ? "unnamed_nbt_file" : Nodes.First().DisplayName;
         var hWnd = WindowNative.GetWindowHandle(App.MainWindow);
         InitializeWithWindow.Initialize(savePicker, hWnd);
 
@@ -246,7 +245,7 @@ public sealed partial class TreeViewPageViewModel
 
     /// <summary>创建 NBT 文件</summary>
     [RelayCommand]
-    private async Task CreateFile(string? param)
+    private async Task CreateFile(MinecraftEdition? param)
     {
         // 确认是否丢弃修改
         if (IsApplyEnabled)
@@ -261,16 +260,10 @@ public sealed partial class TreeViewPageViewModel
                     break; // 执行方法
             }
 
-        _minecraftEdition = param?.ToLower() switch
-        {
-            "java" => MinecraftEdition.Java,
-            "bedrock" => MinecraftEdition.Bedrock,
-            _ => throw new Exception("新建文件按钮在XAML中版本参数错误!")
-        };
+        _minecraftEdition = param ?? throw new Exception("新建文件按钮在XAML中未设置游戏版本!");
         var builder = new NbtTagBuilder(_minecraftEdition == MinecraftEdition.Java);
-        if (Nodes.Count > 0) Nodes.Clear();
         Nodes.Clear();
-        Nodes.Add(new NbtNode(builder.Dictionary("root", []), true));
+        Nodes.Add(new NbtNode(builder.Dictionary("root", []), null, true));
         _filePath = string.Empty;
         IsApplyEnabled = false;
         IsSaveEnabled = true;
@@ -321,7 +314,7 @@ public sealed partial class TreeViewPageViewModel
     private async Task<ContentDialogResult> VerifyAbandonChanges()
     {
         var fileName = _filePath == string.Empty
-            ? Nodes.First().Name == string.Empty ? "未命名" : Nodes.First().Name
+            ? Nodes.First().DisplayName == string.Empty ? "未命名" : Nodes.First().DisplayName
             : Path.GetFileNameWithoutExtension(_filePath);
         return await DialogService.ShowDialog("是否保存修改？", "保存", "丢弃", "取消", description: $"「{fileName}」未保存修改");
     }
@@ -370,7 +363,7 @@ public sealed partial class TreeViewPageViewModel
 
         // 二、应用节点搜索
         foreach (var child in childrenAll.Where(child =>
-                     !string.IsNullOrWhiteSpace(SearchBoxText) && !child.Name.Contains(SearchBoxText) &&
+                     !string.IsNullOrWhiteSpace(SearchBoxText) && !child.DisplayName.Contains(SearchBoxText) &&
                      !NbtTagEnumExtensions.IsCollection(child.TagEnum)))
             child.Visibility = Visibility.Collapsed;
 
@@ -391,31 +384,6 @@ public sealed partial class TreeViewPageViewModel
     {
         // TODO)) 节点排序
     }
-
-    /// <summary> 处理节点修改操作相关 UI 更新 </summary>
-    /// <remarks> 委托方法</remarks>
-    private void NodeChangeAction(NbtNode node, NodeModify type)
-    {
-        switch (type)
-        {
-            case NodeModify.Rename:
-                break;
-            case NodeModify.Remove:
-                Nodes.Remove(node);
-                // 隐藏自身及其子项
-                node.Visibility = Visibility.Collapsed;
-                foreach (var child in node.Children) child.Visibility = Visibility.Collapsed;
-                // 更新其父节点的子项数量显示
-                foreach (var child in Nodes.First().GetChildrenAll()) child.UpdateChildrenCount();
-                break;
-            case NodeModify.SetValue:
-                break;
-            default:
-                throw new Exception("无法确定节点修改操作类型");
-        }
-
-        if (_filePath != string.Empty) IsApplyEnabled = true;
-    }
 }
 
 /// <summary>
@@ -424,69 +392,11 @@ public sealed partial class TreeViewPageViewModel
 public sealed partial class TreeViewPageViewModel
 {
     /// <summary>
-    ///     添加节点
+    ///     插入节点
     /// </summary>
-    private async Task CreateNode(NbtNode invokedNode, NbtTagEnum tagEnum)
-    {
-        // 确认父类目标（若「选中」是列表或字典，则为自身添加子项，否则为父节点添加子项）
-        var parent = NbtTagEnumExtensions.IsCollection(invokedNode.TagEnum)
-            ? invokedNode
-            : invokedNode.Parent!;
-
-        // 合法性判断
-        if (parent.TagEnum == NbtTagEnum.List && parent.Tag.ChildrenTag != tagEnum)
-        {
-            await DialogService.ShowDialog("添加失败", "确认",
-                description: $"列表<{parent.Tag.ChildrenTag}> 不允许添加 <{tagEnum}> 节点");
-            return;
-        }
-
-        // 初始化弹窗
-        var content = new CreateNodeDialog(tagEnum);
-        var dialog = DialogService.GetDialog($"添加「{tagEnum}」节点", "确认", close: "取消", content: content);
-        content.DialogOkButtonEnabledSetter = b => dialog.IsPrimaryButtonEnabled = b;
-        dialog.IsPrimaryButtonEnabled = NbtTagEnumExtensions.IsCollection(tagEnum);
-
-        // 获取输入的名称、值
-        var choice = await dialog.ShowAsync();
-        if (choice == ContentDialogResult.None) return;
-        var name = content.NodeName;
-        var value = content.NodeValue;
-
-        // 一、向 NBT 标签实例添加节点
-        var builder = new NbtTagBuilder(_minecraftEdition == MinecraftEdition.Java);
-        var tag = tagEnum switch
-        {
-            NbtTagEnum.Byte => builder.Byte(name, byte.Parse((string)value)),
-            NbtTagEnum.Short => builder.Short(name, short.Parse((string)value)),
-            NbtTagEnum.Int => builder.Int(name, int.Parse((string)value)),
-            NbtTagEnum.Long => builder.Long(name, long.Parse((string)value)),
-            NbtTagEnum.Float => builder.Float(name, float.Parse((string)value)),
-            NbtTagEnum.Double => builder.Double(name, double.Parse((string)value)),
-            NbtTagEnum.ByteArray => builder.ByteArray(name, (byte[])value),
-            NbtTagEnum.String => builder.String(name, (string)value),
-            NbtTagEnum.List => builder.List(name, [], content.ChildrenTag),
-            NbtTagEnum.Dictionary => builder.Dictionary(name, []),
-            NbtTagEnum.IntArray => builder.IntArray(name, (int[])value),
-            NbtTagEnum.LongArray => builder.LongArray(name, (long[])value),
-            _ => throw new ArgumentOutOfRangeException(nameof(tagEnum), tagEnum, null)
-        };
-        parent.Tag.AppendChild(tag, []);
-
-        // 二、向节点树添加节点(UI)
-        parent.Children.Add(new NbtNode(tag));
-        OnPropertyChanged(nameof(Nodes));
-
-        if (_filePath != string.Empty) IsApplyEnabled = true;
-        IsSaveEnabled = true;
-    }
-
-    /// <summary>
-    ///     从选择的 TreeViewNode 添加节点
-    /// </summary>
-    /// <remarks>调用 CreateNode</remarks>
+    /// <remarks>调用 <see cref="NbtNode"/> 的 AppendChild 方法（含界面交互）</remarks>
     [RelayCommand]
-    private async Task CreateNodeFromSelected(NbtTagEnum tagEnum)
+    private async Task AppendNode(NbtTagEnum tagEnum)
     {
         if (SelectedNode == null)
         {
@@ -494,6 +404,10 @@ public sealed partial class TreeViewPageViewModel
             return;
         }
 
-        await CreateNode((NbtNode)SelectedNode.Content, tagEnum);
+        var selectedNbtNode = (NbtNode)SelectedNode.Content;
+        await selectedNbtNode.AppendChild(tagEnum);
+
+        if (_filePath != string.Empty) IsApplyEnabled = true;
+        IsSaveEnabled = true;
     }
 }
