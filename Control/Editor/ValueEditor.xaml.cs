@@ -104,6 +104,6 @@ public sealed partial class ValueEditor
     private void AddArrayValue_OnClicked(object sender, RoutedEventArgs e)
     {
         _viewModel.AddArrayValueCommand.Execute(null);
-        SaveButton.IsEnabled = true;
+        SaveButton.IsEnabled = false;  // 避免空值保存
     }
 }
