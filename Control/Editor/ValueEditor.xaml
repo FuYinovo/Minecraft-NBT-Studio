@@ -6,6 +6,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:model="using:NBT_Studio.Model"
     mc:Ignorable="d">
 
 
@@ -61,12 +62,57 @@
 
                 <!-- 右侧 -->
                 <Grid Grid.Column="1">
+                    <!-- 普通值 -->
                     <TextBox Header="数据"
+                             Visibility="{Binding GenericValueVis}"
                              Text="{Binding Value, Mode=TwoWay}"
                              IsEnabled="False"
                              TextWrapping="Wrap"
                              IsSpellCheckEnabled="False"
                              TextChanged="TextBox_OnValueChanged" />
+                    <!-- 数组值 -->
+                    <StackPanel Spacing="12"
+                                Visibility="{Binding ArrayValueVis}">
+                        <TextBlock Text="数组元素" Margin="0,0,0,-3"></TextBlock>
+                        <ItemsControl ItemsSource="{Binding ArrayValues}">
+                            <!-- 容器 -->
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Spacing="6"></StackPanel>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <!-- 模板 -->
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="model:ArrayNodeValue">
+                                    <Grid>
+                                        <!-- 值文本框 -->
+                                        <TextBox HorizontalAlignment="Stretch"
+                                                 Text="{Binding Value, Mode=TwoWay}"
+                                                 Margin="0,0,48,0"
+                                                 PlaceholderText="必须"
+                                                 TextChanged="TextBox_OnValueChanged" />
+                                        <!-- 值删除按钮 -->
+                                        <Button Opacity=".8"
+                                                HorizontalAlignment="Right"
+                                                Click="RemoveArrayValue_OnClicked">
+                                            <FontIcon Glyph="&#xE74D;" />
+                                        </Button>
+                                    </Grid>
+
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <!-- 添加按钮 -->
+                        <Button Opacity=".8"
+                                HorizontalAlignment="Stretch"
+                                Height="42"
+                                Click="AddArrayValue_OnClicked">
+                            <StackPanel Orientation="Horizontal" Spacing="4">
+                                <FontIcon Glyph="&#xF8AA;" FontSize="14" />
+                                <TextBlock Text="添加元素"></TextBlock>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
                 </Grid>
             </Grid>
             <!-- 保存按钮 -->

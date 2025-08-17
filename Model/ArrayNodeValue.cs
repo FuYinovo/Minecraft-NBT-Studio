@@ -3,5 +3,5 @@
 public class ArrayNodeValue
 {
     public string Value { get; set; } = string.Empty;
-    public bool IsValid { get; set; } = false;
+    public bool IsValid { get; set; }
 }

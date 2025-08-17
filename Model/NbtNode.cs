@@ -14,6 +14,7 @@ using NBT_Studio.Library.NBT_Parser.Class;
 using NBT_Studio.Library.NBT_Parser.Enum;
 using NBT_Studio.Message;
 using NBT_Studio.Service;
+using NBT_Studio.Utils;
 
 namespace NBT_Studio.Model;
 
@@ -166,12 +167,19 @@ public sealed partial class NbtNode
     }
 
     /// <summary>
-    /// 修改值时：更新显示值
+    /// 修改值时：更新显示值(普通)
     /// </summary>
-    /// <param name="newValue"></param>
     private void OnValueModified(string newValue)
     {
         DisplayValue = newValue;
+    }
+
+    /// <summary>
+    /// 修改值时：更新显示值(数组)
+    /// </summary>
+    private void OnValueModified(string[] newValue)
+    {
+        DisplayValue = string.Join(", ", newValue);
     }
 
     /// <summary>
@@ -256,27 +264,24 @@ public sealed partial class NbtNode
 public sealed partial class NbtNode
 {
     /// <summary>
-    ///     设置节点值
+    ///     设置节点值(普通)
     /// </summary>
     public void SetValue(string newValue)
     {
-        Tag.SetValue(TagEnum switch
-        {
-            // TODO)) 数组保存
-            NbtTagEnum.Byte => byte.Parse(newValue),
-            NbtTagEnum.Short => short.Parse(newValue),
-            NbtTagEnum.Int => int.Parse(newValue),
-            NbtTagEnum.Long => long.Parse(newValue),
-            NbtTagEnum.Float => float.Parse(newValue),
-            NbtTagEnum.Double => double.Parse(newValue),
-            NbtTagEnum.ByteArray => Array.Empty<byte>(),
-            NbtTagEnum.String => newValue,
-            NbtTagEnum.IntArray => Array.Empty<int>(),
-            NbtTagEnum.LongArray => Array.Empty<long>(),
-            _ => throw new ArgumentOutOfRangeException()
-        });
-
+        if (NbtTagEnumExtensions.IsArray(TagEnum)) return;
+        Tag.SetValue(NbtTagHelper.Parse(TagEnum, newValue));
         OnValueModified(newValue);
+        SendNodeModifiedMessage(this);
+    }
+
+    /// <summary>
+    /// 设置节点值(数组)
+    /// </summary>
+    public void SetValue(string[] newValues)
+    {
+        if (!NbtTagEnumExtensions.IsArray(TagEnum)) return;
+        Tag.SetValue(NbtTagHelper.Parse(TagEnum, newValues));
+        OnValueModified(newValues);
         SendNodeModifiedMessage(this);
     }
 

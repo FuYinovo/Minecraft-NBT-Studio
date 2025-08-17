@@ -1,3 +1,4 @@
+using System.Linq;
 using Windows.Foundation;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
@@ -5,6 +6,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using NBT_Studio.Library.NBT_Parser.Enum;
 using NBT_Studio.Message;
+using NBT_Studio.Model;
 using NBT_Studio.Utils;
 using NBT_Studio.ViewModel;
 
@@ -29,7 +31,7 @@ public sealed partial class ValueEditor
     // 自动调整内容 Grid 大小 ( CommunityToolKit 未实现 )
     private void UpdateGridSize(Size size)
     {
-        if (size.Width <= 60 || size.Height <=60) return;
+        if (size.Width <= 60 || size.Height <= 60) return;
         ControlGrid.Width = size.Width - 60;
         ControlGrid.Height = size.Height - 70;
     }
@@ -47,20 +49,37 @@ public sealed partial class ValueEditor
         textBox.IsEnabled = !NbtTagEnumExtensions.IsCollection(_viewModel.TagEnum);
         if (textBox.FocusState == FocusState.Unfocused)
         {
-            SetState(false, BorderDefault.BorderBrush);
+            SetTextBoxIsValid(true);
+            SetSaveButtonIsEnabled(false);
             return;
         }
 
-        SetState(NbtTagHelper.IsValueValid(_viewModel.TagEnum, textBox.Text));
+        if (NbtTagEnumExtensions.IsArray(_viewModel.TagEnum))
+        {
+            if (textBox.DataContext is not ArrayNodeValue arrayValue) return;
+            var valueType = NbtTagEnumExtensions.GetArrayElementType(_viewModel.TagEnum);
+            arrayValue.IsValid = NbtTagHelper.IsValueValid(valueType, textBox.Text);
+            SetTextBoxIsValid(arrayValue.IsValid);
+            SetSaveButtonIsEnabled(_viewModel.ArrayValues.Count(x => x.IsValid) == _viewModel.ArrayValues.Count);
+        }
+        else
+        {
+            var isValid = NbtTagHelper.IsValueValid(_viewModel.TagEnum, textBox.Text);
+            SetTextBoxIsValid(isValid);
+            SetSaveButtonIsEnabled(isValid);
+        }
 
 
         return;
 
-        // 设置「保存」按钮启用状态、「输入框」边框笔刷
-        void SetState(bool isEnabled, Brush? borderBrush = null)
+        void SetTextBoxIsValid(bool isValid)
+        {
+            textBox.BorderBrush = isValid ? BorderDefault.BorderBrush : BorderRed.BorderBrush;
+        }
+
+        void SetSaveButtonIsEnabled(bool isEnabled)
         {
             SaveButton.IsEnabled = isEnabled;
-            textBox.BorderBrush = borderBrush ?? (isEnabled ? BorderDefault.BorderBrush : BorderRed.BorderBrush);
         }
     }
 
@@ -73,5 +92,18 @@ public sealed partial class ValueEditor
     {
         if (sender is not TextBox textBox) return;
         if (textBox.FocusState != FocusState.Unfocused) SaveButton.IsEnabled = true;
+    }
+
+    private void RemoveArrayValue_OnClicked(object sender, RoutedEventArgs e)
+    {
+        if (sender is not Button btn) return;
+        _viewModel.RemoveArrayValueCommand.Execute(btn);
+        SaveButton.IsEnabled = true;
+    }
+
+    private void AddArrayValue_OnClicked(object sender, RoutedEventArgs e)
+    {
+        _viewModel.AddArrayValueCommand.Execute(null);
+        SaveButton.IsEnabled = true;
     }
 }

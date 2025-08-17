@@ -41,11 +41,11 @@
                         <!-- 模板 -->
                         <ItemsControl.ItemTemplate>
                             <DataTemplate x:DataType="model:ArrayNodeValue">
-                                <StackPanel Orientation="Horizontal" Spacing="4">
+                                <Grid>
                                     <!-- 值文本框 -->
                                     <TextBox HorizontalAlignment="Stretch"
                                              Text="{Binding Value, Mode=TwoWay}"
-                                             Width="222"
+                                             Margin="0,0,48,0"
                                              PlaceholderText="必须"
                                              TextChanged="OnNodeArrayValueChanged" />
                                     <!-- 值删除按钮 -->
@@ -54,7 +54,7 @@
                                             Click="RemoveArrayValue_OnClick">
                                         <FontIcon Glyph="&#xE74D;" />
                                     </Button>
-                                </StackPanel>
+                                </Grid>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>

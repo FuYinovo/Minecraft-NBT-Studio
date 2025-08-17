@@ -1,10 +1,13 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using NBT_Studio.Library.NBT_Parser.Enum;
-using NBT_Studio.Library.NBT_Parser.Utils;
 using NBT_Studio.Message;
 using NBT_Studio.Model;
 using NBT_Studio.Utils;
@@ -33,17 +36,17 @@ public sealed partial class ValueEditorViewModel : ObservableObject
             });
     }
 
-    private void UpdateValueDisplay(TreeViewNode? value)
+    private void UpdateValueDisplay(TreeViewNode? treeViewNode)
     {
-        if (value == null) return;
-        var node = (NbtNode)value.Content;
+        if (treeViewNode == null) return;
+        var node = (NbtNode)treeViewNode.Content;
         TagEnum = node.TagEnum;
         ChildrenTagEnum = node.Tag.ChildrenTag;
 
-        var isNumber = NbtTagEnumExtensions.IsNumber(TagEnum) || NbtTagEnumExtensions.IsArray(TagEnum);
+        var isNumber = NbtTagEnumExtensions.IsNumber(TagEnum);
+        var isArray = NbtTagEnumExtensions.IsArray(TagEnum);
 
         Name = node.DisplayName;
-        Value = node.DisplayValue;
         Length = node.DisplayValue.Length;
         AllowChildren = NbtTagEnumExtensions.IsCollection(TagEnum);
         AllowDelete = !node.IsRootNode;
@@ -53,20 +56,46 @@ public sealed partial class ValueEditorViewModel : ObservableObject
         ChildrenType = _tagHelper.GetDescription(ChildrenTagEnum);
         MaxValue = _tagHelper.GetMaxValue(TagEnum);
         MinValue = _tagHelper.GetMinValue(TagEnum);
+        ArrayValueVis = isArray ? Visibility.Visible : Visibility.Collapsed;
+        GenericValueVis = isArray ? Visibility.Collapsed : Visibility.Visible;
+
+        if (isArray && node.Tag.Value is Array values)
+        {
+            ArrayValues.Clear();
+            foreach (var value in values)
+                ArrayValues.Add(new ArrayNodeValue { Value = value?.ToString() ?? string.Empty, IsValid = true });
+        }
+        else Value = node.DisplayValue;
 
 
         IsChildrenTypeEnabled = TagEnum == NbtTagEnum.List;
-        IsMaxValueEnabled = isNumber;
-        IsMinValueEnabled = isNumber;
-        IsAllowNegativeEnabled = isNumber;
-        IsAllowDecimalEnabled = isNumber;
+        IsMaxValueEnabled = isNumber || isArray;
+        IsMinValueEnabled = isNumber || isArray;
+        IsAllowNegativeEnabled = isNumber || isArray;
+        IsAllowDecimalEnabled = isNumber || isArray;
     }
+
 
     [RelayCommand]
     private void SaveValueChanges()
     {
-        _selectedNode?.SetValue(Value);
-        _selectedNode?.SetName(Name);
+        if (_selectedNode is null) return;
+        _selectedNode.SetName(Name);
+        if (NbtTagEnumExtensions.IsArray(TagEnum)) _selectedNode.SetValue(ArrayValues.Select(x => x.Value).ToArray());
+        else _selectedNode.SetValue(Value);
+    }
+
+    [RelayCommand]
+    private void AddArrayValue()
+    {
+        ArrayValues.Add(new ArrayNodeValue());
+    }
+
+    [RelayCommand]
+    private void RemoveArrayValue(Button button)
+    {
+        if (button.DataContext is not ArrayNodeValue arrayValue) return;
+        ArrayValues.Remove(arrayValue);
     }
 
 
@@ -92,6 +121,9 @@ public sealed partial class ValueEditorViewModel : ObservableObject
     [ObservableProperty] private bool _isMinValueEnabled;
     [ObservableProperty] private bool _isAllowNegativeEnabled;
     [ObservableProperty] private bool _isAllowDecimalEnabled;
+    [ObservableProperty] private Visibility _genericValueVis = Visibility.Collapsed;
+    [ObservableProperty] private Visibility _arrayValueVis = Visibility.Collapsed;
+    [ObservableProperty] private ObservableCollection<ArrayNodeValue> _arrayValues = [];
 
     #endregion
 }
