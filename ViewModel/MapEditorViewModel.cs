@@ -13,9 +13,9 @@ namespace NBT_Studio.ViewModel;
 
 [SuppressMessage("CommunityToolkit.Mvvm.SourceGenerators.ObservablePropertyGenerator",
     "MVVMTK0045:Using [ObservableProperty] on fields is not AOT compatible for WinRT")]
-public class MapEditor : IMutuallyControls
+public class MapEditorViewModel : IMutuallyControls
 {
-    public MapEditor(int size)
+    public MapEditorViewModel(int size)
     {
         _size = size;
         Pixels = new MinecraftMapPixel[_size, _size];
@@ -51,18 +51,26 @@ public class MapEditor : IMutuallyControls
     {
         if (!_dataTags.TryGetValue(MinecraftMapNecessaryTags.Colors, out var tag) || tag.Value is null) return;
 
-        Pixels = new MinecraftMapPixel[_size, _size];
-        var colors = (byte[])tag.Value;
-        for (var y = 0; y < _size; y++)
+        try
         {
-            for (var x = 0; x < _size; x++)
+            Pixels = new MinecraftMapPixel[_size, _size];
+            var colors = (byte[])tag.Value;
+
+            for (var y = 0; y < _size; y++)
             {
-                var pixel = colors[y * _size + x];
-                var baseColor = (MinecraftMapColor)(byte)(pixel >> 2); // 前 6 位
-                var modifyColor = (MinecraftColorModify)(byte)(pixel & 0b00000011); // 后 2 位
-                var color = MinecraftMapColorExtensions.GetColor(baseColor, modifyColor);
-                Pixels[y, x] = new MinecraftMapPixel { Color = color };
+                for (var x = 0; x < _size; x++)
+                {
+                    var pixel = colors[y * _size + x];
+                    var baseColor = (MinecraftMapColor)(byte)(pixel >> 2); // 前 6 位
+                    var modifyColor = (MinecraftColorModify)(byte)(pixel & 0b00000011); // 后 2 位
+                    var color = MinecraftMapColorExtensions.GetColor(baseColor, modifyColor);
+                    Pixels[y, x] = new MinecraftMapPixel { Color = color };
+                }
             }
+        }
+        catch (Exception)
+        {
+            return;
         }
 
         WeakReferenceMessenger.Default.Send(new DrawMapMessage());
