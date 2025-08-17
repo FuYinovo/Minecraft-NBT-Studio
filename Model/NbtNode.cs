@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
@@ -23,6 +24,9 @@ namespace NBT_Studio.Model;
     "MVVMTK0045:Using [ObservableProperty] on fields is not AOT compatible for WinRT")]
 public sealed partial class NbtNode : ObservableObject
 {
+    private const string IconUriHead = "ms-appx:///Assets/NodeIcon/Data_node_";
+    private const string IconUriExtension = ".svg";
+
     /// <summary>
     ///     初始化属性
     /// </summary>
@@ -36,54 +40,44 @@ public sealed partial class NbtNode : ObservableObject
         // 名称
         DisplayName = nbtTag.Name ?? TagEnum.ToString();
         // 值
-        var value = nbtTag.Value;
-        DisplayValue = TagEnum switch
-        {
-            NbtTagEnum.IntArray => string.Join(", ", (int[])value!),
-            NbtTagEnum.ByteArray => string.Join(", ", (byte[])value!),
-            NbtTagEnum.LongArray => string.Join(", ", (long[])value!),
-            _ => nbtTag.Value?.ToString() ?? ""
-        };
+        DisplayValue = GetDisplayValue(nbtTag.Value);
         // 图标
         Icon = GetIconUri(TagEnum);
         // 节点子项
         foreach (var child in nbtTag.Children.Where(child => child.Tag != NbtTagEnum.End))
             Children.Add(new NbtNode(child, this));
         // 子项数量
-        DisplayChildrenCount = $"<{Children.Count.ToString()}>";
+        UpdateChildrenCount();
         // 是否显示子项数量
-        if (NbtTagEnumExtensions.IsCollection(TagEnum)) ChildrenCountVisibility = Visibility.Visible;
+        if (NbtTagEnumExtensions.IsCollection(TagEnum)) ChildrenCountVis = Visibility.Visible;
         // 是否显示等号
-        if (ChildrenCountVisibility == Visibility.Collapsed) EqualMarkVisibility = Visibility.Visible;
+        if (ChildrenCountVis == Visibility.Collapsed) EqualMarkVis = Visibility.Visible;
 
         return;
 
 
         static string GetIconUri(NbtTagEnum tagEnum)
         {
-            const string path = "ms-appx:///Assets/NodeIcon/";
-            const string head = "Data_node_";
-            const string extension = ".svg";
             return tagEnum switch
             {
-                NbtTagEnum.ByteArray => $"{path}{head}byte-array{extension}",
-                NbtTagEnum.IntArray => $"{path}{head}int-array{extension}",
-                NbtTagEnum.LongArray => $"{path}{head}long-array{extension}",
-                _ => $"{path}{head}{tagEnum.ToString().ToLower()}{extension}"
+                NbtTagEnum.ByteArray => $"{IconUriHead}byte-array{IconUriExtension}",
+                NbtTagEnum.IntArray => $"{IconUriHead}int-array{IconUriExtension}",
+                NbtTagEnum.LongArray => $"{IconUriHead}long-array{IconUriExtension}",
+                _ => $"{IconUriHead}{tagEnum.ToString().ToLower()}{IconUriExtension}"
             };
         }
     }
 
     #region Property
 
-    public Visibility ChildrenCountVisibility { get; } = Visibility.Collapsed;
-    public Visibility EqualMarkVisibility { get; } = Visibility.Collapsed;
+    public Visibility ChildrenCountVis { get; } = Visibility.Collapsed;
+    public Visibility EqualMarkVis { get; } = Visibility.Collapsed;
     public ObservableCollection<NbtNode> Children { get; } = [];
-    public NbtTag Tag { get; }
-    public NbtNode? Parent { get; }
-    public NbtTagEnum TagEnum { get; }
-    public string Icon { get; }
+    public readonly NbtTag Tag;
+    public readonly NbtNode? Parent;
+    public readonly NbtTagEnum TagEnum;
     public readonly bool IsRootNode;
+    public string Icon { get; }
     [ObservableProperty] private string _displayValue;
     [ObservableProperty] private string _displayName = string.Empty;
     [ObservableProperty] private string _displayChildrenCount = string.Empty;
@@ -101,9 +95,7 @@ public sealed partial class NbtNode
     /// <remarks>节点为显示状态、未被移除则视为有效/>/></remarks>
     public int GetVisibleChildrenCount()
     {
-        var count = 0;
-        if (NbtTagEnumExtensions.IsCollection(TagEnum)) count += Children.Count(IsValid);
-        return count;
+        return Children.Count(IsValid);
 
         bool IsValid(NbtNode node) => node is { Visibility: Visibility.Visible, Tag.IsRemoved: false } &&
                                       node.TagEnum != NbtTagEnum.End;
@@ -132,6 +124,12 @@ public sealed partial class NbtNode
             list.Add(node);
             foreach (var child in node.Children.Where(c => !c.Tag.IsRemoved)) GetChildren(child, ref list);
         }
+    }
+
+    private string GetDisplayValue(object? value)
+    {
+        if (value is IEnumerable enumerable and not string ) return string.Join(", ", enumerable.Cast<object>());
+        return value?.ToString() ?? string.Empty;
     }
 }
 

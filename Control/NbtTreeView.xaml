@@ -159,11 +159,11 @@
                                    Text="{Binding DisplayName}" />
                         <!-- 子项数量 -->
                         <TextBlock Style="{StaticResource TreeNodeSubText}"
-                                   Visibility="{Binding ChildrenCountVisibility}"
+                                   Visibility="{Binding ChildrenCountVis}"
                                    Text="{Binding DisplayChildrenCount}" />
                         <!-- 等号 -->
                         <TextBlock Style="{StaticResource TreeNodeSubText}"
-                                   Visibility="{Binding EqualMarkVisibility}"
+                                   Visibility="{Binding EqualMarkVis}"
                                    Text="=" />
                         <!-- 值 -->
                         <TextBlock Style="{StaticResource TreeNodeText}"

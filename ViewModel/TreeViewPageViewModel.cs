@@ -115,7 +115,7 @@ public sealed partial class TreeViewPageViewModel
         // 确认是否丢弃修改
         if (IsApplyEnabled)
         {
-            var choice = await VerifyAbandonChanges();
+            var choice = await VerifyAbandonModifies();
             switch (choice)
             {
                 case ContentDialogResult.None: // 结束方法
@@ -249,7 +249,7 @@ public sealed partial class TreeViewPageViewModel
     {
         // 确认是否丢弃修改
         if (IsApplyEnabled)
-            switch (await VerifyAbandonChanges())
+            switch (await VerifyAbandonModifies())
             {
                 case ContentDialogResult.None: // 结束方法
                     return;
@@ -311,7 +311,7 @@ public sealed partial class TreeViewPageViewModel
     }
 
     /// <summary>确认是否丢弃 NBT 文件未保存的修改</summary>
-    private async Task<ContentDialogResult> VerifyAbandonChanges()
+    private async Task<ContentDialogResult> VerifyAbandonModifies()
     {
         var fileName = _filePath == string.Empty
             ? Nodes.First().DisplayName == string.Empty ? "未命名" : Nodes.First().DisplayName
