@@ -23,40 +23,6 @@ public enum NbtTagEnum
 
 public static class NbtTagEnumExtensions
 {
-    public static string? GetMaxValue(NbtTagEnum tagEnum)
-    {
-        return tagEnum switch
-        {
-            NbtTagEnum.Byte
-                or NbtTagEnum.ByteArray => byte.MaxValue.ToString(),
-            NbtTagEnum.Int
-                or NbtTagEnum.IntArray => int.MaxValue.ToString(),
-            NbtTagEnum.Long
-                or NbtTagEnum.LongArray => long.MaxValue.ToString(),
-            NbtTagEnum.Short => short.MaxValue.ToString(),
-            NbtTagEnum.Float => float.MaxValue.ToString(),
-            NbtTagEnum.Double => double.MaxValue.ToString(),
-            _ => null
-        };
-    }
-
-    public static string? GetMinValue(NbtTagEnum tagEnum)
-    {
-        return tagEnum switch
-        {
-            NbtTagEnum.Byte
-                or NbtTagEnum.ByteArray => byte.MinValue.ToString(),
-            NbtTagEnum.Int
-                or NbtTagEnum.IntArray => int.MinValue.ToString(),
-            NbtTagEnum.Long
-                or NbtTagEnum.LongArray => long.MinValue.ToString(),
-            NbtTagEnum.Short => short.MinValue.ToString(),
-            NbtTagEnum.Float => float.MinValue.ToString(),
-            NbtTagEnum.Double => double.MinValue.ToString(),
-            _ => null
-        };
-    }
-
     public static bool IsNumber(NbtTagEnum tagEnum)
     {
         return tagEnum switch

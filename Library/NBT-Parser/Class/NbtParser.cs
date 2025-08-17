@@ -320,7 +320,7 @@ public class NbtParser
     private T ConsumeLengthField<T>(ref int offset, int fieldSize) where T : struct
     {
         var bytes = _bytes.Span.Slice(offset, fieldSize);
-        var length = Tools.ReadNumber<T>(bytes, _isBigEndian);
+        var length = Tools.ReadBinaryNumber<T>(bytes, _isBigEndian);
         offset += fieldSize;
         return length;
     }

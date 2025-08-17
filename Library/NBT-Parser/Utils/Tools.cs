@@ -45,7 +45,7 @@ public static class Tools
                 : BinaryPrimitives.ReadDoubleLittleEndian(span.Span)
     };
 
-    public static T ReadNumber<T>(Span<byte> bytes, bool isBigEndian) where T : struct
+    public static T ReadBinaryNumber<T>(Span<byte> bytes, bool isBigEndian) where T : struct
     {
         try
         {

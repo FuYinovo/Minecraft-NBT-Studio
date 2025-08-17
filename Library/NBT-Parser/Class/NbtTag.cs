@@ -475,8 +475,8 @@ public class NbtTag : ICloneable
 
         var dataLength = info.fieldSize switch
         {
-            2 => Tools.ReadNumber<short>(dataLengthField.ToArray(), IsBigEndian),
-            4 => Tools.ReadNumber<int>(dataLengthField.ToArray(), IsBigEndian),
+            2 => Tools.ReadBinaryNumber<short>(dataLengthField.ToArray(), IsBigEndian),
+            4 => Tools.ReadBinaryNumber<int>(dataLengthField.ToArray(), IsBigEndian),
             _ => throw new Exception("未知标签!") // 正常不可能报错
         };
 
@@ -534,16 +534,16 @@ public class NbtTag : ICloneable
 
         _floatValueTemp = Tag switch
         {
-            NbtTagEnum.Float => Tools.ReadNumber<float>(data.ToArray(), IsBigEndian).ToString(),
-            NbtTagEnum.Double => Tools.ReadNumber<double>(data.ToArray(), IsBigEndian).ToString(),
+            NbtTagEnum.Float => Tools.ReadBinaryNumber<float>(data.ToArray(), IsBigEndian).ToString(),
+            NbtTagEnum.Double => Tools.ReadBinaryNumber<double>(data.ToArray(), IsBigEndian).ToString(),
             _ => string.Empty
         };
         if (Tag == NbtTagEnum.Byte) return data[0];
-        if (Tag == NbtTagEnum.Short) return Tools.ReadNumber<short>(data.ToArray(), IsBigEndian);
-        if (Tag == NbtTagEnum.Int) return Tools.ReadNumber<int>(data.ToArray(), IsBigEndian);
-        if (Tag == NbtTagEnum.Float) return Tools.ReadNumber<float>(data.ToArray(), IsBigEndian);
-        if (Tag == NbtTagEnum.Long) return Tools.ReadNumber<long>(data.ToArray(), IsBigEndian);
-        if (Tag == NbtTagEnum.Double) return Tools.ReadNumber<double>(data.ToArray(), IsBigEndian);
+        if (Tag == NbtTagEnum.Short) return Tools.ReadBinaryNumber<short>(data.ToArray(), IsBigEndian);
+        if (Tag == NbtTagEnum.Int) return Tools.ReadBinaryNumber<int>(data.ToArray(), IsBigEndian);
+        if (Tag == NbtTagEnum.Float) return Tools.ReadBinaryNumber<float>(data.ToArray(), IsBigEndian);
+        if (Tag == NbtTagEnum.Long) return Tools.ReadBinaryNumber<long>(data.ToArray(), IsBigEndian);
+        if (Tag == NbtTagEnum.Double) return Tools.ReadBinaryNumber<double>(data.ToArray(), IsBigEndian);
         throw new Exception("非静态负载长度");
     }
 
@@ -554,7 +554,7 @@ public class NbtTag : ICloneable
     {
         if (IsListDirectElement) return 0; // 列表元素没有名称
         var nameLengthField = _bytes.Span.Slice(1, NbtGlobal.NameLengthFieldSize);
-        return Tools.ReadNumber<short>(nameLengthField.ToArray(), IsBigEndian);
+        return Tools.ReadBinaryNumber<short>(nameLengthField.ToArray(), IsBigEndian);
     }
 
     /// <summary>

@@ -15,7 +15,7 @@ namespace NBT_Studio.ViewModel;
     "MVVMTK0045:Using [ObservableProperty] on fields is not AOT compatible for WinRT")]
 public sealed partial class ValueEditorViewModel : ObservableObject
 {
-    private readonly NbtDataHelper _dataHelper = new();
+    private readonly NbtTagHelper _tagHelper = new();
 
     public ValueEditorViewModel()
     {
@@ -49,10 +49,10 @@ public sealed partial class ValueEditorViewModel : ObservableObject
         AllowDelete = !node.IsRootNode;
         AllowNegative = NbtTagEnumExtensions.AllowNegative(TagEnum);
         AllowDecimal = NbtTagEnumExtensions.AllowDecimal(TagEnum);
-        Type = _dataHelper.GetDescription(TagEnum);
-        ChildrenType = _dataHelper.GetDescription(ChildrenTagEnum);
-        MaxValue = _dataHelper.GetMaxValue(TagEnum);
-        MinValue = _dataHelper.GetMinValue(TagEnum);
+        Type = _tagHelper.GetDescription(TagEnum);
+        ChildrenType = _tagHelper.GetDescription(ChildrenTagEnum);
+        MaxValue = _tagHelper.GetMaxValue(TagEnum);
+        MinValue = _tagHelper.GetMinValue(TagEnum);
 
 
         IsChildrenTypeEnabled = TagEnum == NbtTagEnum.List;

@@ -51,7 +51,7 @@ public sealed partial class ValueEditor
             return;
         }
 
-        SetState(NbtValueChecker.IsValid(_viewModel.TagEnum, textBox.Text));
+        SetState(NbtTagHelper.IsValueValid(_viewModel.TagEnum, textBox.Text));
 
 
         return;

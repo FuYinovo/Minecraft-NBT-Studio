@@ -62,8 +62,8 @@ public sealed partial class CreateNodeDialog
     public object GetNodeValue()
     {
         return NbtTagEnumExtensions.IsArray(_tagEnum)
-            ? NbtDataHelper.Parse(_tagEnum, NodeArrayValues.Select(x => x.Value).ToArray())
-            : NbtDataHelper.Parse(_tagEnum, NodeValue);
+            ? NbtTagHelper.Parse(_tagEnum, NodeArrayValues.Select(x => x.Value).ToArray())
+            : NbtTagHelper.Parse(_tagEnum, NodeValue);
     }
 
 
@@ -84,7 +84,7 @@ public sealed partial class CreateNodeDialog
     private void OnNodeValueChanged(object sender, TextChangedEventArgs e)
     {
         if (sender is not TextBox textBox) return;
-        var isValid = NbtValueChecker.IsValid(_tagEnum, textBox.Text);
+        var isValid = NbtTagHelper.IsValueValid(_tagEnum, textBox.Text);
 
         UpdateBorderBrush(textBox, isValid);
         DialogOkButtonEnabledSetter?.Invoke(isValid);
@@ -95,7 +95,7 @@ public sealed partial class CreateNodeDialog
         if (sender is not TextBox textBox) return;
         var arrayNodeValue = (ArrayNodeValue)textBox.DataContext;
         arrayNodeValue.IsValid =
-            NbtValueChecker.IsValid(NbtTagEnumExtensions.GetArrayElementType(_tagEnum), textBox.Text);
+            NbtTagHelper.IsValueValid(NbtTagEnumExtensions.GetArrayElementType(_tagEnum), textBox.Text);
 
         UpdateBorderBrush(textBox, arrayNodeValue.IsValid);
         DialogOkButtonEnabledSetter?.Invoke(NodeArrayValues.Count(v => v.IsValid) == NodeArrayValues.Count);
