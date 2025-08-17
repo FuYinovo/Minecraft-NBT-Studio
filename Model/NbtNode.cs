@@ -10,7 +10,6 @@ using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using NBT_Studio.Control.Dialog;
-using NBT_Studio.Enum;
 using NBT_Studio.Library.NBT_Parser.Class;
 using NBT_Studio.Library.NBT_Parser.Enum;
 using NBT_Studio.Message;
@@ -228,13 +227,6 @@ public sealed partial class NbtNode
             : Parent!;
 
         // 合法性判断
-        if (!NbtTagEnumExtensions.IsCollection(parent.TagEnum))
-        {
-            await DialogService.ShowDialog("添加失败", "确认",
-                description: $"<{parent.TagEnum}> 不允许添加子项");
-            return;
-        }
-
         if (parent.TagEnum == NbtTagEnum.List && parent.Tag.ChildrenTag != tagEnum)
         {
             await DialogService.ShowDialog("添加失败", "确认",
@@ -253,8 +245,8 @@ public sealed partial class NbtNode
         // 获取输入的名称、值
         var choice = await dialog.ShowAsync();
         if (choice == ContentDialogResult.None) return;
-        var name = content.NodeName;
-        var value = content.NodeValue;
+        var name = content.GetNodeName();
+        var value = content.GetNodeValue();
 
         AppendNewChild(tagEnum, name, value, isListElement, content.NodeChildrenType, parent);
     }
@@ -325,12 +317,12 @@ public sealed partial class NbtNode
         var builder = new NbtTagBuilder(parent.Tag.IsBigEndian);
         var tag = tagEnum switch
         {
-            NbtTagEnum.Byte => builder.Byte(name, byte.Parse((string)value)),
-            NbtTagEnum.Short => builder.Short(name, short.Parse((string)value)),
-            NbtTagEnum.Int => builder.Int(name, int.Parse((string)value)),
-            NbtTagEnum.Long => builder.Long(name, long.Parse((string)value)),
-            NbtTagEnum.Float => builder.Float(name, float.Parse((string)value)),
-            NbtTagEnum.Double => builder.Double(name, double.Parse((string)value)),
+            NbtTagEnum.Byte => builder.Byte(name, (byte)value),
+            NbtTagEnum.Short => builder.Short(name, (short)value),
+            NbtTagEnum.Int => builder.Int(name, (int)value),
+            NbtTagEnum.Long => builder.Long(name, (long)value),
+            NbtTagEnum.Float => builder.Float(name, (float)value),
+            NbtTagEnum.Double => builder.Double(name, (double)value),
             NbtTagEnum.ByteArray => builder.ByteArray(name, (byte[])value),
             NbtTagEnum.String => builder.String(name, (string)value),
             NbtTagEnum.List => builder.List(name, [], childrenEnum),

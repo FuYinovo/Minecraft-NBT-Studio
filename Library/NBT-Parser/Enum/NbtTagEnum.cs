@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 
 namespace NBT_Studio.Library.NBT_Parser.Enum;
 
@@ -110,6 +111,17 @@ public static class NbtTagEnumExtensions
         {
             NbtTagEnum.Byte => false,
             _ => true
+        };
+    }
+
+    public static NbtTagEnum GetArrayElementType(NbtTagEnum tagEnum)
+    {
+        return tagEnum switch
+        {
+            NbtTagEnum.ByteArray => NbtTagEnum.Byte,
+            NbtTagEnum.IntArray => NbtTagEnum.Int,
+            NbtTagEnum.LongArray => NbtTagEnum.Long,
+            _ => NbtTagEnum.Unknown
         };
     }
 }

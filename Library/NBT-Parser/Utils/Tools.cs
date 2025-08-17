@@ -73,4 +73,11 @@ public static class Tools
         var field = enumType.GetType().GetField(enumType.ToString());
         return field?.GetCustomAttribute<DescriptionAttribute>()?.Description;
     }
+
+    public static string? GetInterfaceProperty(string interfaceName, string propertyName, Type objectType)
+    {
+        var interfaceType = objectType.GetInterface(interfaceName);
+        var property = interfaceType?.GetProperty(propertyName);
+        return property?.GetValue(Activator.CreateInstance(objectType))?.ToString();
+    }
 }

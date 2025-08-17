@@ -7,6 +7,7 @@ using NBT_Studio.Library.NBT_Parser.Enum;
 using NBT_Studio.Library.NBT_Parser.Utils;
 using NBT_Studio.Message;
 using NBT_Studio.Model;
+using NBT_Studio.Utils;
 
 namespace NBT_Studio.ViewModel;
 
@@ -14,6 +15,8 @@ namespace NBT_Studio.ViewModel;
     "MVVMTK0045:Using [ObservableProperty] on fields is not AOT compatible for WinRT")]
 public sealed partial class ValueEditorViewModel : ObservableObject
 {
+    private readonly NbtDataHelper _dataHelper = new();
+
     public ValueEditorViewModel()
     {
         RegisterMessages();
@@ -37,6 +40,8 @@ public sealed partial class ValueEditorViewModel : ObservableObject
         TagEnum = node.TagEnum;
         ChildrenTagEnum = node.Tag.ChildrenTag;
 
+        var isNumber = NbtTagEnumExtensions.IsNumber(TagEnum) || NbtTagEnumExtensions.IsArray(TagEnum);
+
         Name = node.DisplayName;
         Value = node.DisplayValue;
         Length = node.DisplayValue.Length;
@@ -44,12 +49,12 @@ public sealed partial class ValueEditorViewModel : ObservableObject
         AllowDelete = !node.IsRootNode;
         AllowNegative = NbtTagEnumExtensions.AllowNegative(TagEnum);
         AllowDecimal = NbtTagEnumExtensions.AllowDecimal(TagEnum);
-        Type = Tools.GetEnumDescription(TagEnum) ?? string.Empty;
-        ChildrenType = Tools.GetEnumDescription(ChildrenTagEnum) ?? string.Empty;
-        MaxValue = NbtTagEnumExtensions.GetMaxValue(TagEnum) ?? string.Empty;
-        MinValue = NbtTagEnumExtensions.GetMinValue(TagEnum) ?? string.Empty;
+        Type = _dataHelper.GetDescription(TagEnum);
+        ChildrenType = _dataHelper.GetDescription(ChildrenTagEnum);
+        MaxValue = _dataHelper.GetMaxValue(TagEnum);
+        MinValue = _dataHelper.GetMinValue(TagEnum);
 
-        var isNumber = NbtTagEnumExtensions.IsNumber(TagEnum) || NbtTagEnumExtensions.IsArray(TagEnum);
+
         IsChildrenTypeEnabled = TagEnum == NbtTagEnum.List;
         IsMaxValueEnabled = isNumber;
         IsMinValueEnabled = isNumber;
