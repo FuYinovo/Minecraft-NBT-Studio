@@ -262,7 +262,7 @@ public sealed partial class NbtNode
     {
         Tag.SetValue(TagEnum switch
         {
-            //TODO)) 数组保存
+            // TODO)) 数组保存
             NbtTagEnum.Byte => byte.Parse(newValue),
             NbtTagEnum.Short => short.Parse(newValue),
             NbtTagEnum.Int => int.Parse(newValue),

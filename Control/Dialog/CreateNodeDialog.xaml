@@ -49,7 +49,9 @@
                                              PlaceholderText="必须"
                                              TextChanged="OnNodeArrayValueChanged" />
                                     <!-- 值删除按钮 -->
-                                    <Button Opacity=".8" HorizontalAlignment="Right">
+                                    <Button Opacity=".8"
+                                            HorizontalAlignment="Right"
+                                            Click="RemoveArrayValue_OnClick">
                                         <FontIcon Glyph="&#xE74D;" />
                                     </Button>
                                 </StackPanel>

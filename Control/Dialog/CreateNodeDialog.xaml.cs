@@ -111,4 +111,10 @@ public sealed partial class CreateNodeDialog
     {
         textBox.BorderBrush = isValid ? _validBrush : _invalidBrush;
     }
+
+    private void RemoveArrayValue_OnClick(object sender, RoutedEventArgs e)
+    {
+        if (sender is not Button { DataContext: ArrayNodeValue arrayValue }) return;
+        NodeArrayValues.Remove(arrayValue);
+    }
 }
