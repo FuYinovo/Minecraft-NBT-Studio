@@ -24,8 +24,7 @@ namespace NBT_Studio.Model;
     "MVVMTK0045:Using [ObservableProperty] on fields is not AOT compatible for WinRT")]
 public sealed partial class NbtNode : ObservableObject
 {
-    private const string IconUriHead = "ms-appx:///Assets/NodeIcon/Data_node_";
-    private const string IconUriExtension = ".svg";
+
 
     /// <summary>
     ///     初始化属性
@@ -42,7 +41,7 @@ public sealed partial class NbtNode : ObservableObject
         // 值
         DisplayValue = GetDisplayValue(nbtTag.Value);
         // 图标
-        Icon = GetIconUri(TagEnum);
+        Icon = AssetHelper.GetNbtTagIconUri(TagEnum);
         // 节点子项
         foreach (var child in nbtTag.Children.Where(child => child.Tag != NbtTagEnum.End))
             Children.Add(new NbtNode(child, this));
@@ -52,20 +51,6 @@ public sealed partial class NbtNode : ObservableObject
         if (NbtTagEnumExtensions.IsCollection(TagEnum)) ChildrenCountVis = Visibility.Visible;
         // 是否显示等号
         if (ChildrenCountVis == Visibility.Collapsed) EqualMarkVis = Visibility.Visible;
-
-        return;
-
-
-        static string GetIconUri(NbtTagEnum tagEnum)
-        {
-            return tagEnum switch
-            {
-                NbtTagEnum.ByteArray => $"{IconUriHead}byte-array{IconUriExtension}",
-                NbtTagEnum.IntArray => $"{IconUriHead}int-array{IconUriExtension}",
-                NbtTagEnum.LongArray => $"{IconUriHead}long-array{IconUriExtension}",
-                _ => $"{IconUriHead}{tagEnum.ToString().ToLower()}{IconUriExtension}"
-            };
-        }
     }
 
     #region Property
