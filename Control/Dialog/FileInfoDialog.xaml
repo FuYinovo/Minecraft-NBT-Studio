@@ -9,7 +9,7 @@
     mc:Ignorable="d">
 
     <Grid>
-        <StackPanel Spacing="16">
+        <StackPanel Spacing="16" MaxWidth="270">
             <TextBox Header="文件路径" Text="{x:Bind FilePath}" IsReadOnly="True" />
             <TextBox Header="文件长度" Text="{x:Bind FileLength}" IsReadOnly="True" />
 

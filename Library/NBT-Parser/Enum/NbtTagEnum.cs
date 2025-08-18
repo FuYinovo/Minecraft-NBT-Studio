@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 
 namespace NBT_Studio.Library.NBT_Parser.Enum;
 
@@ -7,13 +6,13 @@ public enum NbtTagEnum
 {
     Unknown = -1,
     End = 0,
-    [Description("字节")] Byte = 1,
+    [Description("字节型")] Byte = 1,
     [Description("短整型")] Short = 2,
     [Description("整型")] Int = 3,
     [Description("长整型")] Long = 4,
     [Description("单精度浮点")] Float = 5,
     [Description("双精度浮点")] Double = 6,
-    [Description("字节数组")] ByteArray = 7,
+    [Description("字节型数组")] ByteArray = 7,
     [Description("字符串")] String = 8,
     [Description("列表")] List = 9,
     [Description("字典")] Dictionary = 10,
