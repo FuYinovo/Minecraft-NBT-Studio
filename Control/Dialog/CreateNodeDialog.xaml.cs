@@ -12,25 +12,6 @@ namespace NBT_Studio.Control.Dialog;
 
 public sealed partial class CreateNodeDialog
 {
-    # region Properties
-
-    private readonly NbtTagEnum _tagEnum;
-    private readonly Brush _validBrush;
-    private readonly Brush _invalidBrush;
-    private readonly bool _isListElement;
-    private Visibility NodeChildrenTypeVis { get; set; } = Visibility.Collapsed;
-    private Visibility NodeValueVis { get; set; } = Visibility.Collapsed;
-    private Visibility NodeNameVis { get; set; } = Visibility.Collapsed;
-    private Visibility NodeArrayValueVis { get; set; } = Visibility.Collapsed;
-    private ObservableCollection<NodeArrayElement> NodeArrayValues { get; } = [new()];
-    private ComboBoxItem SelectedChildrenTagItem { get; set; }
-    private string NodeName { get; set; } = string.Empty;
-    private string NodeValue { get; set; } = string.Empty;
-
-    public Action<bool>? DialogOkButtonEnabledSetter;
-
-    # endregion
-
     public CreateNodeDialog(NbtTagEnum tagEnum, bool isListElement)
     {
         InitializeComponent();
@@ -116,4 +97,23 @@ public sealed partial class CreateNodeDialog
         if (!_isListElement) NodeNameVis = Visibility.Visible;
         if (isArray) NodeArrayValueVis = Visibility.Visible;
     }
+
+    # region Properties
+
+    private readonly NbtTagEnum _tagEnum;
+    private readonly Brush _validBrush;
+    private readonly Brush _invalidBrush;
+    private readonly bool _isListElement;
+    private Visibility NodeChildrenTypeVis { get; set; } = Visibility.Collapsed;
+    private Visibility NodeValueVis { get; set; } = Visibility.Collapsed;
+    private Visibility NodeNameVis { get; set; } = Visibility.Collapsed;
+    private Visibility NodeArrayValueVis { get; set; } = Visibility.Collapsed;
+    private ObservableCollection<NodeArrayElement> NodeArrayValues { get; } = [new()];
+    private ComboBoxItem SelectedChildrenTagItem { get; set; }
+    private string NodeName { get; set; } = string.Empty;
+    private string NodeValue { get; set; } = string.Empty;
+
+    public Action<bool>? DialogOkButtonEnabledSetter;
+
+    # endregion
 }

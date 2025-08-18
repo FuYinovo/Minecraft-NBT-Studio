@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
-using System.Reflection;
 
 namespace NBT_Studio.Library.NBT_Parser.Utils;
 

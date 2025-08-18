@@ -7,34 +7,16 @@ using Windows.Foundation;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Graphics.Canvas.UI.Xaml;
 using NBT_Studio.Message;
-using NBT_Studio.Model;
 using NBT_Studio.ViewModel;
 
 namespace NBT_Studio.Control.Editor;
 
 public sealed partial class MapEditor : INotifyPropertyChanged
 {
-    private readonly MapEditorViewModel _viewModel = new(InitMapSize);
     private const double MapScaleFactor = 0.7;
     private const int InitMapSize = 128;
+    private readonly MapEditorViewModel _viewModel = new(InitMapSize);
     private float _mapScale = 1;
-
-    # region UI Observable Properties
-
-    private double _mapSize = 256.0;
-    public double BorderSize => MapSize + 16;
-
-    private double MapSize
-    {
-        get => _mapSize;
-        set
-        {
-            SetField(ref _mapSize, value);
-            OnPropertyChanged(nameof(BorderSize));
-        }
-    }
-
-    # endregion
 
     public MapEditor()
     {
@@ -63,7 +45,7 @@ public sealed partial class MapEditor : INotifyPropertyChanged
     }
 
     /// <summary>
-    /// 绘制地图
+    ///     绘制地图
     /// </summary>
     /// <remarks>Win2D</remarks>
     private void DrawMap(CanvasControl sender, CanvasDrawEventArgs args)
@@ -71,13 +53,26 @@ public sealed partial class MapEditor : INotifyPropertyChanged
         var session = args.DrawingSession;
         session.Transform = Matrix3x2.CreateScale(_mapScale, _mapScale);
         for (var y = 0; y < InitMapSize; y++)
+        for (var x = 0; x < InitMapSize; x++)
+            session.FillRectangle(x, y, 1, 1, _viewModel.Pixels[y, x].Color);
+    }
+
+    # region UI Observable Properties
+
+    private double _mapSize = 256.0;
+    public double BorderSize => MapSize + 16;
+
+    private double MapSize
+    {
+        get => _mapSize;
+        set
         {
-            for (var x = 0; x < InitMapSize; x++)
-            {
-                session.FillRectangle(x, y, 1, 1, _viewModel.Pixels[y, x].Color);
-            }
+            SetField(ref _mapSize, value);
+            OnPropertyChanged(nameof(BorderSize));
         }
     }
+
+    # endregion
 
     # region INotifyPropertyChanged
 

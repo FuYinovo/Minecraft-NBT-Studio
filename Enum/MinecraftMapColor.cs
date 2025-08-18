@@ -82,7 +82,7 @@ public enum MinecraftColorModify : byte
 public struct MinecraftMapColorExtensions
 {
     /// <summary>
-    /// 获取颜色
+    ///     获取颜色
     /// </summary>
     /// <param name="baseColor">基础色</param>
     /// <param name="modifier">修饰色</param>
@@ -99,7 +99,7 @@ public struct MinecraftMapColorExtensions
     }
 
     /// <summary>
-    /// 获取颜色的十六进制
+    ///     获取颜色的十六进制
     /// </summary>
     /// <param name="baseColor">基础色</param>
     /// <param name="modifier">修饰色</param>
@@ -358,6 +358,6 @@ public struct MinecraftMapColorExtensions
             {
                 MinecraftMapColor.GlowLichen,
                 ("#43584F".ToColor(), "#597569".ToColor(), "#6D9081".ToColor(), "#7FA796".ToColor())
-            },
+            }
         };
 }

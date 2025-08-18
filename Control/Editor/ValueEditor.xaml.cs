@@ -3,7 +3,6 @@ using Windows.Foundation;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Media;
 using NBT_Studio.Library.NBT_Parser.Enum;
 using NBT_Studio.Message;
 using NBT_Studio.Model;
@@ -104,6 +103,6 @@ public sealed partial class ValueEditor
     private void AddArrayValue_OnClicked(object sender, RoutedEventArgs e)
     {
         _viewModel.AddArrayValueCommand.Execute(null);
-        SaveButton.IsEnabled = false;  // 避免空值保存
+        SaveButton.IsEnabled = false; // 避免空值保存
     }
 }

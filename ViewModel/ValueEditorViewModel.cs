@@ -65,7 +65,10 @@ public sealed partial class ValueEditorViewModel : ObservableObject
             foreach (var value in values)
                 ArrayValues.Add(new NodeArrayElement { Value = value?.ToString() ?? string.Empty, IsValid = true });
         }
-        else Value = node.DisplayValue;
+        else
+        {
+            Value = node.DisplayValue;
+        }
 
 
         IsChildrenTypeEnabled = TagEnum == NbtTagEnum.List;

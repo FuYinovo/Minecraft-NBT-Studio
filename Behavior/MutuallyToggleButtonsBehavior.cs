@@ -25,7 +25,7 @@ public class MutuallyToggleButtonsBehavior : Behavior<ToggleButton>, IMutuallyCo
 
 
     /// <summary>
-    /// ToggleButton 选中时设置到 MutuallyControlsManager 中
+    ///     ToggleButton 选中时设置到 MutuallyControlsManager 中
     /// </summary>
     private void OnChecked(object sender, RoutedEventArgs routedEventArgs)
     {
@@ -35,7 +35,7 @@ public class MutuallyToggleButtonsBehavior : Behavior<ToggleButton>, IMutuallyCo
     }
 
     /// <summary>
-    /// ToggleButton 取消选中时阻止
+    ///     ToggleButton 取消选中时阻止
     /// </summary>
     private void OnUnchecked(object sender, RoutedEventArgs e)
     {

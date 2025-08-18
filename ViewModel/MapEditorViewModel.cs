@@ -30,7 +30,7 @@ public class MapEditorViewModel : IMutuallyControls
     }
 
     /// <summary>
-    /// 更新地图显示
+    ///     更新地图显示
     /// </summary>
     /// <param name="selectedTreeNode"></param>
     private void UpdateMapDisplay(TreeViewNode selectedTreeNode)
@@ -45,7 +45,7 @@ public class MapEditorViewModel : IMutuallyControls
     }
 
     /// <summary>
-    /// 更新像素颜色
+    ///     更新像素颜色
     /// </summary>
     private void UpdateColors()
     {
@@ -57,15 +57,13 @@ public class MapEditorViewModel : IMutuallyControls
             var colors = (byte[])tag.Value;
 
             for (var y = 0; y < _size; y++)
+            for (var x = 0; x < _size; x++)
             {
-                for (var x = 0; x < _size; x++)
-                {
-                    var pixel = colors[y * _size + x];
-                    var baseColor = (MinecraftMapColor)(byte)(pixel >> 2); // 前 6 位
-                    var modifyColor = (MinecraftColorModify)(byte)(pixel & 0b00000011); // 后 2 位
-                    var color = MinecraftMapColorExtensions.GetColor(baseColor, modifyColor);
-                    Pixels[y, x] = new MinecraftMapPixel { Color = color };
-                }
+                var pixel = colors[y * _size + x];
+                var baseColor = (MinecraftMapColor)(byte)(pixel >> 2); // 前 6 位
+                var modifyColor = (MinecraftColorModify)(byte)(pixel & 0b00000011); // 后 2 位
+                var color = MinecraftMapColorExtensions.GetColor(baseColor, modifyColor);
+                Pixels[y, x] = new MinecraftMapPixel { Color = color };
             }
         }
         catch (Exception)
@@ -77,7 +75,7 @@ public class MapEditorViewModel : IMutuallyControls
     }
 
     /// <summary>
-    /// 从节点更新地图数据
+    ///     从节点更新地图数据
     /// </summary>
     private void UpdateMapData(NbtTag dataTag)
     {
@@ -105,7 +103,7 @@ public class MapEditorViewModel : IMutuallyControls
 
     public MutuallyToggleButton[] SelectionPanel { get; } =
     [
-        new() { FontIcon = "\uEF20", Name = "All" },
+        new() { FontIcon = "\uEF20", Name = "All" }
     ];
 
     public MutuallyToggleButton[] ToolsPanel { get; } =

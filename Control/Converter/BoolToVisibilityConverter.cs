@@ -4,7 +4,7 @@ using Microsoft.UI.Xaml.Data;
 
 namespace NBT_Studio.Control.Converter;
 
-public class BoolToVisibilityConverter:IValueConverter
+public class BoolToVisibilityConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, string language)
     {

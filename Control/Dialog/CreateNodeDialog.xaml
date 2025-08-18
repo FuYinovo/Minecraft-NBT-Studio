@@ -30,12 +30,12 @@
                 <!-- 数组值 -->
                 <StackPanel Spacing="12"
                             Visibility="{x:Bind NodeArrayValueVis}">
-                    <TextBlock Text="数组元素" Margin="0,0,0,-3"></TextBlock>
+                    <TextBlock Text="数组元素" Margin="0,0,0,-3" />
                     <ItemsControl ItemsSource="{x:Bind NodeArrayValues}">
                         <!-- 容器 -->
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
-                                <StackPanel Spacing="6"></StackPanel>
+                                <StackPanel Spacing="6" />
                             </ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>
                         <!-- 模板 -->
@@ -62,7 +62,7 @@
                     <Button Opacity=".8" HorizontalAlignment="Stretch" Height="42" Click="AddArrayValue_OnClick">
                         <StackPanel Orientation="Horizontal" Spacing="4">
                             <FontIcon Glyph="&#xF8AA;" FontSize="14" />
-                            <TextBlock Text="添加元素"></TextBlock>
+                            <TextBlock Text="添加元素" />
                         </StackPanel>
                     </Button>
                 </StackPanel>

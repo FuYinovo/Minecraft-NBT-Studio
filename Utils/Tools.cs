@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -12,7 +11,7 @@ namespace NBT_Studio.Utils;
 public static class Tools
 {
     /// <summary>
-    /// 获取一个枚举的描述信息（Description）
+    ///     获取一个枚举的描述信息（Description）
     /// </summary>
     /// <param name="enumType">枚举</param>
     /// <returns>描述信息</returns>
@@ -23,7 +22,7 @@ public static class Tools
     }
 
     /// <summary>
-    /// 实例化一个类，通过其实现的接口获取某个属性
+    ///     实例化一个类，通过其实现的接口获取某个属性
     /// </summary>
     /// <param name="objectType">类</param>
     /// <param name="propertyName">属性名称</param>
@@ -37,7 +36,7 @@ public static class Tools
     }
 
     /// <summary>
-    /// 确认是否为 Gzip 或 Zlib 压缩文件
+    ///     确认是否为 Gzip 或 Zlib 压缩文件
     /// </summary>
     /// <remarks>在方法执行完成后，文件流的位置将被重置</remarks>
     /// <param name="fileStream">文件流</param>
@@ -62,7 +61,7 @@ public static class Tools
             // Zlib 文件
             var cmf = fileHead[0];
             var flg = fileHead[1];
-            if ((cmf << 8 | flg) % 31 == 0) return (true, FileCompress.Zlib);
+            if (((cmf << 8) | flg) % 31 == 0) return (true, FileCompress.Zlib);
 
             // 非压缩文件
             return (false, null);
@@ -70,7 +69,7 @@ public static class Tools
     }
 
     /// <summary>
-    /// 解压一个 Gzip 或 Zlib 压缩文件
+    ///     解压一个 Gzip 或 Zlib 压缩文件
     /// </summary>
     /// <param name="fileStream">文件流</param>
     /// <param name="compressType">压缩文件类型</param>

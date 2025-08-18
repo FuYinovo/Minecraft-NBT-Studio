@@ -2,16 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using NBT_Studio.Library.NBT_Parser.Enum;
-using NBT_Studio.Library.NBT_Parser.Utils;
 
 namespace NBT_Studio.Utils;
 
 public class NbtTagHelper
 {
-    private readonly Dictionary<NbtTagEnum, string> _minValues = new();
-    private readonly Dictionary<NbtTagEnum, string> _maxValues = new();
-    private readonly Dictionary<NbtTagEnum, string> _descriptions = new();
-
     private static readonly Dictionary<NbtTagEnum, Func<string, object>> ValueParsers = new()
     {
         [NbtTagEnum.Byte] = s => byte.Parse(s),
@@ -20,7 +15,7 @@ public class NbtTagHelper
         [NbtTagEnum.Long] = s => long.Parse(s),
         [NbtTagEnum.Float] = s => float.Parse(s),
         [NbtTagEnum.Double] = s => double.Parse(s),
-        [NbtTagEnum.String] = s => s,
+        [NbtTagEnum.String] = s => s
     };
 
     private static readonly Dictionary<NbtTagEnum, Func<string[], Array>> ArrayValueParsers = new()
@@ -43,12 +38,16 @@ public class NbtTagHelper
         [NbtTagEnum.IntArray] = typeof(int[]),
         [NbtTagEnum.LongArray] = typeof(long[]),
         [NbtTagEnum.Dictionary] = null,
-        [NbtTagEnum.List] = null,
+        [NbtTagEnum.List] = null
     };
+
+    private readonly Dictionary<NbtTagEnum, string> _descriptions = new();
+    private readonly Dictionary<NbtTagEnum, string> _maxValues = new();
+    private readonly Dictionary<NbtTagEnum, string> _minValues = new();
 
 
     /// <summary>
-    /// 解析数组值
+    ///     解析数组值
     /// </summary>
     /// <param name="tagEnum">标签类型</param>
     /// <param name="tagValue">字符串的数组值</param>
@@ -59,7 +58,7 @@ public class NbtTagHelper
     }
 
     /// <summary>
-    /// 解析值
+    ///     解析值
     /// </summary>
     /// <param name="tagEnum">标签类型</param>
     /// <param name="tagValue">字符串的值</param>
@@ -70,7 +69,7 @@ public class NbtTagHelper
     }
 
     /// <summary>
-    /// 获取数字标签的最小值
+    ///     获取数字标签的最小值
     /// </summary>
     /// <param name="tagEnum">标签类型</param>
     /// <returns>一个字符串</returns>
@@ -105,7 +104,7 @@ public class NbtTagHelper
     }
 
     /// <summary>
-    /// 获取数字标签的最大值
+    ///     获取数字标签的最大值
     /// </summary>
     /// <param name="tagEnum">标签类型</param>
     /// <returns>一个字符串</returns>
@@ -140,7 +139,7 @@ public class NbtTagHelper
     }
 
     /// <summary>
-    /// 检查值的合法性
+    ///     检查值的合法性
     /// </summary>
     /// <remarks>标签类型为容器则直接返回 false；字符串则直接返回 true；数组则 FallBack 到元素类型</remarks>
     /// <param name="tagEnum">标签类型</param>
@@ -168,7 +167,7 @@ public class NbtTagHelper
     }
 
     /// <summary>
-    /// 获取标签描述
+    ///     获取标签描述
     /// </summary>
     public string GetDescription(NbtTagEnum tagEnum)
     {

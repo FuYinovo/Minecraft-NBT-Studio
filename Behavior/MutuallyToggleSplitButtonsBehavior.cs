@@ -22,7 +22,7 @@ public class MutuallyToggleSplitButtonsBehavior : Behavior<ToggleSplitButton>, I
     }
 
     /// <summary>
-    /// ToggleSplitButton 点击处理
+    ///     ToggleSplitButton 点击处理
     /// </summary>
     private void OnCheckedChanged(ToggleSplitButton sender, ToggleSplitButtonIsCheckedChangedEventArgs args)
     {

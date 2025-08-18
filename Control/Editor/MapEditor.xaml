@@ -16,13 +16,13 @@
     <UserControl.Resources>
         <!-- 地图背景色 -->
         <Style x:Key="MapBackground" TargetType="Border">
-            <Setter Property="Background" Value="#40d2b48c"></Setter>
+            <Setter Property="Background" Value="#40d2b48c" />
         </Style>
         <!-- 工具栏标签 -->
         <Style x:Key="ToolsLabel" TargetType="TextBlock" BasedOn="{StaticResource CaptionTextBlockStyle}">
-            <Setter Property="HorizontalAlignment" Value="Center"></Setter>
+            <Setter Property="HorizontalAlignment" Value="Center" />
         </Style>
-        <converter:EnumerableSliceConverter x:Key="EnumerableSliceConverter"></converter:EnumerableSliceConverter>
+        <converter:EnumerableSliceConverter x:Key="EnumerableSliceConverter" />
     </UserControl.Resources>
 
     <Grid DataContext="{x:Bind _viewModel}" x:Name="ControlGrid" Padding="-32,20,20,20" RowSpacing="24">
@@ -47,19 +47,18 @@
                                 <ToggleButton
                                     Height="48"
                                     Background="Transparent">
-                                    <FontIcon Glyph="{x:Bind FontIcon}" FontSize="18"></FontIcon>
+                                    <FontIcon Glyph="{x:Bind FontIcon}" FontSize="18" />
                                     <inter:Interaction.Behaviors>
                                         <behavior:MutuallyToggleButtonsBehavior GroupName="MapEditorTools"
-                                            Value="{x:Bind Name}">
-                                        </behavior:MutuallyToggleButtonsBehavior>
+                                            Value="{x:Bind Name}" />
                                     </inter:Interaction.Behaviors>
                                 </ToggleButton>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
-                    <TextBlock Style="{StaticResource ToolsLabel}" Text="选择"></TextBlock>
+                    <TextBlock Style="{StaticResource ToolsLabel}" Text="选择" />
                 </StackPanel>
-                <AppBarSeparator Margin="0,-5,0,0"></AppBarSeparator>
+                <AppBarSeparator Margin="0,-5,0,0" />
 
                 <!-- 工具 -->
                 <StackPanel Spacing="2">
@@ -72,7 +71,7 @@
                             <!-- 容器 -->
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
-                                    <StackPanel Orientation="Horizontal" Spacing="2"></StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="2" />
                                 </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
                             <!-- 内容 -->
@@ -83,11 +82,10 @@
                                         Width="32"
                                         Padding="0"
                                         Background="Transparent">
-                                        <FontIcon Glyph="{x:Bind FontIcon}" FontSize="16"></FontIcon>
+                                        <FontIcon Glyph="{x:Bind FontIcon}" FontSize="16" />
                                         <inter:Interaction.Behaviors>
                                             <behavior:MutuallyToggleButtonsBehavior GroupName="MapEditorTools"
-                                                Value="{x:Bind Name}">
-                                            </behavior:MutuallyToggleButtonsBehavior>
+                                                Value="{x:Bind Name}" />
                                         </inter:Interaction.Behaviors>
                                     </ToggleButton>
                                 </DataTemplate>
@@ -103,7 +101,7 @@
                             <!-- 容器 -->
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
-                                    <StackPanel Orientation="Horizontal" Spacing="2"></StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="2" />
                                 </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
                             <!-- 内容 -->
@@ -114,11 +112,10 @@
                                         Width="32"
                                         Padding="0"
                                         Background="Transparent">
-                                        <FontIcon Glyph="{x:Bind FontIcon}" FontSize="16"></FontIcon>
+                                        <FontIcon Glyph="{x:Bind FontIcon}" FontSize="16" />
                                         <inter:Interaction.Behaviors>
                                             <behavior:MutuallyToggleButtonsBehavior GroupName="MapEditorTools"
-                                                Value="{x:Bind Name}">
-                                            </behavior:MutuallyToggleButtonsBehavior>
+                                                Value="{x:Bind Name}" />
                                         </inter:Interaction.Behaviors>
                                     </ToggleButton>
                                 </DataTemplate>
@@ -126,9 +123,9 @@
                         </ItemsControl>
                     </StackPanel>
 
-                    <TextBlock Style="{StaticResource ToolsLabel}" Text="工具"></TextBlock>
+                    <TextBlock Style="{StaticResource ToolsLabel}" Text="工具" />
                 </StackPanel>
-                <AppBarSeparator Margin="0,-5,0,0"></AppBarSeparator>
+                <AppBarSeparator Margin="0,-5,0,0" />
 
                 <!-- 笔刷 -->
                 <!-- <StackPanel Spacing="4"> -->
@@ -171,8 +168,7 @@
                     Width="{x:Bind MapSize, Mode=OneWay}"
                     Height="{x:Bind MapSize, Mode=OneWay}"
                     AllowDrop="True"
-                    Draw="DrawMap">
-                </graphic:CanvasControl>
+                    Draw="DrawMap" />
             </Border>
         </Grid>
 

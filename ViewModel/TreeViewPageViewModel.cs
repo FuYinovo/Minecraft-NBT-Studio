@@ -19,7 +19,6 @@ using NBT_Studio.Enum;
 using NBT_Studio.Enum.Settings;
 using NBT_Studio.Library.NBT_Parser.Class;
 using NBT_Studio.Library.NBT_Parser.Enum;
-using NBT_Studio.Library.NBT_Parser.Utils;
 using NBT_Studio.Message;
 using NBT_Studio.Model;
 using NBT_Studio.Service;
@@ -36,18 +35,18 @@ namespace NBT_Studio.ViewModel;
     "MVVMTK0045:Using [ObservableProperty] on fields is not AOT compatible for WinRT")]
 public sealed partial class TreeViewPageViewModel : ObservableObject
 {
+    private FileInfo _fileInfo = new();
     [ObservableProperty] private bool _isApplyEnabled;
     [ObservableProperty] private bool _isBedrockLevelDat;
     [ObservableProperty] private bool _isFilterEnabled;
     [ObservableProperty] private bool _isInfoEnabled;
     [ObservableProperty] private bool _isSaveEnabled;
     [ObservableProperty] private bool _isSearchBoxEnabled;
+    private int _nodeFilterIndex;
     [ObservableProperty] private ObservableCollection<NbtNode> _nodes = [];
+    private string _searchBoxText = string.Empty;
     [ObservableProperty] private TreeViewNode? _selectedNode;
     [ObservableProperty] private bool _waitingToSelectMaskVisibility = true;
-    private string _searchBoxText = string.Empty;
-    private int _nodeFilterIndex;
-    private FileInfo _fileInfo = new();
 
     public TreeViewPageViewModel()
     {
@@ -432,7 +431,7 @@ public sealed partial class TreeViewPageViewModel
     /// <summary>
     ///     插入节点
     /// </summary>
-    /// <remarks>调用 <see cref="NbtNode"/> 的 AppendChild 方法（含界面交互）</remarks>
+    /// <remarks>调用 <see cref="NbtNode" /> 的 AppendChild 方法（含界面交互）</remarks>
     [RelayCommand]
     private async Task AppendNode(NbtTagEnum tagEnum)
     {

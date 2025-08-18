@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using Microsoft.UI.Xaml;
+﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
 
 namespace NBT_Studio.Utils;
@@ -7,7 +6,7 @@ namespace NBT_Studio.Utils;
 public static class TreeHelper
 {
     /// <summary>
-    /// 从一个起始控件向上查找父控件，若其 DataContext 实现了 [T] 接口或继承了 [T] 类，则返回其 DataContext
+    ///     从一个起始控件向上查找父控件，若其 DataContext 实现了 [T] 接口或继承了 [T] 类，则返回其 DataContext
     /// </summary>
     /// <param name="dependencyObject">起始控件</param>
     /// <param name="result">结果</param>

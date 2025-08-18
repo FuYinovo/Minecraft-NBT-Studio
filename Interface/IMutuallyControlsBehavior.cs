@@ -13,7 +13,7 @@ public interface IMutuallyControlsBehavior
     void UpdateState();
 
     /// <summary>
-    /// 获取页面的 MutuallyControlsViewModel 类型的 MutuallyControlsManager
+    ///     获取页面的 MutuallyControlsViewModel 类型的 MutuallyControlsManager
     /// </summary>
     static IMutuallyControls GetManager(DependencyObject associatedObject)
     {

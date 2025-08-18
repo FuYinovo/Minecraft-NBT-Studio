@@ -73,12 +73,12 @@
                     <!-- 数组值 -->
                     <StackPanel Spacing="12"
                                 Visibility="{Binding ArrayValueVis}">
-                        <TextBlock Text="数组元素" Margin="0,0,0,-3"></TextBlock>
+                        <TextBlock Text="数组元素" Margin="0,0,0,-3" />
                         <ItemsControl ItemsSource="{Binding ArrayValues}">
                             <!-- 容器 -->
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
-                                    <StackPanel Spacing="6"></StackPanel>
+                                    <StackPanel Spacing="6" />
                                 </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
                             <!-- 模板 -->
@@ -109,7 +109,7 @@
                                 Click="AddArrayValue_OnClicked">
                             <StackPanel Orientation="Horizontal" Spacing="4">
                                 <FontIcon Glyph="&#xF8AA;" FontSize="14" />
-                                <TextBlock Text="添加元素"></TextBlock>
+                                <TextBlock Text="添加元素" />
                             </StackPanel>
                         </Button>
                     </StackPanel>

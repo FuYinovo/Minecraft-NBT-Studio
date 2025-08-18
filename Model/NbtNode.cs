@@ -97,8 +97,11 @@ public sealed partial class NbtNode
     {
         return Children.Count(IsValid);
 
-        bool IsValid(NbtNode node) => node is { Visibility: Visibility.Visible, Tag.IsRemoved: false } &&
-                                      node.TagEnum != NbtTagEnum.End;
+        bool IsValid(NbtNode node)
+        {
+            return node is { Visibility: Visibility.Visible, Tag.IsRemoved: false } &&
+                   node.TagEnum != NbtTagEnum.End;
+        }
     }
 
     /// <summary>
@@ -111,7 +114,7 @@ public sealed partial class NbtNode
     }
 
     /// <summary>
-    ///    获取所有子项
+    ///     获取所有子项
     /// </summary>
     public List<NbtNode> GetChildrenAll()
     {
@@ -128,7 +131,7 @@ public sealed partial class NbtNode
 
     private string GetDisplayValue(object? value)
     {
-        if (value is IEnumerable enumerable and not string ) return string.Join(", ", enumerable.Cast<object>());
+        if (value is IEnumerable enumerable and not string) return string.Join(", ", enumerable.Cast<object>());
         return value?.ToString() ?? string.Empty;
     }
 }
@@ -137,7 +140,7 @@ public sealed partial class NbtNode
 public sealed partial class NbtNode
 {
     /// <summary>
-    /// 插入子项时：更新子项列表
+    ///     插入子项时：更新子项列表
     /// </summary>
     /// <param name="appendedChild"></param>
     private void OnChildAppended(NbtTag appendedChild)
@@ -156,7 +159,7 @@ public sealed partial class NbtNode
     }
 
     /// <summary>
-    /// 修改名称时：更新显示名称
+    ///     修改名称时：更新显示名称
     /// </summary>
     /// <param name="newName"></param>
     private void OnNameModified(string newName)
@@ -165,7 +168,7 @@ public sealed partial class NbtNode
     }
 
     /// <summary>
-    /// 修改值时：更新显示值(普通)
+    ///     修改值时：更新显示值(普通)
     /// </summary>
     private void OnValueModified(string newValue)
     {
@@ -173,7 +176,7 @@ public sealed partial class NbtNode
     }
 
     /// <summary>
-    /// 修改值时：更新显示值(数组)
+    ///     修改值时：更新显示值(数组)
     /// </summary>
     private void OnValueModified(string[] newValue)
     {
@@ -181,7 +184,7 @@ public sealed partial class NbtNode
     }
 
     /// <summary>
-    /// 移除时：隐藏自身、子项
+    ///     移除时：隐藏自身、子项
     /// </summary>
     private void OnRemoved()
     {
@@ -273,7 +276,7 @@ public sealed partial class NbtNode
     }
 
     /// <summary>
-    /// 设置节点值(数组)
+    ///     设置节点值(数组)
     /// </summary>
     public void SetValue(string[] newValues)
     {
@@ -284,7 +287,7 @@ public sealed partial class NbtNode
     }
 
     /// <summary>
-    /// 设置节点名称
+    ///     设置节点名称
     /// </summary>
     public void SetName(string name)
     {
@@ -294,7 +297,7 @@ public sealed partial class NbtNode
     }
 
     /// <summary>
-    /// 删除节点
+    ///     删除节点
     /// </summary>
     public void Remove()
     {
@@ -304,7 +307,7 @@ public sealed partial class NbtNode
     }
 
     /// <summary>
-    /// 插入节点
+    ///     插入节点
     /// </summary>
     /// <param name="tagEnum">插入的节点类型</param>
     /// <param name="name">节点名称></param>
@@ -341,7 +344,7 @@ public sealed partial class NbtNode
     }
 
     /// <summary>
-    /// 发送「节点修改」消息
+    ///     发送「节点修改」消息
     /// </summary>
     /// <param name="node">被修改的节点</param>
     private static void SendNodeModifiedMessage(NbtNode node)
