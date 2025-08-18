@@ -41,88 +41,14 @@
                 <!-- 右键菜单 -->
                 <TreeViewItem.ContextFlyout>
                     <MenuFlyout>
-                        <!-- 插入节点 -->
-                        <MenuFlyoutSubItem Text="插入节点">
+                        <!-- 插入节点（动态生成） -->
+                        <MenuFlyoutSubItem Text="插入节点" Loaded="MenuFlyoutSubItem_OnLoaded">
                             <MenuFlyoutSubItem.Icon>
                                 <FontIcon Glyph="&#xE710;" />
                             </MenuFlyoutSubItem.Icon>
                             <MenuFlyoutSubItem.KeyboardAccelerators>
                                 <KeyboardAccelerator Key="A" />
                             </MenuFlyoutSubItem.KeyboardAccelerators>
-                            <MenuFlyoutItem Text="字节" Command="{Binding AppendChildCommand}"
-                                            CommandParameter="{x:Bind enum:NbtTagEnum.Byte}">
-                                <MenuFlyoutItem.KeyboardAccelerators>
-                                    <KeyboardAccelerator Key="B" />
-                                </MenuFlyoutItem.KeyboardAccelerators>
-                            </MenuFlyoutItem>
-                            <MenuFlyoutItem Text="短整型" Command="{Binding AppendChildCommand}"
-                                            CommandParameter="{x:Bind enum:NbtTagEnum.Short}">
-                                <MenuFlyoutItem.KeyboardAccelerators>
-                                    <KeyboardAccelerator Key="S" />
-                                </MenuFlyoutItem.KeyboardAccelerators>
-                            </MenuFlyoutItem>
-                            <MenuFlyoutItem Text="整型" Command="{Binding AppendChildCommand}"
-                                            CommandParameter="{x:Bind enum:NbtTagEnum.Int}">
-                                <MenuFlyoutItem.KeyboardAccelerators>
-                                    <KeyboardAccelerator Key="I" />
-                                </MenuFlyoutItem.KeyboardAccelerators>
-                            </MenuFlyoutItem>
-                            <MenuFlyoutItem Text="长整型" Command="{Binding AppendChildCommand}"
-                                            CommandParameter="{x:Bind enum:NbtTagEnum.Long}">
-                                <MenuFlyoutItem.KeyboardAccelerators>
-                                    <KeyboardAccelerator Key="L" />
-                                </MenuFlyoutItem.KeyboardAccelerators>
-                            </MenuFlyoutItem>
-                            <MenuFlyoutItem Text="单精度浮点" Command="{Binding AppendChildCommand}"
-                                            CommandParameter="{x:Bind enum:NbtTagEnum.Float}">
-                                <MenuFlyoutItem.KeyboardAccelerators>
-                                    <KeyboardAccelerator Key="F" />
-                                </MenuFlyoutItem.KeyboardAccelerators>
-                            </MenuFlyoutItem>
-                            <MenuFlyoutItem Text="双精度浮点" Command="{Binding AppendChildCommand}"
-                                            CommandParameter="{x:Bind enum:NbtTagEnum.Double}">
-                                <MenuFlyoutItem.KeyboardAccelerators>
-                                    <KeyboardAccelerator Key="D" />
-                                </MenuFlyoutItem.KeyboardAccelerators>
-                            </MenuFlyoutItem>
-                            <MenuFlyoutItem Text="字符串" Command="{Binding AppendChildCommand}"
-                                            CommandParameter="{x:Bind enum:NbtTagEnum.String}">
-                                <MenuFlyoutItem.KeyboardAccelerators>
-                                    <KeyboardAccelerator Key="S" />
-                                </MenuFlyoutItem.KeyboardAccelerators>
-                            </MenuFlyoutItem>
-                            <MenuFlyoutSeparator />
-                            <MenuFlyoutItem Text="字节数组" Command="{Binding AppendChildCommand}"
-                                            CommandParameter="{x:Bind enum:NbtTagEnum.ByteArray}">
-                                <MenuFlyoutItem.KeyboardAccelerators>
-                                    <KeyboardAccelerator Modifiers="Control" Key="B" />
-                                </MenuFlyoutItem.KeyboardAccelerators>
-                            </MenuFlyoutItem>
-                            <MenuFlyoutItem Text="整型数组" Command="{Binding AppendChildCommand}"
-                                            CommandParameter="{x:Bind enum:NbtTagEnum.IntArray}">
-                                <MenuFlyoutItem.KeyboardAccelerators>
-                                    <KeyboardAccelerator Modifiers="Control" Key="I" />
-                                </MenuFlyoutItem.KeyboardAccelerators>
-                            </MenuFlyoutItem>
-                            <MenuFlyoutItem Text="长整型数组" Command="{Binding AppendChildCommand}"
-                                            CommandParameter="{x:Bind enum:NbtTagEnum.LongArray}">
-                                <MenuFlyoutItem.KeyboardAccelerators>
-                                    <KeyboardAccelerator Modifiers="Control" Key="L" />
-                                </MenuFlyoutItem.KeyboardAccelerators>
-                            </MenuFlyoutItem>
-                            <MenuFlyoutSeparator />
-                            <MenuFlyoutItem Text="字典" Command="{Binding AppendChildCommand}"
-                                            CommandParameter="{x:Bind enum:NbtTagEnum.Dictionary}">
-                                <MenuFlyoutItem.KeyboardAccelerators>
-                                    <KeyboardAccelerator Modifiers="Control" Key="D" />
-                                </MenuFlyoutItem.KeyboardAccelerators>
-                            </MenuFlyoutItem>
-                            <MenuFlyoutItem Text="列表" Command="{Binding AppendChildCommand}"
-                                            CommandParameter="{x:Bind enum:NbtTagEnum.List}">
-                                <MenuFlyoutItem.KeyboardAccelerators>
-                                    <KeyboardAccelerator Modifiers="Control" Key="L" />
-                                </MenuFlyoutItem.KeyboardAccelerators>
-                            </MenuFlyoutItem>
                         </MenuFlyoutSubItem>
                         <!-- 重命名 -->
                         <MenuFlyoutItem Text="重命名" Command="{Binding RenameCommand}">
