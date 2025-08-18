@@ -56,7 +56,7 @@ public sealed partial class ValueEditor
 
         if (NbtTagEnumExtensions.IsArray(_viewModel.TagEnum))
         {
-            if (textBox.DataContext is not ArrayNodeValue arrayValue) return;
+            if (textBox.DataContext is not NodeArrayElement arrayValue) return;
             var valueType = NbtTagEnumExtensions.GetArrayElementType(_viewModel.TagEnum);
             arrayValue.IsValid = NbtTagHelper.IsValueValid(valueType, textBox.Text);
             SetTextBoxIsValid(arrayValue.IsValid);

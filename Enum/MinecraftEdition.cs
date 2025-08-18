@@ -1,7 +1,10 @@
-﻿namespace NBT_Studio.Enum;
+﻿using System.ComponentModel;
+
+namespace NBT_Studio.Enum;
 
 public enum MinecraftEdition
 {
-    Java,
-    Bedrock
+    [Description("Java 版")] Java,
+    [Description("基岩版")] Bedrock,
+    [Description("未知")]Unknown
 }

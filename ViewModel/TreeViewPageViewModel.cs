@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -23,6 +24,8 @@ using NBT_Studio.Message;
 using NBT_Studio.Model;
 using NBT_Studio.Service;
 using WinRT.Interop;
+using FileInfo = NBT_Studio.Model.FileInfo;
+using Tools = NBT_Studio.Utils.Tools;
 
 namespace NBT_Studio.ViewModel;
 
@@ -33,19 +36,18 @@ namespace NBT_Studio.ViewModel;
     "MVVMTK0045:Using [ObservableProperty] on fields is not AOT compatible for WinRT")]
 public sealed partial class TreeViewPageViewModel : ObservableObject
 {
-    private string _filePath = string.Empty;
     [ObservableProperty] private bool _isApplyEnabled;
     [ObservableProperty] private bool _isBedrockLevelDat;
     [ObservableProperty] private bool _isFilterEnabled;
     [ObservableProperty] private bool _isInfoEnabled;
     [ObservableProperty] private bool _isSaveEnabled;
     [ObservableProperty] private bool _isSearchBoxEnabled;
-    private MinecraftEdition _minecraftEdition;
-    private int _nodeFilterIndex;
     [ObservableProperty] private ObservableCollection<NbtNode> _nodes = [];
-    private string _searchBoxText = string.Empty;
     [ObservableProperty] private TreeViewNode? _selectedNode;
     [ObservableProperty] private bool _waitingToSelectMaskVisibility = true;
+    private string _searchBoxText = string.Empty;
+    private int _nodeFilterIndex;
+    private FileInfo _fileInfo = new();
 
     public TreeViewPageViewModel()
     {
@@ -91,7 +93,7 @@ public sealed partial class TreeViewPageViewModel : ObservableObject
         WeakReferenceMessenger.Default.Register<NodeModifiedMessage>(this,
             (_, _) =>
             {
-                if (_filePath != string.Empty) IsApplyEnabled = true;
+                if (_fileInfo.FilePath != string.Empty) IsApplyEnabled = true;
             });
     }
 
@@ -142,14 +144,33 @@ public sealed partial class TreeViewPageViewModel
         // 选择文件
         var file = await openPicker.PickSingleFileAsync();
         if (file == null) return;
-        _filePath = file.Path;
-        var bytes = Tools.ReadBytes(file.Path);
+        _fileInfo.FilePath = file.Path;
+
+        // 读取文件
+        var fileStream = new FileStream(file.Path, FileMode.Open, FileAccess.Read);
+        var compressInfo = Tools.IsCompressedFile(fileStream);
+        byte[] bytes;
+        if (compressInfo.isCompressed)
+        {
+            bytes = Tools.DecompressFile(fileStream, (FileCompress)compressInfo.compressType!);
+            _fileInfo.IsCompressed = true;
+            _fileInfo.CompressType = (FileCompress)compressInfo.compressType!;
+        }
+        else
+        {
+            var binaryReader = new BinaryReader(fileStream);
+            bytes = binaryReader.ReadBytes((int)fileStream.Length);
+            binaryReader.Close();
+        }
+
+        fileStream.Close();
 
         // 分别尝试以 Java 版、基岩版加载
         var javaResult = LoadJavaFile(bytes);
         if (javaResult.isSuccessed)
         {
-            _minecraftEdition = MinecraftEdition.Java;
+            _fileInfo.MinecraftEdition = MinecraftEdition.Java;
+            _fileInfo.Endianness = Endianness.Big;
             LoadRootTag(javaResult.tag);
             return;
         }
@@ -157,7 +178,8 @@ public sealed partial class TreeViewPageViewModel
         var bedrockResult = LoadBedrockFile(bytes);
         if (bedrockResult.isSuccessed)
         {
-            _minecraftEdition = MinecraftEdition.Bedrock;
+            _fileInfo.MinecraftEdition = MinecraftEdition.Bedrock;
+            _fileInfo.Endianness = Endianness.Little;
             IsBedrockLevelDat = bedrockResult.isLevelDat;
             LoadRootTag(bedrockResult.tag);
             return;
@@ -229,7 +251,7 @@ public sealed partial class TreeViewPageViewModel
         var path = await savePicker.PickSaveFileAsync();
         if (path == null) return;
         await WriteFile(bytes, path.Path);
-        _filePath = path.Path;
+        _fileInfo.FilePath = path.Path;
         IsApplyEnabled = false;
     }
 
@@ -238,7 +260,7 @@ public sealed partial class TreeViewPageViewModel
     private async Task ApplyFile()
     {
         var bytes = Nodes.First().Tag.GetBytes();
-        await WriteFile(bytes, _filePath);
+        await WriteFile(bytes, _fileInfo.FilePath);
 
         IsApplyEnabled = false;
     }
@@ -260,11 +282,11 @@ public sealed partial class TreeViewPageViewModel
                     break; // 执行方法
             }
 
-        _minecraftEdition = param ?? throw new Exception("新建文件按钮在XAML中未设置游戏版本!");
-        var builder = new NbtTagBuilder(_minecraftEdition == MinecraftEdition.Java);
+        _fileInfo.MinecraftEdition = param ?? throw new Exception("尝试新建未知设置游戏版本!");
+        var builder = new NbtTagBuilder(_fileInfo.Endianness == Endianness.Big);
         Nodes.Clear();
         Nodes.Add(new NbtNode(builder.Dictionary("root", []), null, true));
-        _filePath = string.Empty;
+        _fileInfo.FilePath = string.Empty;
         IsApplyEnabled = false;
         IsSaveEnabled = true;
         IsInfoEnabled = true;
@@ -276,24 +298,24 @@ public sealed partial class TreeViewPageViewModel
     [RelayCommand]
     private async Task ShowFileInfo()
     {
-        var content = new FileInfoDialog(_filePath, Nodes.First().Tag.GetBytes().Length, _minecraftEdition,
-            Nodes.First().Tag.IsBigEndian);
+        _fileInfo.FileLength = Nodes.First().Tag.GetBytes().Length;
+        var content = new FileInfoDialog(_fileInfo);
         await DialogService.ShowDialog("文件信息", "确认", content: content);
     }
 
     /// <summary>写入 NBT 文件</summary>
     private async Task WriteFile(byte[] bytes, string path)
     {
-        var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write);
-        switch (_minecraftEdition)
+        // 写入文件
+        switch (_fileInfo.MinecraftEdition)
         {
             case MinecraftEdition.Java:
-                await fileStream.WriteAsync(bytes);
+                await WriteBytes(bytes);
                 break;
             case MinecraftEdition.Bedrock:
                 if (!IsBedrockLevelDat)
                 {
-                    await fileStream.WriteAsync(bytes);
+                    await WriteBytes(bytes);
                     break;
                 }
 
@@ -301,22 +323,38 @@ public sealed partial class TreeViewPageViewModel
                 var extension = new byte[8];
                 BinaryPrimitives.WriteInt32LittleEndian(extension, 10);
                 BinaryPrimitives.WriteInt32LittleEndian(extension, bytes.Length);
-                await fileStream.WriteAsync(extension.Concat(bytes).ToArray());
+                await WriteBytes(extension.Concat(bytes).ToArray());
                 break;
             default:
                 throw new Exception("保存文件时无法确定游戏版本");
         }
 
-        fileStream.Close();
+        return;
+
+        // 根据 _fileInfo 决定是否压缩后保存
+        async Task WriteBytes(byte[] data)
+        {
+            await using var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write);
+
+            var compressType = _fileInfo.CompressType;
+            await using Stream outStream = _fileInfo.IsCompressed switch
+            {
+                true when compressType == FileCompress.Gzip => new GZipStream(fileStream, CompressionMode.Compress),
+                true when compressType == FileCompress.Zlib => new ZLibStream(fileStream, CompressionMode.Compress),
+                false => fileStream,
+                _ => throw new NotSupportedException($"不支持对将文件压缩为[{compressType}]类型!")
+            };
+            await outStream.WriteAsync(data);
+        }
     }
 
     /// <summary>确认是否丢弃 NBT 文件未保存的修改</summary>
     private async Task<ContentDialogResult> VerifyAbandonModifies()
     {
-        var fileName = _filePath == string.Empty
+        var fileName = _fileInfo.FilePath == string.Empty
             ? Nodes.First().DisplayName == string.Empty ? "未命名" : Nodes.First().DisplayName
-            : Path.GetFileNameWithoutExtension(_filePath);
-        return await DialogService.ShowDialog("是否保存修改？", "保存", "丢弃", "取消", description: $"「{fileName}」未保存修改");
+            : Path.GetFileNameWithoutExtension(_fileInfo.FilePath);
+        return await DialogService.ShowDialog("保存修改？", "保存", "丢弃", "取消", description: $"「{fileName}」未保存修改");
     }
 }
 
@@ -407,7 +445,7 @@ public sealed partial class TreeViewPageViewModel
         var selectedNbtNode = (NbtNode)SelectedNode.Content;
         await selectedNbtNode.AppendChild(tagEnum);
 
-        if (_filePath != string.Empty) IsApplyEnabled = true;
+        if (_fileInfo.FilePath != string.Empty) IsApplyEnabled = true;
         IsSaveEnabled = true;
     }
 }

@@ -1,25 +1,27 @@
-using NBT_Studio.Enum;
+using NBT_Studio.Model;
+using Tools = NBT_Studio.Utils.Tools;
 
 namespace NBT_Studio.Control.Dialog;
 
 public sealed partial class FileInfoDialog
 {
-    public FileInfoDialog(string filePath, int fileLength, MinecraftEdition minecraftEdition, bool isBigEndian)
+    public FileInfoDialog(FileInfo fileInfo)
     {
         InitializeComponent();
 
-        FilePath = filePath;
-        FileLength = fileLength;
-        MinecraftEdition = minecraftEdition == Enum.MinecraftEdition.Java ? 0 : 1;
-        IsBigEndian = isBigEndian ? 1 : 0;
-        ItemJava.IsEnabled = minecraftEdition == Enum.MinecraftEdition.Java;
-        ItemBedrock.IsEnabled = minecraftEdition == Enum.MinecraftEdition.Bedrock;
-        ItemBiggerEndian.IsEnabled = isBigEndian;
-        ItemLittleEndian.IsEnabled = !isBigEndian;
+        FilePath = fileInfo.FilePath;
+        FileLength = fileInfo.FileLength;
+        IsCompressed = fileInfo.IsCompressed;
+        CompressType = IsCompressed ? fileInfo.CompressType.ToString() : string.Empty;
+        MinecraftEdition = Tools.GetEnumDescription(fileInfo.MinecraftEdition) ?? string.Empty;
+        Endianness = Tools.GetEnumDescription(fileInfo.Endianness) ?? string.Empty;
     }
 
     private string FilePath { get; }
     private int FileLength { get; }
-    private int MinecraftEdition { get; }
-    private int IsBigEndian { get; }
+    private string MinecraftEdition { get; }
+    private string Endianness { get; }
+
+    private bool IsCompressed { get; }
+    private string CompressType { get; }
 }

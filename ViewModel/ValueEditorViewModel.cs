@@ -63,7 +63,7 @@ public sealed partial class ValueEditorViewModel : ObservableObject
         {
             ArrayValues.Clear();
             foreach (var value in values)
-                ArrayValues.Add(new ArrayNodeValue { Value = value?.ToString() ?? string.Empty, IsValid = true });
+                ArrayValues.Add(new NodeArrayElement { Value = value?.ToString() ?? string.Empty, IsValid = true });
         }
         else Value = node.DisplayValue;
 
@@ -88,13 +88,13 @@ public sealed partial class ValueEditorViewModel : ObservableObject
     [RelayCommand]
     private void AddArrayValue()
     {
-        ArrayValues.Add(new ArrayNodeValue());
+        ArrayValues.Add(new NodeArrayElement());
     }
 
     [RelayCommand]
     private void RemoveArrayValue(Button button)
     {
-        if (button.DataContext is not ArrayNodeValue arrayValue) return;
+        if (button.DataContext is not NodeArrayElement arrayValue) return;
         ArrayValues.Remove(arrayValue);
     }
 
@@ -123,7 +123,7 @@ public sealed partial class ValueEditorViewModel : ObservableObject
     [ObservableProperty] private bool _isAllowDecimalEnabled;
     [ObservableProperty] private Visibility _genericValueVis = Visibility.Collapsed;
     [ObservableProperty] private Visibility _arrayValueVis = Visibility.Collapsed;
-    [ObservableProperty] private ObservableCollection<ArrayNodeValue> _arrayValues = [];
+    [ObservableProperty] private ObservableCollection<NodeArrayElement> _arrayValues = [];
 
     #endregion
 }

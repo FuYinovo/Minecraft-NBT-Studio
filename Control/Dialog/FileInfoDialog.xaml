@@ -12,14 +12,12 @@
         <StackPanel Spacing="16">
             <TextBox Header="文件路径" Text="{x:Bind FilePath}" IsReadOnly="True" />
             <TextBox Header="文件长度" Text="{x:Bind FileLength}" IsReadOnly="True" />
-            <ComboBox Header="文件端序" SelectedIndex="{x:Bind IsBigEndian}">
-                <ComboBoxItem x:Name="ItemLittleEndian" Content="小端序" />
-                <ComboBoxItem x:Name="ItemBiggerEndian" Content="大端序" />
-            </ComboBox>
-            <ComboBox Header="游戏版本" SelectedIndex="{x:Bind MinecraftEdition}" IsTabStop="False">
-                <ComboBoxItem x:Name="ItemJava" Content="Java 版" />
-                <ComboBoxItem x:Name="ItemBedrock" Content="基岩版" />
-            </ComboBox>
+
+            <TextBox Header="字节顺序" Text="{x:Bind Endianness}" IsReadOnly="True" />
+            <TextBox Header="游戏版本" Text="{x:Bind MinecraftEdition}" IsReadOnly="True" />
+
+            <TextBox Header="压缩类型" Text="{x:Bind CompressType}" IsReadOnly="True"
+                     IsEnabled="{x:Bind IsCompressed}" />
         </StackPanel>
     </Grid>
 </UserControl>

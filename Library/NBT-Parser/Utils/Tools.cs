@@ -67,17 +67,4 @@ public static class Tools
         binaryReader.Close();
         return bytes;
     }
-
-    public static string? GetEnumDescription(System.Enum enumType)
-    {
-        var field = enumType.GetType().GetField(enumType.ToString());
-        return field?.GetCustomAttribute<DescriptionAttribute>()?.Description;
-    }
-
-    public static string? GetInterfaceProperty(string interfaceName, string propertyName, Type objectType)
-    {
-        var interfaceType = objectType.GetInterface(interfaceName);
-        var property = interfaceType?.GetProperty(propertyName);
-        return property?.GetValue(Activator.CreateInstance(objectType))?.ToString();
-    }
 }
