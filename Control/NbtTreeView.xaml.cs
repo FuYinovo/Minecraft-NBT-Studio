@@ -1,5 +1,5 @@
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using Windows.System;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
@@ -14,27 +14,42 @@ namespace NBT_Studio.Control;
 public sealed partial class NbtTreeView
 {
     // 「插入节点」右键菜单
-    private readonly List<NodeMenuFlyoutItem> _menuFlyoutItems =
-    [
-        new(NbtTagEnum.Byte, VirtualKey.B),
-        new(NbtTagEnum.Short, VirtualKey.S),
-        new(NbtTagEnum.Int, VirtualKey.I),
-        new(NbtTagEnum.Long, VirtualKey.L),
-        new(NbtTagEnum.Float, VirtualKey.F),
-        new(NbtTagEnum.Double, VirtualKey.D),
-        new(NbtTagEnum.String, VirtualKey.S),
-        NodeMenuFlyoutItem.Separator,
-        new(NbtTagEnum.ByteArray, VirtualKey.B, VirtualKeyModifiers.Control),
-        new(NbtTagEnum.IntArray, VirtualKey.I, VirtualKeyModifiers.Control),
-        new(NbtTagEnum.LongArray, VirtualKey.L, VirtualKeyModifiers.Control),
-        NodeMenuFlyoutItem.Separator,
-        new(NbtTagEnum.Dictionary, VirtualKey.D, VirtualKeyModifiers.Control),
-        new(NbtTagEnum.List, VirtualKey.L, VirtualKeyModifiers.Control)
-    ];
+    private readonly NodeMenuFlyoutItem[] _menuFlyoutItems;
 
     public NbtTreeView()
     {
+        _menuFlyoutItems = GetMenuFlyoutItems();
         InitializeComponent();
+    }
+
+    private static NodeMenuFlyoutItem[] GetMenuFlyoutItems()
+    {
+        var numbers = NbtTagEnumExtensions.Numbers
+            .Select(x => new NodeMenuFlyoutItem(x, GetKey(x)));
+        var others = NbtTagEnumExtensions.Others
+            .Select(x => new NodeMenuFlyoutItem(x, GetKey(x)));
+        var arrays = NbtTagEnumExtensions.Arrays
+            .Select(x =>
+                new NodeMenuFlyoutItem(x, GetKey(x), VirtualKeyModifiers.Control));
+        var collections = NbtTagEnumExtensions.Collections
+            .Select(x =>
+                new NodeMenuFlyoutItem(x, GetKey(x), VirtualKeyModifiers.Control));
+        return
+        [
+            ..numbers,
+            ..others,
+            NodeMenuFlyoutItem.Separator,
+            ..arrays,
+            NodeMenuFlyoutItem.Separator,
+            ..collections
+        ];
+
+        VirtualKey GetKey(NbtTagEnum tag)
+        {
+            return System.Enum.TryParse(tag.ToString().ToUpper()[..1], out VirtualKey key)
+                ? key
+                : VirtualKey.None;
+        }
     }
 
     ///<summary> 展开或折叠子项 </summary>

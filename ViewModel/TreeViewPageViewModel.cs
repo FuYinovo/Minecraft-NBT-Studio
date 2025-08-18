@@ -22,8 +22,8 @@ using NBT_Studio.Library.NBT_Parser.Enum;
 using NBT_Studio.Message;
 using NBT_Studio.Model;
 using NBT_Studio.Service;
-using WinRT.Interop;
 using NBT_Studio.Utils;
+using WinRT.Interop;
 using FileInfo = NBT_Studio.Model.FileInfo;
 
 namespace NBT_Studio.ViewModel;
@@ -35,6 +35,8 @@ namespace NBT_Studio.ViewModel;
     "MVVMTK0045:Using [ObservableProperty] on fields is not AOT compatible for WinRT")]
 public sealed partial class TreeViewPageViewModel : ObservableObject
 {
+    # region Properties
+
     private FileInfo _fileInfo = new();
     [ObservableProperty] private bool _isApplyEnabled;
     [ObservableProperty] private bool _isBedrockLevelDat;
@@ -47,11 +49,6 @@ public sealed partial class TreeViewPageViewModel : ObservableObject
     private string _searchBoxText = string.Empty;
     [ObservableProperty] private TreeViewNode? _selectedNode;
     [ObservableProperty] private bool _waitingToSelectMaskVisibility = true;
-
-    public TreeViewPageViewModel()
-    {
-        RegisterMessages();
-    }
 
     public int NodeFilterIndex
     {
@@ -71,6 +68,53 @@ public sealed partial class TreeViewPageViewModel : ObservableObject
             SetField(ref _searchBoxText, value);
             ApplyFilter();
         }
+    }
+
+    public CreateNodeButtonItem[][] CreateNodeButtonGroups { get; } // 「添加节点」按钮
+
+    #region Methods: GetProperty
+
+    private CreateNodeButtonItem[][] GetCreateNodeButtonGroups()
+    {
+        return
+        [
+            // 第一组：数字类型、其他类型
+            NbtTagEnumExtensions.Numbers
+                .Concat(NbtTagEnumExtensions.Others)
+                .Select(x => x switch
+                {
+                    NbtTagEnum.Float => new CreateNodeButtonItem(x) { Label = "单精浮点" }, // 避免超出控件长度
+                    NbtTagEnum.Double => new CreateNodeButtonItem(x) { Label = "双精浮点" },
+                    _ => new CreateNodeButtonItem(x, AppendNodeCommand)
+                })
+                .ToArray(),
+
+            // 第二组：数组类型
+            NbtTagEnumExtensions.Arrays
+                .Select(x => x switch
+                {
+                    NbtTagEnum.ByteArray => new CreateNodeButtonItem(x) { Label = "字节组" }, // 避免超出控件长度
+                    NbtTagEnum.Int => new CreateNodeButtonItem(x) { Label = "整数组" },
+                    NbtTagEnum.LongArray => new CreateNodeButtonItem(x) { Label = "长整数组" },
+                    _ => new CreateNodeButtonItem(x, AppendNodeCommand)
+                })
+                .ToArray(),
+
+            // 第三组：集合类型
+            NbtTagEnumExtensions.Collections
+                .Select(x => new CreateNodeButtonItem(x, AppendNodeCommand))
+                .ToArray()
+        ];
+    }
+
+    #endregion
+
+    #endregion
+
+    public TreeViewPageViewModel()
+    {
+        RegisterMessages();
+        CreateNodeButtonGroups = GetCreateNodeButtonGroups();
     }
 
     /// <summary>
@@ -96,12 +140,17 @@ public sealed partial class TreeViewPageViewModel : ObservableObject
             });
     }
 
+
+    #region INotifyPropertyChanged
+
     private void SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
     {
         if (EqualityComparer<T>.Default.Equals(field, value)) return;
         field = value;
         OnPropertyChanged(propertyName);
     }
+
+    #endregion
 }
 
 /// <summary>

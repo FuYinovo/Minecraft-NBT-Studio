@@ -1,4 +1,7 @@
 ﻿using System.ComponentModel;
+using System.Linq;
+using System.Runtime.InteropServices.JavaScript;
+using NBT_Studio.Library.NBT_Parser.Class;
 
 namespace NBT_Studio.Library.NBT_Parser.Enum;
 
@@ -22,39 +25,44 @@ public enum NbtTagEnum
 
 public static class NbtTagEnumExtensions
 {
+    public static readonly NbtTagEnum[] Numbers =
+    [
+        NbtTagEnum.Byte,
+        NbtTagEnum.Short,
+        NbtTagEnum.Int,
+        NbtTagEnum.Long,
+        NbtTagEnum.Float,
+        NbtTagEnum.Double
+    ];
+
+    public static readonly NbtTagEnum[] Arrays =
+    [
+        NbtTagEnum.ByteArray,
+        NbtTagEnum.IntArray,
+        NbtTagEnum.LongArray
+    ];
+
+    public static readonly NbtTagEnum[] Collections =
+    [
+        NbtTagEnum.List,
+        NbtTagEnum.Dictionary
+    ];
+
+    public static readonly NbtTagEnum[] Others = [NbtTagEnum.String];
+
     public static bool IsNumber(NbtTagEnum tagEnum)
     {
-        return tagEnum switch
-        {
-            NbtTagEnum.Byte or
-                NbtTagEnum.Short or
-                NbtTagEnum.Int or
-                NbtTagEnum.Long or
-                NbtTagEnum.Float or
-                NbtTagEnum.Double => true,
-            _ => false
-        };
+        return Numbers.Contains(tagEnum);
     }
 
     public static bool IsCollection(NbtTagEnum tagEnum)
     {
-        return tagEnum switch
-        {
-            NbtTagEnum.Dictionary or
-                NbtTagEnum.List => true,
-            _ => false
-        };
+        return Collections.Contains(tagEnum);
     }
 
     public static bool IsArray(NbtTagEnum tagEnum)
     {
-        return tagEnum switch
-        {
-            NbtTagEnum.ByteArray or
-                NbtTagEnum.IntArray or
-                NbtTagEnum.LongArray => true,
-            _ => false
-        };
+        return Arrays.Contains(tagEnum);
     }
 
 

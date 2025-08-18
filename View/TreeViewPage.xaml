@@ -15,6 +15,8 @@
     xmlns:editor="using:NBT_Studio.Control.Editor"
     xmlns:flyout="using:NBT_Studio.Control.Flyout"
     xmlns:view="using:NBT_Studio.View"
+    xmlns:model="using:NBT_Studio.Model"
+    xmlns:system="using:System"
     mc:Ignorable="d">
 
     <Page.Resources>
@@ -107,72 +109,49 @@
                             </AppBarButton>
                         </community:TabbedCommandBarItem>
                         <!-- 添加节点页 -->
-                        <community:TabbedCommandBarItem Header="添加节点">
-                            <!-- 基础数据类型 -->
-                            <AppBarElementContainer>
-                                <StackPanel Orientation="Horizontal">
-                                    <control:CreateNodeButton Label="字节"
-                                                              Tag="{x:Bind tag:NbtTagEnum.Byte}"
-                                                              IconUri="ms-appx:///Assets/NodeIcon/Data_node_byte.svg"
-                                                              ButtonCommand="{Binding AppendNodeCommand}" />
-                                    <control:CreateNodeButton Label="短整数"
-                                                              Tag="{x:Bind tag:NbtTagEnum.Short}"
-                                                              IconUri="ms-appx:///Assets/NodeIcon/Data_node_short.svg"
-                                                              ButtonCommand="{Binding AppendNodeCommand}" />
-                                    <control:CreateNodeButton Label="整数"
-                                                              Tag="{x:Bind tag:NbtTagEnum.Int}"
-                                                              IconUri="ms-appx:///Assets/NodeIcon/Data_node_int.svg"
-                                                              ButtonCommand="{Binding AppendNodeCommand}" />
-                                    <control:CreateNodeButton Label="长整数"
-                                                              Tag="{x:Bind tag:NbtTagEnum.Long}"
-                                                              IconUri="ms-appx:///Assets/NodeIcon/Data_node_long.svg"
-                                                              ButtonCommand="{Binding AppendNodeCommand}" />
-                                    <control:CreateNodeButton Label="单精浮点"
-                                                              Tag="{x:Bind tag:NbtTagEnum.Float}"
-                                                              IconUri="ms-appx:///Assets/NodeIcon/Data_node_float.svg"
-                                                              ButtonCommand="{Binding AppendNodeCommand}" />
-                                    <control:CreateNodeButton Label="双精浮点"
-                                                              Tag="{x:Bind tag:NbtTagEnum.Double}"
-                                                              IconUri="ms-appx:///Assets/NodeIcon/Data_node_double.svg"
-                                                              ButtonCommand="{Binding AppendNodeCommand}" />
-                                    <control:CreateNodeButton Label="字符串"
-                                                              Tag="{x:Bind tag:NbtTagEnum.String}"
-                                                              IconUri="ms-appx:///Assets/NodeIcon/Data_node_string.svg"
-                                                              ButtonCommand="{Binding AppendNodeCommand}" />
-                                </StackPanel>
-                            </AppBarElementContainer>
-                            <AppBarSeparator />
-                            <!-- 数组类型 -->
-                            <AppBarElementContainer>
-                                <StackPanel Orientation="Horizontal">
-                                    <control:CreateNodeButton Label="字节组"
-                                                              Tag="{x:Bind tag:NbtTagEnum.ByteArray}"
-                                                              IconUri="ms-appx:///Assets/NodeIcon/Data_node_byte-array.svg"
-                                                              ButtonCommand="{Binding AppendNodeCommand}" />
-                                    <control:CreateNodeButton Label="整数组"
-                                                              Tag="{x:Bind tag:NbtTagEnum.IntArray}"
-                                                              IconUri="ms-appx:///Assets/NodeIcon/Data_node_int-array.svg"
-                                                              ButtonCommand="{Binding AppendNodeCommand}" />
-                                    <control:CreateNodeButton Label="长整数组"
-                                                              Tag="{x:Bind tag:NbtTagEnum.LongArray}"
-                                                              IconUri="ms-appx:///Assets/NodeIcon/Data_node_long-array.svg"
-                                                              ButtonCommand="{Binding AppendNodeCommand}" />
-                                </StackPanel>
-                            </AppBarElementContainer>
-                            <AppBarSeparator />
-                            <!-- 复合类型 -->
-                            <AppBarElementContainer>
-                                <StackPanel Orientation="Horizontal">
-                                    <control:CreateNodeButton Label="字典"
-                                                              Tag="{x:Bind tag:NbtTagEnum.Dictionary}"
-                                                              IconUri="ms-appx:///Assets/NodeIcon/Data_node_dictionary.svg"
-                                                              ButtonCommand="{Binding AppendNodeCommand}" />
-                                    <control:CreateNodeButton Label="列表"
-                                                              Tag="{x:Bind tag:NbtTagEnum.List}"
-                                                              IconUri="ms-appx:///Assets/NodeIcon/Data_node_list.svg"
-                                                              ButtonCommand="{Binding AppendNodeCommand}" />
-                                </StackPanel>
-                            </AppBarElementContainer>
+                        <community:TabbedCommandBarItem Header="添加节点" Padding="0,-5,0,0"
+                                                        OverflowButtonVisibility="Collapsed">
+                            <community:TabbedCommandBarItem.Content>
+                                <ItemsControl ItemsSource="{Binding CreateNodeButtonGroups}">
+                                    <!-- 组容器 -->
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Horizontal"></StackPanel>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <!-- 组模板 -->
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate x:DataType="system:Array">
+                                            <StackPanel Orientation="Horizontal">
+                                                <!-- 组 -->
+                                                <AppBarElementContainer>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <ItemsControl ItemsSource="{Binding}">
+                                                            <!-- 按钮容器 -->
+                                                            <ItemsControl.ItemsPanel>
+                                                                <ItemsPanelTemplate>
+                                                                    <StackPanel Orientation="Horizontal"></StackPanel>
+                                                                </ItemsPanelTemplate>
+                                                            </ItemsControl.ItemsPanel>
+                                                            <!-- 按钮模板 -->
+                                                            <ItemsControl.ItemTemplate>
+                                                                <DataTemplate x:DataType="model:CreateNodeButtonItem">
+                                                                    <control:CreateNodeButton Label="{x:Bind Label}"
+                                                                        Tag="{x:Bind Tag}"
+                                                                        IconUri="{x:Bind IconUri}"
+                                                                        ButtonCommand="{x:Bind Command, Mode=OneWay}" />
+                                                                </DataTemplate>
+                                                            </ItemsControl.ItemTemplate>
+                                                        </ItemsControl>
+                                                    </StackPanel>
+                                                </AppBarElementContainer>
+                                                <!-- 组分界线 -->
+                                                <AppBarSeparator></AppBarSeparator>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </community:TabbedCommandBarItem.Content>
                         </community:TabbedCommandBarItem>
                     </community:TabbedCommandBar.MenuItems>
                 </community:TabbedCommandBar>
