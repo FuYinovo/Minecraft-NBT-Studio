@@ -35,6 +35,47 @@ namespace NBT_Studio.ViewModel;
     "MVVMTK0045:Using [ObservableProperty] on fields is not AOT compatible for WinRT")]
 public sealed partial class TreeViewPageViewModel : ObservableObject
 {
+    public TreeViewPageViewModel()
+    {
+        RegisterMessages();
+        CreateNodeButtonGroups = GetCreateNodeButtonGroups();
+    }
+
+    /// <summary>
+    ///     注册消息队列
+    /// </summary>
+    private void RegisterMessages()
+    {
+        // 「选中节点改动」消息
+        WeakReferenceMessenger.Default.Register<SelectedNodeChangedMessage>(this,
+            (_, v) =>
+            {
+                SelectedNode = v.Value;
+                WaitingToSelectMaskVisibility = false;
+            });
+        // 「排序方式改动」消息
+        WeakReferenceMessenger.Default.Register<SettingsChangedMessage<Sort>>(this,
+            (_, v) => ApplySort(v.Value));
+        // 「节点被修改」消息
+        WeakReferenceMessenger.Default.Register<NodeModifiedMessage>(this,
+            (_, _) =>
+            {
+                if (_fileInfo.FilePath != string.Empty) IsApplyEnabled = true;
+            });
+    }
+
+
+    #region INotifyPropertyChanged
+
+    private void SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
+    {
+        if (EqualityComparer<T>.Default.Equals(field, value)) return;
+        field = value;
+        OnPropertyChanged(propertyName);
+    }
+
+    #endregion
+
     # region Properties
 
     private FileInfo _fileInfo = new();
@@ -83,8 +124,8 @@ public sealed partial class TreeViewPageViewModel : ObservableObject
                 .Concat(NbtTagEnumExtensions.Others)
                 .Select(x => x switch
                 {
-                    NbtTagEnum.Float => new CreateNodeButtonItem(x) { Label = "单精浮点" }, // 避免超出控件长度
-                    NbtTagEnum.Double => new CreateNodeButtonItem(x) { Label = "双精浮点" },
+                    NbtTagEnum.Float => new CreateNodeButtonItem(x, AppendNodeCommand) { Label = "单精浮点" }, // 避免超出控件长度
+                    NbtTagEnum.Double => new CreateNodeButtonItem(x, AppendNodeCommand) { Label = "双精浮点" },
                     _ => new CreateNodeButtonItem(x, AppendNodeCommand)
                 })
                 .ToArray(),
@@ -93,9 +134,9 @@ public sealed partial class TreeViewPageViewModel : ObservableObject
             NbtTagEnumExtensions.Arrays
                 .Select(x => x switch
                 {
-                    NbtTagEnum.ByteArray => new CreateNodeButtonItem(x) { Label = "字节组" }, // 避免超出控件长度
-                    NbtTagEnum.Int => new CreateNodeButtonItem(x) { Label = "整数组" },
-                    NbtTagEnum.LongArray => new CreateNodeButtonItem(x) { Label = "长整数组" },
+                    NbtTagEnum.ByteArray => new CreateNodeButtonItem(x, AppendNodeCommand) { Label = "字节组" },
+                    NbtTagEnum.IntArray => new CreateNodeButtonItem(x, AppendNodeCommand) { Label = "整数组" },
+                    NbtTagEnum.LongArray => new CreateNodeButtonItem(x, AppendNodeCommand) { Label = "长整数组" },
                     _ => new CreateNodeButtonItem(x, AppendNodeCommand)
                 })
                 .ToArray(),
@@ -108,47 +149,6 @@ public sealed partial class TreeViewPageViewModel : ObservableObject
     }
 
     #endregion
-
-    #endregion
-
-    public TreeViewPageViewModel()
-    {
-        RegisterMessages();
-        CreateNodeButtonGroups = GetCreateNodeButtonGroups();
-    }
-
-    /// <summary>
-    ///     注册消息队列
-    /// </summary>
-    private void RegisterMessages()
-    {
-        // 「选中节点改动」消息
-        WeakReferenceMessenger.Default.Register<SelectedNodeChangedMessage>(this,
-            (_, v) =>
-            {
-                SelectedNode = v.Value;
-                WaitingToSelectMaskVisibility = false;
-            });
-        // 「排序方式改动」消息
-        WeakReferenceMessenger.Default.Register<SettingsChangedMessage<Sort>>(this,
-            (_, v) => ApplySort(v.Value));
-        // 「节点被修改」消息
-        WeakReferenceMessenger.Default.Register<NodeModifiedMessage>(this,
-            (_, _) =>
-            {
-                if (_fileInfo.FilePath != string.Empty) IsApplyEnabled = true;
-            });
-    }
-
-
-    #region INotifyPropertyChanged
-
-    private void SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
-    {
-        if (EqualityComparer<T>.Default.Equals(field, value)) return;
-        field = value;
-        OnPropertyChanged(propertyName);
-    }
 
     #endregion
 }
@@ -330,11 +330,14 @@ public sealed partial class TreeViewPageViewModel
                     break; // 执行方法
             }
 
-        _fileInfo.MinecraftEdition = param ?? throw new Exception("尝试新建未知设置游戏版本!");
         var builder = new NbtTagBuilder(_fileInfo.Endianness == Endianness.Big);
         Nodes.Clear();
         Nodes.Add(new NbtNode(builder.Dictionary("root", []), null, true));
+
+        _fileInfo.MinecraftEdition = param ?? throw new Exception("尝试新建未知设置游戏版本!");
         _fileInfo.FilePath = string.Empty;
+        _fileInfo.Endianness = _fileInfo.MinecraftEdition == MinecraftEdition.Java ? Endianness.Big : Endianness.Little;
+
         IsApplyEnabled = false;
         IsSaveEnabled = true;
         IsInfoEnabled = true;
