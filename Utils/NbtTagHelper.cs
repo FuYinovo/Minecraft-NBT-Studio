@@ -172,7 +172,7 @@ public class NbtTagHelper
     public string GetDescription(NbtTagEnum tagEnum)
     {
         if (_descriptions.TryGetValue(tagEnum, out var str)) return str;
-        _descriptions.Add(tagEnum, Tools.GetEnumDescription(tagEnum) ?? string.Empty);
+        _descriptions.Add(tagEnum, ReflectionHelper.GetEnumDescription(tagEnum) ?? string.Empty);
         return _descriptions[tagEnum];
     }
 }

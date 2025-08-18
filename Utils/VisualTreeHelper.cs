@@ -3,7 +3,7 @@ using Microsoft.UI.Xaml.Media;
 
 namespace NBT_Studio.Utils;
 
-public static class TreeHelper
+public static class VisualTreeHelper
 {
     /// <summary>
     ///     从一个起始控件向上查找父控件，若其 DataContext 实现了 [T] 接口或继承了 [T] 类，则返回其 DataContext
@@ -20,7 +20,7 @@ public static class TreeHelper
         var child = dependencyObject;
         while (tried < maxTrying)
         {
-            var found = VisualTreeHelper.GetParent(child);
+            var found = Microsoft.UI.Xaml.Media.VisualTreeHelper.GetParent(child);
             if (found is Microsoft.UI.Xaml.Controls.Control { DataContext: T dataContext })
             {
                 result = dataContext;

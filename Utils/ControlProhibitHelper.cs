@@ -5,7 +5,7 @@ namespace NBT_Studio.Utils;
 /// <summary>
 ///     提供「禁用控件交互，但不影响样式」的方法
 /// </summary>
-public static class ControlDisabler
+public static class ControlProhibitHelper
 {
     /// <summary>
     ///     遍历下拉框每个选项，禁用「枚举标签」与「目标枚举」不一致的选项

@@ -17,7 +17,7 @@ public interface IMutuallyControlsBehavior
     /// </summary>
     static IMutuallyControls GetManager(DependencyObject associatedObject)
     {
-        if (TreeHelper.GetSpecificDataContext<IMutuallyControls>(associatedObject, out var managerViewModel))
+        if (VisualTreeHelper.GetSpecificDataContext<IMutuallyControls>(associatedObject, out var managerViewModel))
             return managerViewModel;
         throw new InvalidOperationException(
             $"[{associatedObject.GetType()}] 使用了 [{nameof(IMutuallyControlsBehavior)}]，这要求页面实现 [{nameof(IMutuallyControls)}] !");

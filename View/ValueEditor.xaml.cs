@@ -39,7 +39,7 @@ public sealed partial class ValueEditor
     private void CheckBox_Prohibit(object sender, RoutedEventArgs e)
     {
         if (sender is not CheckBox checkBox) return;
-        ControlDisabler.DisableCheckBox(checkBox);
+        ControlProhibitHelper.DisableCheckBox(checkBox);
     }
 
     private void TextBox_OnValueChanged(object sender, TextChangedEventArgs e)

@@ -23,8 +23,8 @@ using NBT_Studio.Message;
 using NBT_Studio.Model;
 using NBT_Studio.Service;
 using WinRT.Interop;
+using NBT_Studio.Utils;
 using FileInfo = NBT_Studio.Model.FileInfo;
-using Tools = NBT_Studio.Utils.Tools;
 
 namespace NBT_Studio.ViewModel;
 
@@ -147,11 +147,11 @@ public sealed partial class TreeViewPageViewModel
 
         // 读取文件
         var fileStream = new FileStream(file.Path, FileMode.Open, FileAccess.Read);
-        var compressInfo = Tools.IsCompressedFile(fileStream);
+        var compressInfo = CompressFileHelper.IsCompressedFile(fileStream);
         byte[] bytes;
         if (compressInfo.isCompressed)
         {
-            bytes = Tools.DecompressFile(fileStream, (FileCompress)compressInfo.compressType!);
+            bytes = CompressFileHelper.DecompressFile(fileStream, (FileCompress)compressInfo.compressType!);
             _fileInfo.IsCompressed = true;
             _fileInfo.CompressType = (FileCompress)compressInfo.compressType!;
         }
