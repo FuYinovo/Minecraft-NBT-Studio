@@ -98,16 +98,6 @@ public struct MinecraftMapColorExtensions
         };
     }
 
-    /// <summary>
-    ///     获取颜色的十六进制
-    /// </summary>
-    /// <param name="baseColor">基础色</param>
-    /// <param name="modifier">修饰色</param>
-    public static string GetHexColor(MinecraftMapColor baseColor, MinecraftColorModify modifier)
-    {
-        return GetColor(baseColor, modifier).ToHex();
-    }
-
     private static readonly Dictionary<MinecraftMapColor, (Color lowest, Color low, Color normal, Color high )> Colors =
         new()
         {
