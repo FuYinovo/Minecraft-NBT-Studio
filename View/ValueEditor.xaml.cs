@@ -9,7 +9,7 @@ using NBT_Studio.Model;
 using NBT_Studio.Utils;
 using NBT_Studio.ViewModel;
 
-namespace NBT_Studio.Control.Editor;
+namespace NBT_Studio.View;
 
 public sealed partial class ValueEditor
 {

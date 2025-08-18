@@ -9,7 +9,7 @@ using Microsoft.Graphics.Canvas.UI.Xaml;
 using NBT_Studio.Message;
 using NBT_Studio.ViewModel;
 
-namespace NBT_Studio.Control.Editor;
+namespace NBT_Studio.View;
 
 public sealed partial class MapEditor : INotifyPropertyChanged
 {
