@@ -254,7 +254,7 @@ public sealed partial class NbtNode
         var name = content.GetNodeName();
         var value = content.GetNodeValue();
 
-        AppendNewChild(tagEnum, name, value, isListElement, content.NodeChildrenType, parent);
+        AppendNewChild(tagEnum, name, value, isListElement, content.GetChildrenType(), parent);
     }
 }
 

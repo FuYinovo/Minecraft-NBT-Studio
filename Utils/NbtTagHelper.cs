@@ -142,19 +142,20 @@ public class NbtTagHelper
     /// <summary>
     /// 检查值的合法性
     /// </summary>
-    /// <remarks>标签类型为容器、数组则直接返回 false；字符串则直接返回 true</remarks>
+    /// <remarks>标签类型为容器则直接返回 false；字符串则直接返回 true；数组则 FallBack 到元素类型</remarks>
     /// <param name="tagEnum">标签类型</param>
     /// <param name="value">值（字符串）</param>
     public static bool IsValueValid(NbtTagEnum tagEnum, string value)
     {
-        // 容器、数组
-        if (NbtTagEnumExtensions.IsCollection(tagEnum) || NbtTagEnumExtensions.IsArray(tagEnum)) return false;
+        // 容器
+        if (NbtTagEnumExtensions.IsCollection(tagEnum)) return false;
 
         // 字符串
         if (tagEnum == NbtTagEnum.String) return true;
 
-        // 数字
-        return tagEnum switch
+        // 数组或其他
+        var type = NbtTagEnumExtensions.IsArray(tagEnum) ? NbtTagEnumExtensions.GetArrayElementType(tagEnum) : tagEnum;
+        return type switch
         {
             NbtTagEnum.Byte => byte.TryParse(value, out _),
             NbtTagEnum.Short => short.TryParse(value, out _),

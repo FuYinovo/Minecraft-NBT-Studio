@@ -40,7 +40,7 @@
                         </ItemsControl.ItemsPanel>
                         <!-- 模板 -->
                         <ItemsControl.ItemTemplate>
-                            <DataTemplate x:DataType="model:ArrayNodeValue">
+                            <DataTemplate x:DataType="model:NodeArrayElement">
                                 <Grid>
                                     <!-- 值文本框 -->
                                     <TextBox HorizontalAlignment="Stretch"

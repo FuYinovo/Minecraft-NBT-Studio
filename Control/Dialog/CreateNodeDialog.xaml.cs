@@ -12,7 +12,7 @@ namespace NBT_Studio.Control.Dialog;
 
 public sealed partial class CreateNodeDialog
 {
-    # region Private Properties
+    # region Properties
 
     private readonly NbtTagEnum _tagEnum;
     private readonly Brush _validBrush;
@@ -22,43 +22,33 @@ public sealed partial class CreateNodeDialog
     private Visibility NodeValueVis { get; set; } = Visibility.Collapsed;
     private Visibility NodeNameVis { get; set; } = Visibility.Collapsed;
     private Visibility NodeArrayValueVis { get; set; } = Visibility.Collapsed;
-    private ObservableCollection<ArrayNodeValue> NodeArrayValues { get; } = [new()];
+    private ObservableCollection<NodeArrayElement> NodeArrayValues { get; } = [new()];
     private ComboBoxItem SelectedChildrenTagItem { get; set; }
     private string NodeName { get; set; } = string.Empty;
     private string NodeValue { get; set; } = string.Empty;
 
-    # endregion
-
-    # region Public Properties
-
     public Action<bool>? DialogOkButtonEnabledSetter;
-
-    public NbtTagEnum NodeChildrenType => (NbtTagEnum)SelectedChildrenTagItem.Tag;
 
     # endregion
 
     public CreateNodeDialog(NbtTagEnum tagEnum, bool isListElement)
     {
         InitializeComponent();
+        InitializeVisibility();
         _tagEnum = tagEnum;
         _isListElement = isListElement;
         _validBrush = BorderDefault.BorderBrush;
         _invalidBrush = BorderRed.BorderBrush;
         SelectedChildrenTagItem = DefaultChildrenType;
-        InitVisibility();
     }
 
-    /// <summary>
-    /// 获取节点名称
-    /// </summary>
+    /// <summary>获取节点名称 </summary>
     public string GetNodeName()
     {
         return NodeName;
     }
 
-    /// <summary>
-    /// 获取节点值
-    /// </summary>
+    /// <summary> 获取节点值 </summary>
     public object GetNodeValue()
     {
         return NbtTagEnumExtensions.IsArray(_tagEnum)
@@ -66,21 +56,13 @@ public sealed partial class CreateNodeDialog
             : NbtTagHelper.Parse(_tagEnum, NodeValue);
     }
 
-
-    /// <summary>
-    /// 初始化输入控件的显示状态
-    /// </summary>
-    private void InitVisibility()
+    /// <summary> 获取子项类型 </summary>
+    public NbtTagEnum GetChildrenType()
     {
-        var isCollection = NbtTagEnumExtensions.IsCollection(_tagEnum);
-        var isArray = NbtTagEnumExtensions.IsArray(_tagEnum);
-
-        if (!isCollection && !isArray) NodeValueVis = Visibility.Visible;
-        if (_tagEnum == NbtTagEnum.List) NodeChildrenTypeVis = Visibility.Visible;
-        if (!_isListElement) NodeNameVis = Visibility.Visible;
-        if (isArray) NodeArrayValueVis = Visibility.Visible;
+        return (NbtTagEnum)SelectedChildrenTagItem.Tag;
     }
 
+    /// <summary> 输入值改动 </summary>
     private void OnNodeValueChanged(object sender, TextChangedEventArgs e)
     {
         if (sender is not TextBox textBox) return;
@@ -90,31 +72,48 @@ public sealed partial class CreateNodeDialog
         DialogOkButtonEnabledSetter?.Invoke(isValid);
     }
 
+    /// <summary> 数组元素输入值改动 </summary>
     private void OnNodeArrayValueChanged(object sender, TextChangedEventArgs e)
     {
         if (sender is not TextBox textBox) return;
-        var arrayNodeValue = (ArrayNodeValue)textBox.DataContext;
-        arrayNodeValue.IsValid =
-            NbtTagHelper.IsValueValid(NbtTagEnumExtensions.GetArrayElementType(_tagEnum), textBox.Text);
+        var element = (NodeArrayElement)textBox.DataContext;
+        element.IsValid =
+            NbtTagHelper.IsValueValid(_tagEnum, textBox.Text);
 
-        UpdateBorderBrush(textBox, arrayNodeValue.IsValid);
-        DialogOkButtonEnabledSetter?.Invoke(NodeArrayValues.Count(v => v.IsValid) == NodeArrayValues.Count);
+        var isAllValid = NodeArrayValues.Count(v => v.IsValid) == NodeArrayValues.Count;
+        UpdateBorderBrush(textBox, element.IsValid);
+        DialogOkButtonEnabledSetter?.Invoke(isAllValid);
     }
 
+    /// <summary> 数组添加元素 </summary>
     private void AddArrayValue_OnClick(object sender, RoutedEventArgs e)
     {
-        NodeArrayValues.Add(new ArrayNodeValue());
+        NodeArrayValues.Add(new NodeArrayElement());
         DialogOkButtonEnabledSetter?.Invoke(false);
     }
 
+    /// <summary> 数组删除元素 </summary>
+    private void RemoveArrayValue_OnClick(object sender, RoutedEventArgs e)
+    {
+        if (sender is not Button { DataContext: NodeArrayElement arrayValue }) return;
+        NodeArrayValues.Remove(arrayValue);
+    }
+
+    /// <summary> 更新 TextBox 边框笔刷 </summary>
     private void UpdateBorderBrush(TextBox textBox, bool isValid)
     {
         textBox.BorderBrush = isValid ? _validBrush : _invalidBrush;
     }
 
-    private void RemoveArrayValue_OnClick(object sender, RoutedEventArgs e)
+    /// <summary> 初始化控件显示状态 </summary>
+    private void InitializeVisibility()
     {
-        if (sender is not Button { DataContext: ArrayNodeValue arrayValue }) return;
-        NodeArrayValues.Remove(arrayValue);
+        var isCollection = NbtTagEnumExtensions.IsCollection(_tagEnum);
+        var isArray = NbtTagEnumExtensions.IsArray(_tagEnum);
+
+        if (!isCollection && !isArray) NodeValueVis = Visibility.Visible;
+        if (_tagEnum == NbtTagEnum.List) NodeChildrenTypeVis = Visibility.Visible;
+        if (!_isListElement) NodeNameVis = Visibility.Visible;
+        if (isArray) NodeArrayValueVis = Visibility.Visible;
     }
 }
