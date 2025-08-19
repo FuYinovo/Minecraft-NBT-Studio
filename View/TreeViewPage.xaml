@@ -162,7 +162,7 @@
                         <labs:TokenView HorizontalAlignment="Center"
                                         SelectedIndex="{Binding NodeFilterIndex, Mode=TwoWay}"
                                         IsEnabled="{Binding IsFilterEnabled}">
-                            <labs:TokenItem Content="全部"/>
+                            <labs:TokenItem Content="全部" />
                             <labs:TokenItem Content="字节" />
                             <labs:TokenItem Content="短整数" />
                             <labs:TokenItem Content="整数" />

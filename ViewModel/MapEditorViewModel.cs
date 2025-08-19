@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using Windows.UI;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
-using CommunityToolkit.WinUI.Helpers;
 using Microsoft.UI.Xaml.Controls;
 using NBT_Studio.Enum;
 using NBT_Studio.Interface;
@@ -92,7 +89,7 @@ public partial class MapEditorViewModel : ObservableObject, IMutuallyControls
     }
 
     /// <summary>
-    /// 设置互斥按钮组默认值
+    ///     设置互斥按钮组默认值
     /// </summary>
     private void SetDefaultButtonGroupsSelection()
     {
@@ -103,8 +100,8 @@ public partial class MapEditorViewModel : ObservableObject, IMutuallyControls
     #region Properties
 
     private readonly Color[] _minecraftMapColors = MinecraftMapColorExtensions.GetAllColors(); // 所有地图色
-    [ObservableProperty] private Color _brushColor = new(); // 选中色
-    public Color ClosestMapColor => ColorHelper.GetClosest(_brushColor, _minecraftMapColors); // 选中色的最近地图色
+    [ObservableProperty] private Color _brushColor; // 选中色
+    public Color ClosestMapColor => ColorHelper.GetClosest(BrushColor, _minecraftMapColors); // 选中色的最近地图色
     public MinecraftMapPixel[,] Pixels;
     private readonly int _size;
     private readonly Dictionary<MinecraftMapNecessaryTags, NbtTag> _dataTags = new();

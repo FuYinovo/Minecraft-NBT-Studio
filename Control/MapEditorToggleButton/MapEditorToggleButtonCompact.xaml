@@ -8,7 +8,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:inter="using:Microsoft.Xaml.Interactivity"
     xmlns:behavior="using:NBT_Studio.Xaml.Behavior"
-    xmlns:control="using:NBT_Studio.Control"
     xmlns:mapEditorToggleButton="using:NBT_Studio.Control.MapEditorToggleButton"
     mc:Ignorable="d">
 

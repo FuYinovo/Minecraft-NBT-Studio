@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using Windows.UI;
 using CommunityToolkit.WinUI.Helpers;
@@ -102,7 +101,7 @@ public struct MinecraftMapColorExtensions
 
 
     /// <summary>
-    /// 获取所有颜色
+    ///     获取所有颜色
     /// </summary>
     public static Color[] GetAllColors()
     {

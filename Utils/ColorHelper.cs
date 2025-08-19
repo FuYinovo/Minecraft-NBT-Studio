@@ -7,7 +7,7 @@ namespace NBT_Studio.Utils;
 public static class ColorHelper
 {
     /// <summary>
-    /// 获取最近颜色
+    ///     获取最近颜色
     /// </summary>
     /// <param name="color">参考色</param>
     /// <param name="allColors">所有颜色</param>

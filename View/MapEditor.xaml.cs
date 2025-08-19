@@ -5,11 +5,7 @@ using System.Numerics;
 using System.Runtime.CompilerServices;
 using Windows.Foundation;
 using CommunityToolkit.Mvvm.Messaging;
-using CommunityToolkit.WinUI.Controls;
 using Microsoft.Graphics.Canvas.UI.Xaml;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using NBT_Studio.Enum;
 using NBT_Studio.Message;
 using NBT_Studio.ViewModel;
 

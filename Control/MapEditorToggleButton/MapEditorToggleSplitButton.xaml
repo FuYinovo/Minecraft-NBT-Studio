@@ -23,18 +23,17 @@
                                BorderBrush="{ThemeResource AppBarToggleButtonPointerOverBackgroundThemeBrush}"
                                Height="60"
                                Margin="0,-6,0,-6">
-                <FontIcon Glyph="{x:Bind FontIcon}" FontSize="18"></FontIcon>
+                <FontIcon Glyph="{x:Bind FontIcon}" FontSize="18" />
                 <inter:Interaction.Behaviors>
                     <behavior:MutuallyToggleSplitButtonsBehavior
                         GroupName="{x:Bind GroupName}"
-                        Value="{x:Bind MemberName}">
-                    </behavior:MutuallyToggleSplitButtonsBehavior>
+                        Value="{x:Bind MemberName}" />
                 </inter:Interaction.Behaviors>
                 <ToggleSplitButton.Flyout>
                     <MenuFlyout x:Name="MenuFlyout" />
                 </ToggleSplitButton.Flyout>
             </ToggleSplitButton>
-            <TextBlock Style="{StaticResource ToolsLabel}" Text="{x:Bind Title}"></TextBlock>
+            <TextBlock Style="{StaticResource ToolsLabel}" Text="{x:Bind Title}" />
         </StackPanel>
     </Grid>
 </mapEditorToggleButton:MapEditorToggleButtonBase>

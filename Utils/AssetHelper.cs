@@ -24,7 +24,7 @@ public static class AssetHelper
     }
 
     /// <summary>
-    /// 获取配置文件路径
+    ///     获取配置文件路径
     /// </summary>
     public static string GetConfigUri()
     {

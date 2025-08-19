@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.IO;
 using System.Reflection;
 
 namespace NBT_Studio.Utils;
@@ -33,7 +32,7 @@ public static class ReflectionHelper
     }
 
     /// <summary>
-    /// 判断一个枚举是否存在某个特性
+    ///     判断一个枚举是否存在某个特性
     /// </summary>
     /// <param name="targetEnum">枚举</param>
     /// <typeparam name="T">特性类</typeparam>

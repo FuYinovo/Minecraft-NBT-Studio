@@ -13,7 +13,7 @@
     mc:Ignorable="d">
 
     <UserControl.Resources>
-        <converter:EnumToDescriptionConverter x:Key="EnumToDescriptionConverter"></converter:EnumToDescriptionConverter>
+        <converter:EnumToDescriptionConverter x:Key="EnumToDescriptionConverter" />
     </UserControl.Resources>
 
     <Grid>
@@ -30,7 +30,7 @@
                                   ItemsSource="{ui:EnumValues Type=settings:Theme}">
                             <ComboBox.ItemTemplate>
                                 <DataTemplate x:DataType="settings:Theme">
-                                    <TextBlock Text="{Binding Converter={StaticResource EnumToDescriptionConverter}}"></TextBlock>
+                                    <TextBlock Text="{Binding Converter={StaticResource EnumToDescriptionConverter}}" />
                                 </DataTemplate>
                             </ComboBox.ItemTemplate>
                         </ComboBox>

@@ -47,7 +47,7 @@
         <PackageReference Include="CommunityToolkit.Labs.WinUI.TokenView" Version="0.1.250731-build.2197"/>
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0"/>
         <PackageReference Include="CommunityToolkit.WinUI.Behaviors" Version="8.2.250402"/>
-        <PackageReference Include="CommunityToolkit.WinUI.Controls.ColorPicker" Version="8.2.250402" />
+        <PackageReference Include="CommunityToolkit.WinUI.Controls.ColorPicker" Version="8.2.250402"/>
         <PackageReference Include="CommunityToolkit.WinUI.Controls.SettingsControls" Version="8.2.250402"/>
         <PackageReference Include="CommunityToolkit.WinUI.Controls.Sizers" Version="8.2.250402"/>
         <PackageReference Include="CommunityToolkit.WinUI.Controls.TabbedCommandBar" Version="8.2.250402"/>
