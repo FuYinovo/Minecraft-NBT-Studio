@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
-using Microsoft.UI.Xaml.Controls;
 using NBT_Studio.Enum.Settings;
 using NBT_Studio.Message;
+using NBT_Studio.Utils;
 
 namespace NBT_Studio.ViewModel;
 
@@ -71,7 +71,7 @@ public partial class SettingsFlyoutViewModel : ObservableObject
     #region Private Properties
 
     private readonly JsonSerializerOptions _jsonSerializerOptions = new() { WriteIndented = true };
-    private static readonly Uri SettingsFileUri = new("ms-appx:///Assets/Config/Settings.json");
+    private static readonly Uri SettingsFileUri = new(AssetHelper.GetConfigUri());
     private Dictionary<string, int> _settings = new();
 
     #endregion

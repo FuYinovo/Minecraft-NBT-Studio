@@ -5,22 +5,29 @@ namespace NBT_Studio.Utils;
 public static class AssetHelper
 {
     private const string UriHead = "ms-appx:///Assets/";
-    private const string NbtTagIconPath = "NodeIcon/Data_node_";
-    private const string NbtTagIconUriExtension = ".svg";
 
     /// <summary>
     ///     获取 ms-appx 前缀的节点图标路径
     /// </summary>
     /// <param name="tagEnum">节点类型</param>
-    /// <returns>图标路径</returns>
     public static string GetNbtTagIconUri(NbtTagEnum tagEnum)
     {
+        const string nbtTagIconPath = "NodeIcon/Data_node_";
+        const string nbtTagIconUriExtension = ".svg";
         return tagEnum switch
         {
-            NbtTagEnum.ByteArray => $"{UriHead}{NbtTagIconPath}byte-array{NbtTagIconUriExtension}",
-            NbtTagEnum.IntArray => $"{UriHead}{NbtTagIconPath}int-array{NbtTagIconUriExtension}",
-            NbtTagEnum.LongArray => $"{UriHead}{NbtTagIconPath}long-array{NbtTagIconUriExtension}",
-            _ => $"{UriHead}{NbtTagIconPath}{tagEnum.ToString().ToLower()}{NbtTagIconUriExtension}"
+            NbtTagEnum.ByteArray => $"{UriHead}{nbtTagIconPath}byte-array{nbtTagIconUriExtension}",
+            NbtTagEnum.IntArray => $"{UriHead}{nbtTagIconPath}int-array{nbtTagIconUriExtension}",
+            NbtTagEnum.LongArray => $"{UriHead}{nbtTagIconPath}long-array{nbtTagIconUriExtension}",
+            _ => $"{UriHead}{nbtTagIconPath}{tagEnum.ToString().ToLower()}{nbtTagIconUriExtension}"
         };
+    }
+
+    /// <summary>
+    /// 获取配置文件路径
+    /// </summary>
+    public static string GetConfigUri()
+    {
+        return $"{UriHead}Config/Settings.json";
     }
 }
