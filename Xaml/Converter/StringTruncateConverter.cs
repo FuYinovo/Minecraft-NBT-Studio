@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.UI.Xaml.Data;
 
-namespace NBT_Studio.Control.Converter;
+namespace NBT_Studio.Xaml.Converter;
 
 /// <summary>
 ///     将一个长度大于 50 的字符串截断

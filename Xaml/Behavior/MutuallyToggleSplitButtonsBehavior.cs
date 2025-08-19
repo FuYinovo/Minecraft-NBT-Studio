@@ -3,7 +3,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.Xaml.Interactivity;
 using NBT_Studio.Interface;
 
-namespace NBT_Studio.Behavior;
+namespace NBT_Studio.Xaml.Behavior;
 
 public class MutuallyToggleSplitButtonsBehavior : Behavior<ToggleSplitButton>, IMutuallyControlsBehavior
 {

@@ -3,7 +3,7 @@ using System.Collections;
 using System.Linq;
 using Microsoft.UI.Xaml.Data;
 
-namespace NBT_Studio.Control.Converter;
+namespace NBT_Studio.Xaml.Converter;
 
 public class EnumerableSliceConverter : IValueConverter
 {
