@@ -7,10 +7,10 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:graphic="using:Microsoft.Graphics.Canvas.UI.Xaml"
-    xmlns:converter="using:NBT_Studio.Control.Converter"
     xmlns:model="using:NBT_Studio.Model"
     xmlns:inter="using:Microsoft.Xaml.Interactivity"
-    xmlns:behavior="using:NBT_Studio.Behavior"
+    xmlns:behavior="using:NBT_Studio.Xaml.Behavior"
+    xmlns:converter="using:NBT_Studio.Xaml.Converter"
     mc:Ignorable="d">
 
     <UserControl.Resources>

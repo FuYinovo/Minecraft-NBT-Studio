@@ -14,13 +14,12 @@ public sealed partial class CreateNodeDialog
 {
     public CreateNodeDialog(NbtTagEnum tagEnum, bool isListElement)
     {
-        InitializeComponent();
-        InitializeVisibility();
         _tagEnum = tagEnum;
         _isListElement = isListElement;
+        InitializeComponent();
+        InitializeVisibility();
         _validBrush = BorderDefault.BorderBrush;
         _invalidBrush = BorderRed.BorderBrush;
-        SelectedChildrenTagItem = DefaultChildrenType;
     }
 
     /// <summary>获取节点名称 </summary>
@@ -30,8 +29,9 @@ public sealed partial class CreateNodeDialog
     }
 
     /// <summary> 获取节点值 </summary>
-    public object GetNodeValue()
+    public object? GetNodeValue()
     {
+        if (NbtTagEnumExtensions.IsCollection(_tagEnum)) return null;
         return NbtTagEnumExtensions.IsArray(_tagEnum)
             ? NbtTagHelper.Parse(_tagEnum, NodeArrayValues.Select(x => x.Value).ToArray())
             : NbtTagHelper.Parse(_tagEnum, NodeValue);
@@ -40,7 +40,7 @@ public sealed partial class CreateNodeDialog
     /// <summary> 获取子项类型 </summary>
     public NbtTagEnum GetChildrenType()
     {
-        return (NbtTagEnum)SelectedChildrenTagItem.Tag;
+        return SelectedChildrenType;
     }
 
     /// <summary> 输入值改动 </summary>
@@ -109,7 +109,7 @@ public sealed partial class CreateNodeDialog
     private Visibility NodeNameVis { get; set; } = Visibility.Collapsed;
     private Visibility NodeArrayValueVis { get; set; } = Visibility.Collapsed;
     private ObservableCollection<NodeArrayElement> NodeArrayValues { get; } = [new()];
-    private ComboBoxItem SelectedChildrenTagItem { get; set; }
+    private NbtTagEnum SelectedChildrenType { get; set; } = NbtTagEnum.Byte;
     private string NodeName { get; set; } = string.Empty;
     private string NodeValue { get; set; } = string.Empty;
 

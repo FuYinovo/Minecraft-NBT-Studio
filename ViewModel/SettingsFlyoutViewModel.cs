@@ -17,9 +17,6 @@ public partial class SettingsFlyoutViewModel : ObservableObject
 {
     public SettingsFlyoutViewModel()
     {
-        _selectedSort = SortItems[0];
-        _selectedTheme = ThemeItems[0];
-        _nameToValueSetter = GetValueSetters();
         _ = LoadSettingsFile();
     }
 
@@ -34,7 +31,7 @@ public partial class SettingsFlyoutViewModel : ObservableObject
         _settings = JsonSerializer.Deserialize<Dictionary<string, int>>(jsonCent, _jsonSerializerOptions) ?? [];
         // 还原值
         foreach (var key in _settings.Keys)
-            if (_nameToValueSetter.TryGetValue(key, out var value))
+            if (GetValueSetters().TryGetValue(key, out var value))
                 value(_settings[key]);
     }
 
@@ -55,8 +52,8 @@ public partial class SettingsFlyoutViewModel : ObservableObject
     {
         return new Dictionary<string, Action<int>>
         {
-            { nameof(Theme), i => SelectedTheme = ThemeItems[i] },
-            { nameof(Sort), i => SelectedSort = SortItems[i] }
+            { nameof(Theme), i => SelectedTheme = (Theme)i },
+            { nameof(Sort), i => SelectedSort = (Sort)i }
         };
     }
 
@@ -71,60 +68,40 @@ public partial class SettingsFlyoutViewModel : ObservableObject
 
     #endregion NotifyPropertyChanged
 
-
     #region Private Properties
 
     private readonly JsonSerializerOptions _jsonSerializerOptions = new() { WriteIndented = true };
     private static readonly Uri SettingsFileUri = new("ms-appx:///Assets/Config/Settings.json");
     private Dictionary<string, int> _settings = new();
-    private readonly Dictionary<string, Action<int>> _nameToValueSetter;
 
     #endregion
 
     #region Settings Properties
 
-    private ComboBoxItem _selectedSort;
-    private ComboBoxItem _selectedTheme;
+    private Sort _selectedSort;
+    private Theme _selectedTheme;
 
-    public ComboBoxItem SelectedSort
+    public Sort SelectedSort
     {
         get => _selectedSort;
         set
         {
             SetField(ref _selectedSort, value);
-            WeakReferenceMessenger.Default.Send(new SettingsChangedMessage<Sort>((Sort)value.Tag));
+            WeakReferenceMessenger.Default.Send(new SettingsChangedMessage<Sort>(value));
             _ = UpdateSettingsFile();
         }
     }
 
-    public ComboBoxItem SelectedTheme
+    public Theme SelectedTheme
     {
         get => _selectedTheme;
         set
         {
             SetField(ref _selectedTheme, value);
-            WeakReferenceMessenger.Default.Send(new SettingsChangedMessage<Theme>((Theme)value.Tag));
+            WeakReferenceMessenger.Default.Send(new SettingsChangedMessage<Theme>(value));
             _ = UpdateSettingsFile();
         }
     }
-
-    #endregion
-
-    # region Settings Items
-
-    public List<ComboBoxItem> SortItems { get; } =
-    [
-        new() { Tag = Sort.Default, Content = "默认" },
-        new() { Tag = Sort.Alphabetical, Content = "首字母" },
-        new() { Tag = Sort.ByType, Content = "类型" }
-    ];
-
-    public List<ComboBoxItem> ThemeItems { get; } =
-    [
-        new() { Tag = Theme.Default, Content = "系统" },
-        new() { Tag = Theme.Dark, Content = "深色" },
-        new() { Tag = Theme.Light, Content = "浅色" }
-    ];
 
     #endregion
 }

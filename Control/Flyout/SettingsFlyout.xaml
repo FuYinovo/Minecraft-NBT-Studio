@@ -8,8 +8,13 @@
     xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:settings="using:NBT_Studio.Enum.Settings"
+    xmlns:converter="using:NBT_Studio.Xaml.Converter"
     mc:Ignorable="d">
 
+    <UserControl.Resources>
+        <converter:EnumToDescriptionConverter x:Key="EnumToDescriptionConverter"></converter:EnumToDescriptionConverter>
+    </UserControl.Resources>
 
     <Grid>
         <StackPanel Spacing="4" Width="360" DataContext="{x:Bind _flyoutViewModel}">
@@ -22,14 +27,19 @@
                                             Padding="20,20,160,20"
                                             Width="500">
                         <ComboBox SelectedItem="{Binding SelectedTheme, Mode=TwoWay}"
-                                  ItemsSource="{Binding ThemeItems}"
-                                  DisplayMemberPath="Content" />
+                                  ItemsSource="{ui:EnumValues Type=settings:Theme}">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate x:DataType="settings:Theme">
+                                    <TextBlock Text="{Binding Converter={StaticResource EnumToDescriptionConverter}}"></TextBlock>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
                     </community:SettingsCard>
                 </community:SettingsExpander.Items>
             </community:SettingsExpander>
 
-            <!-- 普通区域 -->
-            <community:SettingsExpander Header="普通" HeaderIcon="{ui:FontIcon Glyph=&#xE713;}">
+            <!-- 节点区域 -->
+            <community:SettingsExpander Header="节点" HeaderIcon="{ui:FontIcon Glyph=&#xE713;}">
                 <!-- 排序选项 -->
                 <community:SettingsExpander.Items>
                     <community:SettingsCard Header="排序"
@@ -37,8 +47,13 @@
                                             Padding="20,20,160,20"
                                             Width="500">
                         <ComboBox SelectedItem="{Binding SelectedSort, Mode=TwoWay}"
-                                  ItemsSource="{Binding SortItems}"
-                                  DisplayMemberPath="Content" />
+                                  ItemsSource="{ui:EnumValues Type=settings:Sort}">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate x:DataType="settings:Sort">
+                                    <TextBlock Text="{Binding Converter={StaticResource EnumToDescriptionConverter}}" />
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
 
                     </community:SettingsCard>
                 </community:SettingsExpander.Items>

@@ -298,26 +298,33 @@ public sealed partial class NbtNode
     /// <param name="isListElement">父项是否为列表</param>
     /// <param name="childrenEnum">插入的节点的子项类型（默认为 Unknown）</param>
     /// <param name="parentNode">目标节点（默认为自身）</param>
-    private void AppendNewChild(NbtTagEnum tagEnum, string name,
-        object value, bool isListElement, NbtTagEnum childrenEnum = NbtTagEnum.Unknown, NbtNode? parentNode = null)
+    private void AppendNewChild(
+        NbtTagEnum tagEnum,
+        string name,
+        object? value = null,
+        bool isListElement = false,
+        NbtTagEnum childrenEnum = NbtTagEnum.Unknown,
+        NbtNode? parentNode = null)
     {
+        if (value is null && !NbtTagEnumExtensions.IsCollection(tagEnum)) return;
         // 一、向 NBT 标签实例添加节点
         var parent = parentNode ?? this;
         var builder = new NbtTagBuilder(parent.Tag.IsBigEndian);
         var tag = tagEnum switch
         {
-            NbtTagEnum.Byte => builder.Byte(name, (byte)value),
-            NbtTagEnum.Short => builder.Short(name, (short)value),
-            NbtTagEnum.Int => builder.Int(name, (int)value),
-            NbtTagEnum.Long => builder.Long(name, (long)value),
-            NbtTagEnum.Float => builder.Float(name, (float)value),
-            NbtTagEnum.Double => builder.Double(name, (double)value),
-            NbtTagEnum.ByteArray => builder.ByteArray(name, (byte[])value),
-            NbtTagEnum.String => builder.String(name, (string)value),
+            // value 为 null 的情况已在开头处理
+            NbtTagEnum.Byte => builder.Byte(name, (byte)value!),
+            NbtTagEnum.Short => builder.Short(name, (short)value!),
+            NbtTagEnum.Int => builder.Int(name, (int)value!),
+            NbtTagEnum.Long => builder.Long(name, (long)value!),
+            NbtTagEnum.Float => builder.Float(name, (float)value!),
+            NbtTagEnum.Double => builder.Double(name, (double)value!),
+            NbtTagEnum.ByteArray => builder.ByteArray(name, (byte[])value!),
+            NbtTagEnum.String => builder.String(name, (string)value!),
             NbtTagEnum.List => builder.List(name, [], childrenEnum),
             NbtTagEnum.Dictionary => builder.Dictionary(name, []),
-            NbtTagEnum.IntArray => builder.IntArray(name, (int[])value),
-            NbtTagEnum.LongArray => builder.LongArray(name, (long[])value),
+            NbtTagEnum.IntArray => builder.IntArray(name, (int[])value!),
+            NbtTagEnum.LongArray => builder.LongArray(name, (long[])value!),
             _ => throw new ArgumentOutOfRangeException(nameof(tagEnum), tagEnum, null)
         };
         tag.IsListDirectElement = isListElement;

@@ -8,13 +8,13 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:community="using:CommunityToolkit.WinUI.Controls"
-    xmlns:converter="using:NBT_Studio.Control.Converter"
     xmlns:labs="using:CommunityToolkit.Labs.WinUI"
     xmlns:enum="using:NBT_Studio.Enum"
     xmlns:flyout="using:NBT_Studio.Control.Flyout"
     xmlns:view="using:NBT_Studio.View"
     xmlns:model="using:NBT_Studio.Model"
     xmlns:system="using:System"
+    xmlns:converter="using:NBT_Studio.Xaml.Converter"
     mc:Ignorable="d">
 
     <Page.Resources>
@@ -162,7 +162,7 @@
                         <labs:TokenView HorizontalAlignment="Center"
                                         SelectedIndex="{Binding NodeFilterIndex, Mode=TwoWay}"
                                         IsEnabled="{Binding IsFilterEnabled}">
-                            <labs:TokenItem Content="全部" />
+                            <labs:TokenItem Content="全部"/>
                             <labs:TokenItem Content="字节" />
                             <labs:TokenItem Content="短整数" />
                             <labs:TokenItem Content="整数" />

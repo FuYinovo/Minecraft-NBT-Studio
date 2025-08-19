@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.IO;
 using System.Reflection;
 
 namespace NBT_Studio.Utils;
@@ -9,11 +10,11 @@ public static class ReflectionHelper
     /// <summary>
     ///     获取一个枚举的描述信息（Description）
     /// </summary>
-    /// <param name="enumType">枚举</param>
+    /// <param name="targetEnum">枚举</param>
     /// <returns>描述信息</returns>
-    public static string? GetEnumDescription(System.Enum enumType)
+    public static string? GetEnumDescription(System.Enum targetEnum)
     {
-        var field = enumType.GetType().GetField(enumType.ToString());
+        var field = GetEnumField(targetEnum);
         return field?.GetCustomAttribute<DescriptionAttribute>()?.Description;
     }
 
@@ -29,5 +30,28 @@ public static class ReflectionHelper
         var interfaceType = objectType.GetInterface(interfaceName);
         var property = interfaceType?.GetProperty(propertyName);
         return property?.GetValue(Activator.CreateInstance(objectType));
+    }
+
+    /// <summary>
+    /// 判断一个枚举是否存在某个特性
+    /// </summary>
+    /// <param name="targetEnum">枚举</param>
+    /// <typeparam name="T">特性类</typeparam>
+    /// <returns>存在性</returns>
+    public static bool IsEnumAttributeExists<T>(System.Enum targetEnum) where T : System.Attribute
+    {
+        var field = GetEnumField(targetEnum);
+        return field != null && field.IsDefined(typeof(T));
+    }
+
+    public static T? GetEnumAttribute<T>(System.Enum targetEnum) where T : System.Attribute
+    {
+        var field = GetEnumField(targetEnum);
+        return field?.GetCustomAttribute<T>();
+    }
+
+    private static FieldInfo? GetEnumField(System.Enum targetEnum)
+    {
+        return targetEnum.GetType().GetField(targetEnum.ToString());
     }
 }
