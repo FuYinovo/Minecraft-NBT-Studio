@@ -1,5 +1,4 @@
 ﻿using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Media;
 
 namespace NBT_Studio.Utils;
 

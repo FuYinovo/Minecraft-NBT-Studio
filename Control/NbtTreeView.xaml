@@ -7,7 +7,6 @@
     xmlns:model="using:NBT_Studio.Model"
     xmlns:converter="using:NBT_Studio.Control.Converter"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:enum="using:NBT_Studio.Library.NBT_Parser.Enum"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 

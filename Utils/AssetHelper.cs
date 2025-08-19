@@ -9,7 +9,7 @@ public static class AssetHelper
     private const string NbtTagIconUriExtension = ".svg";
 
     /// <summary>
-    /// 获取 ms-appx 前缀的节点图标路径
+    ///     获取 ms-appx 前缀的节点图标路径
     /// </summary>
     /// <param name="tagEnum">节点类型</param>
     /// <returns>图标路径</returns>

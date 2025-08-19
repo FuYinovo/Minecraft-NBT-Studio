@@ -1,6 +1,7 @@
 ﻿using System.Windows.Input;
 using Windows.System;
 using NBT_Studio.Library.NBT_Parser.Enum;
+using NBT_Studio.Utils;
 
 namespace NBT_Studio.Model;
 
@@ -10,7 +11,7 @@ public struct NodeMenuFlyoutItem
         VirtualKey key = VirtualKey.None,
         VirtualKeyModifiers modifier = VirtualKeyModifiers.None, ICommand? command = null)
     {
-        Title = Utils.ReflectionHelper.GetEnumDescription(commandParameter) ?? commandParameter.ToString();
+        Title = ReflectionHelper.GetEnumDescription(commandParameter) ?? commandParameter.ToString();
         Command = command;
         CommandParameter = commandParameter;
         IsSeparator = false;

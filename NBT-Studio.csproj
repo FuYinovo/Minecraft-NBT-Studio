@@ -57,7 +57,7 @@
     </ItemGroup>
     <ItemGroup>
         <Folder Include="Assets\ItemIcon\"/>
-        <Folder Include="Control\Editor\" />
+        <Folder Include="Control\Editor\"/>
         <Folder Include="Library\"/>
         <Folder Include="Struct\"/>
     </ItemGroup>

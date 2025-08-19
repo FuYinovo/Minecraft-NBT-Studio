@@ -1,5 +1,5 @@
 using NBT_Studio.Model;
-using   NBT_Studio.Utils;
+using NBT_Studio.Utils;
 
 namespace NBT_Studio.Control.Dialog;
 

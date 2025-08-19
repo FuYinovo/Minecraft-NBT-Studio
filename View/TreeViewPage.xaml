@@ -10,9 +10,7 @@
     xmlns:community="using:CommunityToolkit.WinUI.Controls"
     xmlns:converter="using:NBT_Studio.Control.Converter"
     xmlns:labs="using:CommunityToolkit.Labs.WinUI"
-    xmlns:tag="using:NBT_Studio.Library.NBT_Parser.Enum"
     xmlns:enum="using:NBT_Studio.Enum"
-    xmlns:editor="using:NBT_Studio.Control.Editor"
     xmlns:flyout="using:NBT_Studio.Control.Flyout"
     xmlns:view="using:NBT_Studio.View"
     xmlns:model="using:NBT_Studio.Model"
@@ -116,7 +114,7 @@
                                     <!-- 组容器 -->
                                     <ItemsControl.ItemsPanel>
                                         <ItemsPanelTemplate>
-                                            <StackPanel Orientation="Horizontal"></StackPanel>
+                                            <StackPanel Orientation="Horizontal" />
                                         </ItemsPanelTemplate>
                                     </ItemsControl.ItemsPanel>
                                     <!-- 组模板 -->
@@ -130,7 +128,7 @@
                                                             <!-- 按钮容器 -->
                                                             <ItemsControl.ItemsPanel>
                                                                 <ItemsPanelTemplate>
-                                                                    <StackPanel Orientation="Horizontal"></StackPanel>
+                                                                    <StackPanel Orientation="Horizontal" />
                                                                 </ItemsPanelTemplate>
                                                             </ItemsControl.ItemsPanel>
                                                             <!-- 按钮模板 -->
@@ -146,7 +144,7 @@
                                                     </StackPanel>
                                                 </AppBarElementContainer>
                                                 <!-- 组分界线 -->
-                                                <AppBarSeparator></AppBarSeparator>
+                                                <AppBarSeparator />
                                             </StackPanel>
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>

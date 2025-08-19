@@ -24,8 +24,6 @@ namespace NBT_Studio.Model;
     "MVVMTK0045:Using [ObservableProperty] on fields is not AOT compatible for WinRT")]
 public sealed partial class NbtNode : ObservableObject
 {
-
-
     /// <summary>
     ///     初始化属性
     /// </summary>
