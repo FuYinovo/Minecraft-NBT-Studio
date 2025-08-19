@@ -60,6 +60,7 @@
         <Folder Include="Assets\ItemIcon\"/>
         <Folder Include="Control\Editor\"/>
         <Folder Include="Library\"/>
+        <Folder Include="Service\" />
         <Folder Include="Struct\"/>
     </ItemGroup>
     <ItemGroup>

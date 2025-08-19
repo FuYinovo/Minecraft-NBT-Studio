@@ -21,7 +21,6 @@ using NBT_Studio.Library.NBT_Parser.Class;
 using NBT_Studio.Library.NBT_Parser.Enum;
 using NBT_Studio.Message;
 using NBT_Studio.Model;
-using NBT_Studio.Service;
 using NBT_Studio.Utils;
 using WinRT.Interop;
 using FileInfo = NBT_Studio.Model.FileInfo;
@@ -233,7 +232,7 @@ public sealed partial class TreeViewPageViewModel
             return;
         }
 
-        await DialogService.ShowDialog("加载失败", "确认", description: "请检查 NBT 文件是否损坏");
+        await DialogHelper.ShowDialog("加载失败", "确认", description: "请检查 NBT 文件是否损坏");
         return;
 
         # region Methods
@@ -351,7 +350,7 @@ public sealed partial class TreeViewPageViewModel
     {
         _fileInfo.FileLength = Nodes.First().Tag.GetBytes().Length;
         var content = new FileInfoDialog(_fileInfo);
-        await DialogService.ShowDialog("文件信息", "确认", content: content);
+        await DialogHelper.ShowDialog("文件信息", "确认", content: content);
     }
 
     /// <summary>写入 NBT 文件</summary>
@@ -405,7 +404,7 @@ public sealed partial class TreeViewPageViewModel
         var fileName = _fileInfo.FilePath == string.Empty
             ? Nodes.First().DisplayName == string.Empty ? "未命名" : Nodes.First().DisplayName
             : Path.GetFileNameWithoutExtension(_fileInfo.FilePath);
-        return await DialogService.ShowDialog("保存修改？", "保存", "丢弃", "取消", description: $"「{fileName}」未保存修改");
+        return await DialogHelper.ShowDialog("保存修改？", "保存", "丢弃", "取消", description: $"「{fileName}」未保存修改");
     }
 }
 
@@ -489,7 +488,7 @@ public sealed partial class TreeViewPageViewModel
     {
         if (SelectedNode == null)
         {
-            await DialogService.ShowDialog("添加失败", "确认", description: "选择一个父节点或其子项");
+            await DialogHelper.ShowDialog("添加失败", "确认", description: "选择一个父节点或其子项");
             return;
         }
 

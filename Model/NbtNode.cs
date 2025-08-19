@@ -14,7 +14,6 @@ using NBT_Studio.Control.Dialog;
 using NBT_Studio.Library.NBT_Parser.Class;
 using NBT_Studio.Library.NBT_Parser.Enum;
 using NBT_Studio.Message;
-using NBT_Studio.Service;
 using NBT_Studio.Utils;
 
 namespace NBT_Studio.Model;
@@ -188,7 +187,7 @@ public sealed partial class NbtNode
     [RelayCommand]
     public async Task Delete()
     {
-        if (IsRootNode) await DialogService.ShowDialog("删除失败", "确认", description: "不允许删除根节点");
+        if (IsRootNode) await DialogHelper.ShowDialog("删除失败", "确认", description: "不允许删除根节点");
         else Remove();
     }
 
@@ -200,7 +199,7 @@ public sealed partial class NbtNode
     public async Task Rename()
     {
         var content = new RenameNodeDialog();
-        var choice = await DialogService.ShowDialog("重命名", "确认", close: "取消", content: content);
+        var choice = await DialogHelper.ShowDialog("重命名", "确认", close: "取消", content: content);
         if (choice != ContentDialogResult.Primary) return;
 
         SetName(content.NewName);
@@ -221,7 +220,7 @@ public sealed partial class NbtNode
         // 合法性判断
         if (parent.TagEnum == NbtTagEnum.List && parent.Tag.ChildrenTag != tagEnum)
         {
-            await DialogService.ShowDialog("添加失败", "确认",
+            await DialogHelper.ShowDialog("添加失败", "确认",
                 description: $"列表<{parent.Tag.ChildrenTag}> 不允许添加 <{tagEnum}> 节点");
             return;
         }
@@ -230,7 +229,7 @@ public sealed partial class NbtNode
         // 初始化弹窗
         var isListElement = parent.TagEnum == NbtTagEnum.List;
         var content = new CreateNodeDialog(tagEnum, isListElement);
-        var dialog = DialogService.GetDialog($"添加「{tagEnum}」节点", "确认", close: "取消", content: content);
+        var dialog = DialogHelper.GetDialog($"添加「{tagEnum}」节点", "确认", close: "取消", content: content);
         content.DialogOkButtonEnabledSetter = b => dialog.IsPrimaryButtonEnabled = b;
         dialog.IsPrimaryButtonEnabled = NbtTagEnumExtensions.IsCollection(tagEnum);
 

@@ -3,9 +3,9 @@ using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
-namespace NBT_Studio.Service;
+namespace NBT_Studio.Utils;
 
-public static class DialogService
+public static class DialogHelper
 {
     /// <summary>
     ///     弹出一个对话框
