@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using Windows.UI;
 using CommunityToolkit.WinUI.Helpers;
 
@@ -98,7 +100,22 @@ public struct MinecraftMapColorExtensions
         };
     }
 
-    private static readonly Dictionary<MinecraftMapColor, (Color lowest, Color low, Color normal, Color high )> Colors =
+
+    /// <summary>
+    /// 获取所有颜色
+    /// </summary>
+    public static Color[] GetAllColors()
+    {
+        return Colors.SelectMany(group => new[]
+        {
+            group.Value.lowest,
+            group.Value.low,
+            group.Value.normal,
+            group.Value.high
+        }).ToArray();
+    }
+
+    public static readonly Dictionary<MinecraftMapColor, (Color lowest, Color low, Color normal, Color high )> Colors =
         new()
         {
             {

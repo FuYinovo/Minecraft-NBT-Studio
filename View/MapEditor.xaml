@@ -8,6 +8,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:graphic="using:Microsoft.Graphics.Canvas.UI.Xaml"
     xmlns:mapEditorToggleButton="using:NBT_Studio.Control.MapEditorToggleButton"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:converter="using:NBT_Studio.Xaml.Converter"
     mc:Ignorable="d">
 
     <UserControl.Resources>
@@ -19,6 +21,8 @@
         <Style x:Key="ToolsLabel" TargetType="TextBlock" BasedOn="{StaticResource CaptionTextBlockStyle}">
             <Setter Property="HorizontalAlignment" Value="Center" />
         </Style>
+        <!-- 转换器 -->
+        <converter:ColorToBrushConverter x:Key="ColorToBrushConverter"></converter:ColorToBrushConverter>
     </UserControl.Resources>
 
     <Grid DataContext="{x:Bind _viewModel}" x:Name="ControlGrid" Padding="-32,20,20,20" RowSpacing="24">
@@ -90,7 +94,33 @@
                 </mapEditorToggleButton:MapEditorToggleSplitButton>
                 <AppBarSeparator Margin="0,-5,0,0"></AppBarSeparator>
 
-
+                <!-- 颜色 -->
+                <StackPanel Spacing="2">
+                    <DropDownButton Width="54" Height="50" Padding="6,8,5,8">
+                        <!-- 颜色预览 -->
+                        <Border
+                            Background="{Binding ClosestMapColor,
+                                Mode=OneWay,
+                                Converter={StaticResource ColorToBrushConverter}}"
+                            Width="20"
+                            Height="30"
+                            CornerRadius="4">
+                        </Border>
+                        <!-- 颜色选择器 -->
+                        <DropDownButton.Flyout>
+                            <Flyout>
+                                <controls:ColorPicker
+                                    ColorSpectrumShape="Box"
+                                    IsAlphaSliderVisible="False"
+                                    IsColorChannelTextInputVisible="True"
+                                    IsColorPaletteVisible="True"
+                                    ShowAccentColors="False"
+                                    Color="{Binding BrushColor, Mode=TwoWay}" />
+                            </Flyout>
+                        </DropDownButton.Flyout>
+                    </DropDownButton>
+                    <TextBlock Style="{StaticResource ToolsLabel}" Text="颜色" />
+                </StackPanel>
             </StackPanel>
         </Grid>
 

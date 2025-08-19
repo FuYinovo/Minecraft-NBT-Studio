@@ -17,6 +17,8 @@ public partial class MapEditorToggleSplitButton
 
     private void CreateMenuFlyoutItems(object sender, RoutedEventArgs e)
     {
+        if (MenuFlyout.Items.Count == Menu.Count) return;
+        MenuFlyout.Items.Clear();
         foreach (var str in Menu)
         {
             var item = new RadioMenuFlyoutItem();

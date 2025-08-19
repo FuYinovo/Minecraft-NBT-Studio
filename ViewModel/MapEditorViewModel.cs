@@ -1,19 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using Windows.UI;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.WinUI.Helpers;
 using Microsoft.UI.Xaml.Controls;
 using NBT_Studio.Enum;
 using NBT_Studio.Interface;
 using NBT_Studio.Library.NBT_Parser.Class;
 using NBT_Studio.Message;
 using NBT_Studio.Model;
+using ColorHelper = NBT_Studio.Utils.ColorHelper;
 
 namespace NBT_Studio.ViewModel;
 
 [SuppressMessage("CommunityToolkit.Mvvm.SourceGenerators.ObservablePropertyGenerator",
     "MVVMTK0045:Using [ObservableProperty] on fields is not AOT compatible for WinRT")]
-public class MapEditorViewModel : IMutuallyControls
+public partial class MapEditorViewModel : ObservableObject, IMutuallyControls
 {
     public MapEditorViewModel(int size)
     {
@@ -85,6 +91,9 @@ public class MapEditorViewModel : IMutuallyControls
                 _dataTags[tagEnum] = child;
     }
 
+    /// <summary>
+    /// 设置互斥按钮组默认值
+    /// </summary>
     private void SetDefaultButtonGroupsSelection()
     {
         ((IMutuallyControls)this).SetSelectedValue("MapEditorTools", "All");
@@ -93,6 +102,9 @@ public class MapEditorViewModel : IMutuallyControls
 
     #region Properties
 
+    private readonly Color[] _minecraftMapColors = MinecraftMapColorExtensions.GetAllColors(); // 所有地图色
+    [ObservableProperty] private Color _brushColor = new(); // 选中色
+    public Color ClosestMapColor => ColorHelper.GetClosest(_brushColor, _minecraftMapColors); // 选中色的最近地图色
     public MinecraftMapPixel[,] Pixels;
     private readonly int _size;
     private readonly Dictionary<MinecraftMapNecessaryTags, NbtTag> _dataTags = new();
