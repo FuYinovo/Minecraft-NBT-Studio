@@ -99,23 +99,6 @@ public class MapEditorViewModel : IMutuallyControls
 
     #endregion Properties
 
-    #region Tool ToggleButtons
-
-    public MutuallyToggleButton[] SelectionPanel { get; } =
-    [
-        new() { FontIcon = "\uEF20", Name = "All" }
-    ];
-
-    public MutuallyToggleButton[] ToolsPanel { get; } =
-    [
-        new() { FontIcon = "\uE75C", Name = "Eraser" },
-        new() { FontIcon = "\uE8D2", Name = "Text" },
-        new() { FontIcon = "\uEF3C", Name = "ColorPicker" },
-        new() { FontIcon = "\uE8A3", Name = "Zoom" }
-    ];
-
-    #endregion
-
     # region IMutuallyControls
 
     public Dictionary<string, object> GroupToValue { get; } = new();

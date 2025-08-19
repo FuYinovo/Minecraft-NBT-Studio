@@ -15,6 +15,14 @@ public static class VisualTreeHelper
     public static bool GetSpecificDataContext<T>(DependencyObject dependencyObject, out T result, int maxTrying = 8)
         where T : class
     {
+        //  自身即目标 DataContext
+        if (dependencyObject is Microsoft.UI.Xaml.Controls.Control { DataContext: T context })
+        {
+            result = context;
+            return true;
+        }
+
+        // 向上查找
         var tried = 0;
         var child = dependencyObject;
         while (tried < maxTrying)
