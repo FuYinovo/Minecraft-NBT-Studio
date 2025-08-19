@@ -1,8 +1,10 @@
-﻿namespace NBT_Studio.Enum.Settings;
+﻿using System.ComponentModel;
+
+namespace NBT_Studio.Enum.Settings;
 
 public enum Sort
 {
-    Default,
-    Alphabetical,
-    ByType
+    [Description("默认")]Default,
+    [Description("首字母")]Alphabetical,
+    [Description("类型")]ByType
 }

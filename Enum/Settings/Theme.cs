@@ -1,8 +1,10 @@
-﻿namespace NBT_Studio.Enum.Settings;
+﻿using System.ComponentModel;
+
+namespace NBT_Studio.Enum.Settings;
 
 public enum Theme
 {
-    Default,
-    Dark,
-    Light
+    [Description("系统")] Default,
+    [Description("深色模式")] Dark,
+    [Description("浅色模式")] Light
 }
