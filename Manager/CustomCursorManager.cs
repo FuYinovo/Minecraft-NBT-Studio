@@ -4,7 +4,7 @@ using Microsoft.UI.Xaml.Hosting;
 using Compositor = Microsoft.UI.Composition.Compositor;
 using SpriteVisual = Microsoft.UI.Composition.SpriteVisual;
 
-namespace NBT_Studio.Service;
+namespace NBT_Studio.Manager;
 
 public abstract class CustomCursorManager
 {

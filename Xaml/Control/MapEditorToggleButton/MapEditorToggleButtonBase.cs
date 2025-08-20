@@ -1,7 +1,7 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
-namespace NBT_Studio.Control.MapEditorToggleButton;
+namespace NBT_Studio.Xaml.Control.MapEditorToggleButton;
 
 public class MapEditorToggleButtonBase : UserControl
 {

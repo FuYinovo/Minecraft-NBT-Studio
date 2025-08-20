@@ -9,7 +9,7 @@ using NBT_Studio.Library.NBT_Parser.Enum;
 using NBT_Studio.Message;
 using NBT_Studio.Model;
 
-namespace NBT_Studio.Control;
+namespace NBT_Studio.Xaml.Control;
 
 public sealed partial class NbtTreeView
 {

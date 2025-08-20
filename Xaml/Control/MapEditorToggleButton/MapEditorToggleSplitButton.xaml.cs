@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
-namespace NBT_Studio.Control.MapEditorToggleButton;
+namespace NBT_Studio.Xaml.Control.MapEditorToggleButton;
 
 public partial class MapEditorToggleSplitButton
 {

@@ -8,7 +8,7 @@ using NBT_Studio.Library.NBT_Parser.Enum;
 using NBT_Studio.Model;
 using NBT_Studio.Utils;
 
-namespace NBT_Studio.Control.Dialog;
+namespace NBT_Studio.Xaml.Control.Dialog;
 
 public sealed partial class CreateNodeDialog
 {

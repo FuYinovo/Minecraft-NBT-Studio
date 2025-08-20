@@ -10,6 +10,7 @@
     xmlns:mapEditorToggleButton="using:NBT_Studio.Control.MapEditorToggleButton"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:converter="using:NBT_Studio.Xaml.Converter"
+    xmlns:mapEditorToggleButton1="using:NBT_Studio.Xaml.Control.MapEditorToggleButton"
     mc:Ignorable="d">
 
     <UserControl.Resources>
@@ -40,7 +41,7 @@
                         HorizontalAlignment="Stretch"
                         Background="{ThemeResource CardBackgroundFillColorSecondary}">
                 <!-- 选择 -->
-                <mapEditorToggleButton:MapEditorToggleButton
+                <mapEditorToggleButton1:MapEditorToggleButton
                     FontIcon="&#xEF20;"
                     GroupName="MapEditorTools"
                     MemberName="All"
@@ -53,12 +54,12 @@
                         <!-- 第一行 -->
                         <StackPanel Orientation="Horizontal" Spacing="2">
                             <!-- 橡皮 -->
-                            <mapEditorToggleButton:MapEditorToggleButtonCompact
+                            <mapEditorToggleButton1:MapEditorToggleButtonCompact
                                 FontIcon="&#xE75C;"
                                 GroupName="MapEditorTools"
                                 MemberName="Eraser" />
                             <!-- 文本 -->
-                            <mapEditorToggleButton:MapEditorToggleButtonCompact
+                            <mapEditorToggleButton1:MapEditorToggleButtonCompact
                                 FontIcon="&#xE8D2;"
                                 GroupName="MapEditorTools"
                                 MemberName="Text" />
@@ -66,12 +67,12 @@
                         <!-- 第二行 -->
                         <StackPanel Orientation="Horizontal" Spacing="2">
                             <!-- 吸色器 -->
-                            <mapEditorToggleButton:MapEditorToggleButtonCompact
+                            <mapEditorToggleButton1:MapEditorToggleButtonCompact
                                 FontIcon="&#xEF3C;"
                                 GroupName="MapEditorTools"
                                 MemberName="ColorPicker" />
                             <!-- 缩放 -->
-                            <mapEditorToggleButton:MapEditorToggleButtonCompact
+                            <mapEditorToggleButton1:MapEditorToggleButtonCompact
                                 FontIcon="&#xE8A3;"
                                 GroupName="MapEditorTools"
                                 MemberName="Zoom" />
@@ -82,16 +83,16 @@
                 <AppBarSeparator Margin="0,-5,0,0" />
 
                 <!-- 笔刷 -->
-                <mapEditorToggleButton:MapEditorToggleSplitButton
+                <mapEditorToggleButton1:MapEditorToggleSplitButton
                     FontIcon="&#xE771;"
                     GroupName="MapEditorTools"
                     MemberName="Brush"
                     Title="笔刷">
-                    <mapEditorToggleButton:MapEditorToggleSplitButton.Menu>
+                    <mapEditorToggleButton1:MapEditorToggleSplitButton.Menu>
                         <x:String>{>}像素</x:String>
                         <x:String>画笔</x:String>
-                    </mapEditorToggleButton:MapEditorToggleSplitButton.Menu>
-                </mapEditorToggleButton:MapEditorToggleSplitButton>
+                    </mapEditorToggleButton1:MapEditorToggleSplitButton.Menu>
+                </mapEditorToggleButton1:MapEditorToggleSplitButton>
                 <AppBarSeparator Margin="0,-5,0,0" />
 
                 <!-- 颜色 -->

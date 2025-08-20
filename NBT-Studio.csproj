@@ -59,8 +59,7 @@
     </ItemGroup>
     <ItemGroup>
         <Folder Include="Assets\ItemIcon\"/>
-        <Folder Include="Control\Editor\"/>
-        <Folder Include="Struct\"/>
+        <Folder Include="Service\" />
     </ItemGroup>
     <ItemGroup>
         <Page Update="Control\Content\FileInfoContent.xaml">
@@ -71,11 +70,6 @@
         </Page>
         <Page Update="Control\Content\CreateNodeContent.xaml">
             <SubType>Designer</SubType>
-        </Page>
-    </ItemGroup>
-    <ItemGroup>
-        <Page Update="Control\CreateNodeButton.xaml">
-            <Generator>MSBuild:Compile</Generator>
         </Page>
     </ItemGroup>
 

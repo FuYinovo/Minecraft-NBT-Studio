@@ -24,6 +24,7 @@ using NBT_Studio.Model;
 using NBT_Studio.Utils;
 using WinRT.Interop;
 using FileInfo = NBT_Studio.Model.FileInfo;
+using FileInfoDialog = NBT_Studio.Xaml.Control.Dialog.FileInfoDialog;
 
 namespace NBT_Studio.ViewModel;
 

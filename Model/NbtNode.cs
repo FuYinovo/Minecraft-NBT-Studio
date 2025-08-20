@@ -15,6 +15,8 @@ using NBT_Studio.Library.NBT_Parser.Class;
 using NBT_Studio.Library.NBT_Parser.Enum;
 using NBT_Studio.Message;
 using NBT_Studio.Utils;
+using CreateNodeDialog = NBT_Studio.Xaml.Control.Dialog.CreateNodeDialog;
+using RenameNodeDialog = NBT_Studio.Xaml.Control.Dialog.RenameNodeDialog;
 
 namespace NBT_Studio.Model;
 

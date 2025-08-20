@@ -15,6 +15,8 @@
     xmlns:model="using:NBT_Studio.Model"
     xmlns:system="using:System"
     xmlns:converter="using:NBT_Studio.Xaml.Converter"
+    xmlns:flyout1="using:NBT_Studio.Xaml.Control.Flyout"
+    xmlns:control1="using:NBT_Studio.Xaml.Control"
     mc:Ignorable="d">
 
     <Page.Resources>
@@ -51,7 +53,7 @@
                             <AppBarButton Label="设置" Icon="Setting" AllowFocusOnInteraction="True">
                                 <AppBarButton.Flyout>
                                     <Flyout>
-                                        <flyout:SettingsFlyout />
+                                        <flyout1:SettingsFlyout />
                                     </Flyout>
                                 </AppBarButton.Flyout>
                             </AppBarButton>
@@ -136,7 +138,7 @@
                                                             <!-- 按钮模板 -->
                                                             <ItemsControl.ItemTemplate>
                                                                 <DataTemplate x:DataType="model:CreateNodeButtonItem">
-                                                                    <control:CreateNodeButton Label="{x:Bind Label}"
+                                                                    <control1:CreateNodeButton Label="{x:Bind Label}"
                                                                         Tag="{x:Bind Tag}"
                                                                         IconUri="{x:Bind IconUri}"
                                                                         ButtonEnabled="{x:Bind IsEnabled, Mode=OneWay}"
@@ -175,7 +177,7 @@
                             <labs:TokenItem Content="字符串" />
                         </labs:TokenView>
                         <!-- 节点树 -->
-                        <control:NbtTreeView Nodes="{Binding Nodes, Mode=TwoWay}" />
+                        <control1:NbtTreeView Nodes="{Binding Nodes, Mode=TwoWay}" />
                     </StackPanel>
 
                 </ScrollView>

@@ -1,9 +1,8 @@
-using System.Diagnostics;
 using System.Windows.Input;
 using Microsoft.UI.Xaml;
 using NBT_Studio.Library.NBT_Parser.Enum;
 
-namespace NBT_Studio.Control;
+namespace NBT_Studio.Xaml.Control;
 
 public sealed partial class CreateNodeButton
 {

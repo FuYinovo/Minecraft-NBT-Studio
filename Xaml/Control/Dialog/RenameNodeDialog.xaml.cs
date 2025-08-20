@@ -1,4 +1,4 @@
-namespace NBT_Studio.Control.Dialog;
+namespace NBT_Studio.Xaml.Control.Dialog;
 
 public sealed partial class RenameNodeDialog
 {

@@ -1,4 +1,4 @@
-namespace NBT_Studio.Control.MapEditorToggleButton;
+namespace NBT_Studio.Xaml.Control.MapEditorToggleButton;
 
 public sealed partial class MapEditorToggleButtonCompact
 {

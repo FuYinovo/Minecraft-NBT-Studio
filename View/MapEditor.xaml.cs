@@ -7,8 +7,8 @@ using Windows.Foundation;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Graphics.Canvas.UI.Xaml;
 using Microsoft.UI.Xaml.Controls.Primitives;
+using NBT_Studio.Manager;
 using NBT_Studio.Message;
-using NBT_Studio.Service;
 using NBT_Studio.ViewModel;
 
 namespace NBT_Studio.View;

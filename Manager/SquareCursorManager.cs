@@ -3,7 +3,7 @@ using Windows.UI;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
 
-namespace NBT_Studio.Service;
+namespace NBT_Studio.Manager;
 
 public class SquareCursorManager : CustomCursorManager
 {
