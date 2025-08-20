@@ -10,6 +10,7 @@
     xmlns:mapEditorToggleButton="using:NBT_Studio.Control.MapEditorToggleButton"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:converter="using:NBT_Studio.Xaml.Converter"
+    xmlns:control="using:NBT_Studio.Control"
     mc:Ignorable="d">
 
     <UserControl.Resources>
@@ -125,21 +126,31 @@
 
         <!-- 地图预览 -->
         <Grid Grid.Row="1">
-            <Border HorizontalAlignment="Center"
-                    VerticalAlignment="Bottom"
-                    Style="{StaticResource MapBackground}"
-                    CornerRadius="12"
-                    Width="{x:Bind BorderSize, Mode=OneWay}"
-                    Height="{x:Bind BorderSize, Mode=OneWay}">
+            <Slider
+                Value="{x:Bind MapScale, Mode=TwoWay}"
+                ValueChanged="MapZoom_OnValueChanged"
+                Header="缩放"
+                StepFrequency=".1"
+                Maximum="80"
+                Minimum="1"
+                VerticalAlignment="Stretch"
+                Orientation="Vertical"/>
+            <Border
+                Margin="50,0,0,0"
+                x:Name="MapBorder"
+                Style="{StaticResource MapBackground}"
+                CornerRadius="12"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch">
                 <graphic:CanvasControl
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Width="1024"
+                    Height="1024"
                     x:Name="MapCanvas"
-                    Width="{x:Bind MapSize, Mode=OneWay}"
-                    Height="{x:Bind MapSize, Mode=OneWay}"
                     AllowDrop="True"
                     Draw="DrawMap" />
             </Border>
         </Grid>
-
     </Grid>
-
 </UserControl>

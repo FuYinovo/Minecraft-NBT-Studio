@@ -100,7 +100,10 @@ public partial class MapEditorViewModel : ObservableObject, IMutuallyControls
     #region Properties
 
     private readonly Color[] _minecraftMapColors = MinecraftMapColorExtensions.GetAllColors(); // 所有地图色
-    [ObservableProperty] private Color _brushColor; // 选中色
+
+    [ObservableProperty] [NotifyPropertyChangedFor(nameof(ClosestMapColor))]
+    private Color _brushColor; // 选中色
+
     public Color ClosestMapColor => ColorHelper.GetClosest(BrushColor, _minecraftMapColors); // 选中色的最近地图色
     public MinecraftMapPixel[,] Pixels;
     private readonly int _size;

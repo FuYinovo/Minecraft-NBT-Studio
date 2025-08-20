@@ -7,6 +7,9 @@ namespace NBT_Studio.Utils;
 
 public class NbtTagHelper
 {
+    public static readonly NbtTagHelper Instance = new ();
+    private NbtTagHelper(){}
+
     private static readonly Dictionary<NbtTagEnum, Func<string, object>> ValueParsers = new()
     {
         [NbtTagEnum.Byte] = s => byte.Parse(s),
