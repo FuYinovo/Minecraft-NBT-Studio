@@ -8,7 +8,14 @@ public sealed partial class MainWindow
     public MainWindow()
     {
         InitializeComponent();
-        Frame.Navigate(typeof(TreeViewPage));
+
+        var presenter = OverlappedPresenter.Create();
+        presenter.PreferredMinimumWidth = 1075;
+        presenter.PreferredMinimumHeight = 755;
+        AppWindow.SetPresenter(presenter);
+
         AppWindow.TitleBar.PreferredTheme = TitleBarTheme.UseDefaultAppMode;
+
+        Frame.Navigate(typeof(TreeViewPage));
     }
 }
