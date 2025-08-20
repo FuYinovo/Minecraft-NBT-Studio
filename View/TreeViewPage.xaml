@@ -202,7 +202,7 @@
                             <view:ValueEditor />
                         </AppBarElementContainer>
                     </community:TabbedCommandBarItem>
-                    <community:TabbedCommandBarItem Header="物品编辑器" IsContextual="True" IsDynamicOverflowEnabled="False">
+                    <community:TabbedCommandBarItem Header="物品编辑器" IsContextual="True" IsDynamicOverflowEnabled="False" IsEnabled="False">
                         <AppBarElementContainer
                             Visibility="{Binding WaitingToSelectMaskVisibility, Converter={StaticResource BoolNotConverter}}">
                             <view:ItemEditor />
