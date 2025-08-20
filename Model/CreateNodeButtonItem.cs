@@ -10,4 +10,5 @@ public class CreateNodeButtonItem(NbtTagEnum tagEnum, ICommand? command = null)
     public readonly string IconUri = AssetHelper.GetNbtTagIconUri(tagEnum);
     public readonly NbtTagEnum Tag = tagEnum;
     public string Label = ReflectionHelper.GetEnumDescription(tagEnum) ?? tagEnum.ToString();
+    public bool IsEnabled { get; set; } = true;
 }

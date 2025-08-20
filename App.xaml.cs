@@ -1,5 +1,6 @@
 ﻿using System;
 using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using NBT_Studio.Enum.Settings;
 using NBT_Studio.Message;
@@ -30,12 +31,7 @@ public partial class App
     private static void SetTheme(Theme theme)
     {
         if (MainWindow == null) return;
-        ((FrameworkElement)MainWindow.Content).RequestedTheme = theme switch
-        {
-            Theme.Default => ElementTheme.Default,
-            Theme.Dark => ElementTheme.Dark,
-            Theme.Light => ElementTheme.Light,
-            _ => throw new ArgumentOutOfRangeException(nameof(theme), theme, null)
-        };
+        ((FrameworkElement)MainWindow.Content).RequestedTheme = ThemeExtensions.ToElementTheme(theme);
+        MainWindow.AppWindow.TitleBar.PreferredTheme = ThemeExtensions.ToTitleBarTheme(theme);
     }
 }

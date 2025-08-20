@@ -78,8 +78,8 @@ public sealed partial class NbtTreeView
             return;
         }
 
-        menu.Items.Clear();
-        var command = node.AppendChildCommand; // 点击指令(Command)
+        if (menu.Items.Count == _menuFlyoutItems.Length) return; // 已经添加则返回
+        var command = node.AppendChildCommand; // 右键菜单的 Command
         foreach (var item in _menuFlyoutItems)
         {
             if (item.IsSeparator)
@@ -93,6 +93,8 @@ public sealed partial class NbtTreeView
                 Text = item.Title,
                 Command = command,
                 CommandParameter = item.CommandParameter,
+                // 对于列表节点，禁用与其子项类型不同的添加选项
+                IsEnabled = node.TagEnum != NbtTagEnum.List || item.CommandParameter == node.Tag.ChildrenTag,
                 KeyboardAccelerators =
                 {
                     new KeyboardAccelerator

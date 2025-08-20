@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Windows.Input;
 using Microsoft.UI.Xaml;
 using NBT_Studio.Library.NBT_Parser.Enum;
@@ -6,14 +7,17 @@ namespace NBT_Studio.Control;
 
 public sealed partial class CreateNodeButton
 {
-    private readonly DependencyProperty _buttonCommandDependencyProperty = DependencyProperty.Register(
+    private readonly DependencyProperty _buttonCommandDp = DependencyProperty.Register(
         nameof(ButtonCommand), typeof(ICommand), typeof(CreateNodeButton), new PropertyMetadata(null));
 
-    private readonly DependencyProperty _iconUriDependencyProperty = DependencyProperty.Register(
+    private readonly DependencyProperty _iconUriDp = DependencyProperty.Register(
         nameof(IconUri), typeof(string), typeof(CreateNodeButton), new PropertyMetadata(""));
 
-    private readonly DependencyProperty _labelDependencyProperty = DependencyProperty.Register(
+    private readonly DependencyProperty _labelDp = DependencyProperty.Register(
         nameof(Label), typeof(string), typeof(CreateNodeButton), new PropertyMetadata(""));
+
+    private readonly DependencyProperty _buttonEnabledDp = DependencyProperty.Register(
+        nameof(ButtonEnabled), typeof(bool), typeof(CreateNodeButton), new PropertyMetadata(true));
 
     public CreateNodeButton()
     {
@@ -22,20 +26,26 @@ public sealed partial class CreateNodeButton
 
     public string Label
     {
-        get => (string)GetValue(_labelDependencyProperty);
-        set => SetValue(_labelDependencyProperty, value);
+        get => (string)GetValue(_labelDp);
+        set => SetValue(_labelDp, value);
     }
 
     public string IconUri
     {
-        get => (string)GetValue(_iconUriDependencyProperty);
-        set => SetValue(_iconUriDependencyProperty, value);
+        get => (string)GetValue(_iconUriDp);
+        set => SetValue(_iconUriDp, value);
     }
 
     public ICommand? ButtonCommand
     {
-        get => (ICommand)GetValue(_buttonCommandDependencyProperty);
-        set => SetValue(_buttonCommandDependencyProperty, value);
+        get => (ICommand)GetValue(_buttonCommandDp);
+        set => SetValue(_buttonCommandDp, value);
+    }
+
+    public bool ButtonEnabled
+    {
+        get => (bool)GetValue(_buttonEnabledDp);
+        set => SetValue(_buttonEnabledDp, value);
     }
 
     private void AppBarButton_OnClick(object sender, RoutedEventArgs e)

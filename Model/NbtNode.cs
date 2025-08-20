@@ -229,7 +229,11 @@ public sealed partial class NbtNode
         // 初始化弹窗
         var isListElement = parent.TagEnum == NbtTagEnum.List;
         var content = new CreateNodeDialog(tagEnum, isListElement);
-        var dialog = DialogHelper.GetDialog($"添加「{tagEnum}」节点", "确认", close: "取消", content: content);
+        var dialog = DialogHelper.GetDialog(
+            $"添加「{ReflectionHelper.GetEnumDescription(tagEnum)}」节点",
+            "确认",
+            close: "取消",
+            content: content);
         content.DialogOkButtonEnabledSetter = b => dialog.IsPrimaryButtonEnabled = b;
         dialog.IsPrimaryButtonEnabled = NbtTagEnumExtensions.IsCollection(tagEnum);
 

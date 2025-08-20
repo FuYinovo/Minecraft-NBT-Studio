@@ -139,6 +139,7 @@
                                                                     <control:CreateNodeButton Label="{x:Bind Label}"
                                                                         Tag="{x:Bind Tag}"
                                                                         IconUri="{x:Bind IconUri}"
+                                                                        ButtonEnabled="{x:Bind IsEnabled, Mode=OneWay}"
                                                                         ButtonCommand="{x:Bind Command, Mode=OneWay}" />
                                                                 </DataTemplate>
                                                             </ItemsControl.ItemTemplate>

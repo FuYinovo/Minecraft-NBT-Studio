@@ -10,8 +10,8 @@ public sealed partial class MainWindow
         InitializeComponent();
 
         var presenter = OverlappedPresenter.Create();
-        presenter.PreferredMinimumWidth = 1075;
-        presenter.PreferredMinimumHeight = 755;
+        presenter.PreferredMinimumWidth = 1100;
+        presenter.PreferredMinimumHeight = 765;
         AppWindow.SetPresenter(presenter);
 
         AppWindow.TitleBar.PreferredTheme = TitleBarTheme.UseDefaultAppMode;

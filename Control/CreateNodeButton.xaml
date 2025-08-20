@@ -9,7 +9,10 @@
     mc:Ignorable="d">
 
     <Grid>
-        <AppBarButton Label="{x:Bind Label}" Width="52" Height="56" Click="AppBarButton_OnClick">
+        <AppBarButton Label="{x:Bind Label}"
+                      Width="52" Height="56"
+                      IsEnabled="{x:Bind ButtonEnabled, Mode=TwoWay}"
+                      Click="AppBarButton_OnClick">
             <AppBarButton.Content>
                 <Image>
                     <Image.Source>

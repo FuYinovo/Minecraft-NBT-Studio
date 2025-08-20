@@ -45,23 +45,26 @@ public sealed partial class TreeViewPageViewModel : ObservableObject
     /// </summary>
     private void RegisterMessages()
     {
-        // 「选中节点改动」消息
-        WeakReferenceMessenger.Default.Register<SelectedNodeChangedMessage>(this,
-            (_, v) =>
-            {
-                SelectedNode = v.Value;
-                WaitingToSelectMaskVisibility = false;
-                IsAddNodeEnabled = NbtTagEnumExtensions.IsCollection(((NbtNode)v.Value.Content).TagEnum);
-            });
-        // 「排序方式改动」消息
-        WeakReferenceMessenger.Default.Register<SettingsChangedMessage<Sort>>(this,
-            (_, v) => ApplySort(v.Value));
-        // 「节点被修改」消息
-        WeakReferenceMessenger.Default.Register<NodeModifiedMessage>(this,
-            (_, _) =>
-            {
-                if (_fileInfo.FilePath != string.Empty) IsApplyEnabled = true;
-            });
+        WeakReferenceMessenger.Default.Register<SelectedNodeChangedMessage>(this, SelectedNodeChanged);
+        WeakReferenceMessenger.Default.Register<SettingsChangedMessage<Sort>>(this, SortChanged);
+        WeakReferenceMessenger.Default.Register<NodeModifiedMessage>(this, NodeModified);
+        return;
+
+        void SelectedNodeChanged(object obj, SelectedNodeChangedMessage msg)
+        {
+            SelectedNode = msg.Value;
+            var node = (NbtNode)SelectedNode.Content;
+
+            IsAddNodeEnabled = NbtTagEnumExtensions.IsCollection(node.TagEnum); // 禁止向非容器添加节点
+            if (IsAddNodeEnabled)
+                foreach (var group in CreateNodeButtonGroups)
+                foreach (var btn in group)
+                    btn.IsEnabled = node.TagEnum != NbtTagEnum.List || btn.Tag == node.Tag.ChildrenTag;
+            WaitingToSelectMaskVisibility = false;
+        }
+
+        void SortChanged(object obj, SettingsChangedMessage<Sort> msg) => ApplySort(msg.Value);
+        void NodeModified(object obj, NodeModifiedMessage msg) => IsApplyEnabled = _fileInfo.FilePath != string.Empty;
     }
 
 
@@ -91,6 +94,8 @@ public sealed partial class TreeViewPageViewModel : ObservableObject
     private string _searchBoxText = string.Empty;
     [ObservableProperty] private TreeViewNode? _selectedNode;
     [ObservableProperty] private bool _waitingToSelectMaskVisibility = true;
+    [ObservableProperty] private CreateNodeButtonItem[][] _createNodeButtonGroups = []; // 「添加节点」按钮
+
 
     public int NodeFilterIndex
     {
@@ -112,7 +117,6 @@ public sealed partial class TreeViewPageViewModel : ObservableObject
         }
     }
 
-    public CreateNodeButtonItem[][] CreateNodeButtonGroups { get; } // 「添加节点」按钮
 
     #region Methods: GetProperty
 
