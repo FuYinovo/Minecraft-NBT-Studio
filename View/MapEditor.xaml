@@ -10,7 +10,6 @@
     xmlns:mapEditorToggleButton="using:NBT_Studio.Control.MapEditorToggleButton"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:converter="using:NBT_Studio.Xaml.Converter"
-    xmlns:control="using:NBT_Studio.Control"
     mc:Ignorable="d">
 
     <UserControl.Resources>
@@ -134,7 +133,7 @@
                 Maximum="80"
                 Minimum="1"
                 VerticalAlignment="Stretch"
-                Orientation="Vertical"/>
+                Orientation="Vertical" />
             <Border
                 Margin="50,0,0,0"
                 x:Name="MapBorder"

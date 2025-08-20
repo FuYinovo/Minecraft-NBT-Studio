@@ -21,7 +21,7 @@ public sealed partial class ItemEditor
             (_, v) => UpdateGridSize(v.Value));
     }
 
-    // 自动调整内容 Grid 大小 ( CommunityToolKit 未实现 )
+    // 自动调整内容 Grid 大小
     private void UpdateGridSize(Size size)
     {
         if (size.Width <= 60) return;

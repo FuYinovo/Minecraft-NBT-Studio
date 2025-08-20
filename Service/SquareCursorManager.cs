@@ -7,13 +7,13 @@ namespace NBT_Studio.Service;
 
 public class SquareCursorManager : CustomCursorManager
 {
-    public bool IsVisible => CursorVisual.IsVisible;
-
     public SquareCursorManager(UIElement targetElement, Color? cursorColor = null, int size = 16) : base(targetElement)
     {
         SetCursorColor(cursorColor ?? Colors.White);
         SetCursorSize(size);
     }
+
+    public bool IsVisible => CursorVisual.IsVisible;
 
     /// <summary>设置光标颜色 </summary>
     public void SetCursorColor(Color color)

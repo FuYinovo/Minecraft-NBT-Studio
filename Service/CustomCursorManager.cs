@@ -8,9 +8,9 @@ namespace NBT_Studio.Service;
 
 public abstract class CustomCursorManager
 {
-    protected readonly UIElement TargetElement;
-    protected readonly Compositor ElementCompositor;
     protected readonly SpriteVisual CursorVisual;
+    protected readonly Compositor ElementCompositor;
+    protected readonly UIElement TargetElement;
 
     protected CustomCursorManager(UIElement targetElement)
     {

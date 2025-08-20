@@ -16,16 +16,10 @@ namespace NBT_Studio.View;
 public sealed partial class MapEditor : INotifyPropertyChanged
 {
     private const int InitMapSize = 128;
-    private readonly MapEditorViewModel _viewModel = new(InitMapSize);
-    private float _mapScale = 1;
-
-    private float MapScale
-    {
-        get => _mapScale;
-        set => _mapScale = (float)Math.Pow(0.05 * (value + 30), 2);
-    }
 
     private readonly SquareCursorManager _cursorManager;
+    private readonly MapEditorViewModel _viewModel = new(InitMapSize);
+    private float _mapScale = 1;
 
     public MapEditor()
     {
@@ -34,6 +28,12 @@ public sealed partial class MapEditor : INotifyPropertyChanged
         HookCursorEvents();
         _cursorManager = new SquareCursorManager(MapCanvas);
         _cursorManager.HideCursor();
+    }
+
+    private float MapScale
+    {
+        get => _mapScale;
+        set => _mapScale = (float)Math.Pow(0.05 * (value + 30), 2);
     }
 
     private void RegisterMessages()
@@ -66,8 +66,8 @@ public sealed partial class MapEditor : INotifyPropertyChanged
     }
 
     /// <summary>
-    /// 绑定地图光标事件
-    /// #
+    ///     绑定地图光标事件
+    ///     #
     /// </summary>
     private void HookCursorEvents()
     {
@@ -91,6 +91,11 @@ public sealed partial class MapEditor : INotifyPropertyChanged
         }
     }
 
+    private void MapZoom_OnValueChanged(object sender, RangeBaseValueChangedEventArgs e)
+    {
+        MapCanvas?.Invalidate();
+    }
+
     # region INotifyPropertyChanged
 
     public event PropertyChangedEventHandler? PropertyChanged;
@@ -108,9 +113,4 @@ public sealed partial class MapEditor : INotifyPropertyChanged
     }
 
     #endregion
-
-    private void MapZoom_OnValueChanged(object sender, RangeBaseValueChangedEventArgs e)
-    {
-        MapCanvas?.Invalidate();
-    }
 }

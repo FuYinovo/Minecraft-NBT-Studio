@@ -7,8 +7,7 @@ namespace NBT_Studio.Utils;
 
 public class NbtTagHelper
 {
-    public static readonly NbtTagHelper Instance = new ();
-    private NbtTagHelper(){}
+    public static readonly NbtTagHelper Instance = new();
 
     private static readonly Dictionary<NbtTagEnum, Func<string, object>> ValueParsers = new()
     {
@@ -47,6 +46,10 @@ public class NbtTagHelper
     private readonly Dictionary<NbtTagEnum, string> _descriptions = new();
     private readonly Dictionary<NbtTagEnum, string> _maxValues = new();
     private readonly Dictionary<NbtTagEnum, string> _minValues = new();
+
+    private NbtTagHelper()
+    {
+    }
 
 
     /// <summary>
