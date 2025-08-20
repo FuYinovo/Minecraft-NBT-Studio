@@ -51,6 +51,7 @@ public sealed partial class TreeViewPageViewModel : ObservableObject
             {
                 SelectedNode = v.Value;
                 WaitingToSelectMaskVisibility = false;
+                IsAddNodeEnabled = NbtTagEnumExtensions.IsCollection(((NbtNode)v.Value.Content).TagEnum);
             });
         // 「排序方式改动」消息
         WeakReferenceMessenger.Default.Register<SettingsChangedMessage<Sort>>(this,
@@ -84,6 +85,7 @@ public sealed partial class TreeViewPageViewModel : ObservableObject
     [ObservableProperty] private bool _isInfoEnabled;
     [ObservableProperty] private bool _isSaveEnabled;
     [ObservableProperty] private bool _isSearchBoxEnabled;
+    [ObservableProperty] private bool _isAddNodeEnabled;
     private int _nodeFilterIndex;
     [ObservableProperty] private ObservableCollection<NbtNode> _nodes = [];
     private string _searchBoxText = string.Empty;
@@ -488,7 +490,7 @@ public sealed partial class TreeViewPageViewModel
     {
         if (SelectedNode == null)
         {
-            await DialogHelper.ShowDialog("添加失败", "确认", description: "选择一个父节点或其子项");
+            await DialogHelper.ShowDialog("添加失败", "确认", description: "请选择一个目标节点");
             return;
         }
 

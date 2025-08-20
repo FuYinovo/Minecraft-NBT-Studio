@@ -70,8 +70,16 @@ public sealed partial class NbtTreeView
     private void MenuFlyoutSubItem_OnLoaded(object sender, RoutedEventArgs e)
     {
         if (sender is not MenuFlyoutSubItem { DataContext: NbtNode node } menu) return;
+
+        // 如果不是容器节点，则禁用该右键菜单
+        if (!NbtTagEnumExtensions.IsCollection(node.TagEnum))
+        {
+            menu.IsEnabled = false;
+            return;
+        }
+
         menu.Items.Clear();
-        var command = node.AppendChildCommand; // Command
+        var command = node.AppendChildCommand; // 点击指令(Command)
         foreach (var item in _menuFlyoutItems)
         {
             if (item.IsSeparator)

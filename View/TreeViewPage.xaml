@@ -107,7 +107,9 @@
                             </AppBarButton>
                         </community:TabbedCommandBarItem>
                         <!-- 添加节点页 -->
-                        <community:TabbedCommandBarItem Header="添加节点" Padding="0,-5,0,0"
+                        <community:TabbedCommandBarItem Header="添加节点"
+                                                        Padding="0,-5,0,0"
+                                                        IsEnabled="{Binding IsAddNodeEnabled}"
                                                         OverflowButtonVisibility="Collapsed">
                             <community:TabbedCommandBarItem.Content>
                                 <ItemsControl ItemsSource="{Binding CreateNodeButtonGroups}">
