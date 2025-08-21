@@ -1,4 +1,7 @@
-﻿using NBT_Studio.Library.NBT_Parser.Enum;
+﻿using System;
+using System.Threading.Tasks;
+using Windows.Storage;
+using NBT_Studio.Library.NBT_Parser.Enum;
 
 namespace NBT_Studio.Utils;
 
@@ -29,5 +32,14 @@ public static class AssetHelper
     public static string GetConfigUri()
     {
         return $"{UriHead}Config/Settings.json";
+    }
+
+    /// <summary>
+    /// 通过 Uri 获取文件路径
+    /// </summary>
+    /// <param name="uri">ms-appx 格式的 Uri</param>
+    public static string GetFilePathFromUri(string uri)
+    {
+        return Task.Run(async () => await StorageFile.GetFileFromApplicationUriAsync(new Uri(uri))).Result.Path;
     }
 }

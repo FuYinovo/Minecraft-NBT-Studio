@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using CommunityToolkit.Mvvm.ComponentModel;
 using NBT_Studio.Enum;
 using NBT_Studio.Service;
+using Vanara.PInvoke;
 
 namespace NBT_Studio.ViewModel;
 
@@ -12,35 +14,34 @@ public partial class SettingsFlyoutViewModel : ObservableObject
 
     public SettingsFlyoutViewModel()
     {
-        _sortSetting = _settingsManager.GetValue<Sort>(EnumSettings.Sort);
-        _themeSetting = _settingsManager.GetValue<Theme>(EnumSettings.Theme);
+        _sort = _settingsManager.GetValue<Sort>(EnumSettings.Sort);
+        _theme = _settingsManager.GetValue<Theme>(EnumSettings.Theme);
     }
 
 
     #region Properties
 
-    private Sort _sortSetting;
-    private Theme _themeSetting;
+    private Sort _sort;
+    private Theme _theme;
+    private bool _quickCreate;
 
 
-    public Sort SortSetting
+    public Sort Sort
     {
-        get => _sortSetting;
-        set
-        {
-            SetField(ref _sortSetting, value);
-            _settingsManager.SetValue(EnumSettings.Sort, value);
-        }
+        get => _sort;
+        set => SetSetting(ref _sort, value, EnumSettings.Sort);
     }
 
-    public Theme ThemeSetting
+    public Theme Theme
     {
-        get => _themeSetting;
-        set
-        {
-            SetField(ref _themeSetting, value);
-            _settingsManager.SetValue(EnumSettings.Theme, value);
-        }
+        get => _theme;
+        set => SetSetting(ref _theme, value, EnumSettings.Theme);
+    }
+
+    public bool QuickCreate
+    {
+        get => _quickCreate;
+        set => SetSetting(ref _quickCreate, value, BooleanSettings.QuickCreate);
     }
 
     #endregion
@@ -52,6 +53,14 @@ public partial class SettingsFlyoutViewModel : ObservableObject
         if (EqualityComparer<T>.Default.Equals(field, value)) return;
         field = value;
         OnPropertyChanged(propertyName);
+    }
+
+    private void SetSetting<T, TE>(ref T field, T value, TE settingEnum, [CallerMemberName] string? propertyName = null)
+        where TE : System.Enum
+        where T : IConvertible
+    {
+        SetField(ref field, value, propertyName);
+        _settingsManager.SetValue(settingEnum, value);
     }
 
     #endregion NotifyPropertyChanged

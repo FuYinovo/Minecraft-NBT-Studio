@@ -1,5 +1,4 @@
-﻿using System;
-using CommunityToolkit.Mvvm.Messaging;
+﻿using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using NBT_Studio.Enum;
@@ -15,6 +14,7 @@ public partial class App
     public App()
     {
         InitializeComponent();
+        SettingsManager.GetInstance();
     }
 
     protected override void OnLaunched(LaunchActivatedEventArgs args)

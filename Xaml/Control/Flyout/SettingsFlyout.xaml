@@ -8,7 +8,6 @@
     xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:settings="using:NBT_Studio.Enum.Settings"
     xmlns:converter="using:NBT_Studio.Xaml.Converter"
     xmlns:enum="using:NBT_Studio.Enum"
     mc:Ignorable="d">
@@ -27,7 +26,7 @@
                                             Description="设置深浅色模式"
                                             Padding="20,20,160,20"
                                             Width="500">
-                        <ComboBox SelectedItem="{Binding ThemeSetting, Mode=TwoWay}"
+                        <ComboBox SelectedItem="{Binding Theme, Mode=TwoWay}"
                                   ItemsSource="{ui:EnumValues Type=enum:Theme}">
                             <ComboBox.ItemTemplate>
                                 <DataTemplate x:DataType="enum:Theme">
@@ -47,7 +46,7 @@
                                             Description="节点的排序方式"
                                             Padding="20,20,160,20"
                                             Width="500">
-                        <ComboBox SelectedItem="{Binding SortSetting, Mode=TwoWay}"
+                        <ComboBox SelectedItem="{Binding Sort, Mode=TwoWay}"
                                   ItemsSource="{ui:EnumValues Type=enum:Sort}">
                             <ComboBox.ItemTemplate>
                                 <DataTemplate x:DataType="enum:Sort">
@@ -55,7 +54,12 @@
                                 </DataTemplate>
                             </ComboBox.ItemTemplate>
                         </ComboBox>
-
+                    </community:SettingsCard>
+                    <community:SettingsCard Header="快速创建"
+                                            Description="创建节点时直接应用默认值"
+                                            Padding="20,20,160,20"
+                                            Width="500">
+                        <ToggleSwitch IsOn="{Binding QuickCreate, Mode=TwoWay}"></ToggleSwitch>
                     </community:SettingsCard>
                 </community:SettingsExpander.Items>
             </community:SettingsExpander>

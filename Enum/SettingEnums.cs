@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel;
 using NBT_Studio.Attribute;
+using WinRT;
 
 namespace NBT_Studio.Enum;
-
 
 public enum BooleanSettings
 {
@@ -17,6 +17,7 @@ public enum EnumSettings
     [Setting(Enum.Theme.System, typeof(Theme))]
     Theme,
 }
+
 public enum Sort
 {
     [Description("默认")] Default,

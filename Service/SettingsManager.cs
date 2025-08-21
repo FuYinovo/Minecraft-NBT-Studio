@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.Encodings.Web;
 using System.Text.Json;
-using System.Threading.Tasks;
-using Windows.Storage;
 using CommunityToolkit.Mvvm.Messaging;
 using NBT_Studio.Attribute;
 using NBT_Studio.Enum;
@@ -33,11 +30,7 @@ public sealed class SettingsManager
 
     private SettingsManager()
     {
-        _filePath = Task.Run(async () =>
-        {
-            var uri = new Uri(AssetHelper.GetConfigUri());
-            return await StorageFile.GetFileFromApplicationUriAsync(uri);
-        }).Result.Path;
+        _filePath = AssetHelper.GetFilePathFromUri(AssetHelper.GetConfigUri());
         InitSettingsEnums();
         LoadSettings();
         NotifySettings();
@@ -140,9 +133,7 @@ public sealed class SettingsManager
                 var jsonElement = (JsonElement)value;
                 _settings[key].Value = jsonElement.ValueKind switch
                 {
-                    // 字符串则解析为枚举
-                    JsonValueKind.String => System.Enum.Parse(_settings[key].Attribute.ValueType,
-                        jsonElement.GetString()!, true),
+                    JsonValueKind.String => ParseJsonString(key, jsonElement.GetString()!),
                     JsonValueKind.Number => jsonElement.GetInt32(),
                     JsonValueKind.False => false,
                     JsonValueKind.True => true,
@@ -154,6 +145,16 @@ public sealed class SettingsManager
         {
             ResetSettings();
         }
+
+        return;
+
+        object ParseJsonString(string key, string str)
+        {
+            // 「&;」开头字符串解析为枚举；其他正常解析为字符串
+            return str.StartsWith("&;")
+                ? System.Enum.Parse(_settings[key].Attribute.ValueType, str[2..], true)
+                : str;
+        }
     }
 
     /// <summary>
@@ -163,8 +164,8 @@ public sealed class SettingsManager
     {
         var jsonText = _settings
             .ToDictionary(
-                x => x.Key, // 如果是枚举，以字符串存储
-                x => x.Value.Attribute.ValueType.IsEnum ? x.Value.Value.ToString() : x.Value.Value);
+                x => x.Key, // 枚举字符串以「&;」开头
+                x => x.Value.Attribute.ValueType.IsEnum ? $"&;{x.Value.Value}" : x.Value.Value);
         var jsonSettings = JsonSerializer.Serialize(jsonText, _jsonOptions);
         File.WriteAllText(_filePath, jsonSettings);
     }
