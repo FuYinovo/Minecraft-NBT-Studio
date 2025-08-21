@@ -59,7 +59,6 @@
     </ItemGroup>
     <ItemGroup>
         <Folder Include="Assets\ItemIcon\"/>
-        <Folder Include="Service\" />
     </ItemGroup>
     <ItemGroup>
         <Page Update="Control\Content\FileInfoContent.xaml">

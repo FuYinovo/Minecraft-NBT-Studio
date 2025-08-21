@@ -1,61 +1,49 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using System.Text.Json;
-using System.Threading.Tasks;
-using Windows.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Messaging;
-using NBT_Studio.Enum.Settings;
-using NBT_Studio.Message;
-using NBT_Studio.Utils;
+using NBT_Studio.Enum;
+using NBT_Studio.Service;
 
 namespace NBT_Studio.ViewModel;
 
 public partial class SettingsFlyoutViewModel : ObservableObject
 {
+    private readonly SettingsManager _settingsManager = SettingsManager.GetInstance();
+
     public SettingsFlyoutViewModel()
     {
-        _ = LoadSettingsFile();
+        _sortSetting = _settingsManager.GetValue<Sort>(EnumSettings.Sort);
+        _themeSetting = _settingsManager.GetValue<Theme>(EnumSettings.Theme);
     }
 
-    /// <summary>
-    ///     加载配置文件
-    /// </summary>
-    private async Task LoadSettingsFile()
-    {
-        // 读取配置文件
-        var filePath = (await StorageFile.GetFileFromApplicationUriAsync(SettingsFileUri)).Path;
-        var jsonCent = await File.ReadAllTextAsync(filePath);
-        _settings = JsonSerializer.Deserialize<Dictionary<string, int>>(jsonCent, _jsonSerializerOptions) ?? [];
-        // 还原值
-        foreach (var key in _settings.Keys)
-            if (GetValueSetters().TryGetValue(key, out var value))
-                value(_settings[key]);
-    }
 
-    /// <summary>
-    ///     更新配置文件
-    /// </summary>
-    private async Task UpdateSettingsFile()
-    {
-        var filePath = (await StorageFile.GetFileFromApplicationUriAsync(SettingsFileUri)).Path;
-        var jsonContent = JsonSerializer.Serialize(_settings, _jsonSerializerOptions);
-        await File.WriteAllTextAsync(filePath, jsonContent);
-    }
+    #region Properties
 
-    /// <summary>
-    ///     获取「名称」到「方法:设置值」的字典
-    /// </summary>
-    private Dictionary<string, Action<int>> GetValueSetters()
+    private Sort _sortSetting;
+    private Theme _themeSetting;
+
+
+    public Sort SortSetting
     {
-        return new Dictionary<string, Action<int>>
+        get => _sortSetting;
+        set
         {
-            { nameof(Theme), i => SelectedTheme = (Theme)i },
-            { nameof(Sort), i => SelectedSort = (Sort)i }
-        };
+            SetField(ref _sortSetting, value);
+            _settingsManager.SetValue(EnumSettings.Sort, value);
+        }
     }
+
+    public Theme ThemeSetting
+    {
+        get => _themeSetting;
+        set
+        {
+            SetField(ref _themeSetting, value);
+            _settingsManager.SetValue(EnumSettings.Theme, value);
+        }
+    }
+
+    #endregion
 
     # region INotifyPropertyChanged
 
@@ -67,41 +55,4 @@ public partial class SettingsFlyoutViewModel : ObservableObject
     }
 
     #endregion NotifyPropertyChanged
-
-    #region Private Properties
-
-    private readonly JsonSerializerOptions _jsonSerializerOptions = new() { WriteIndented = true };
-    private static readonly Uri SettingsFileUri = new(AssetHelper.GetConfigUri());
-    private Dictionary<string, int> _settings = new();
-
-    #endregion
-
-    #region Settings Properties
-
-    private Sort _selectedSort;
-    private Theme _selectedTheme;
-
-    public Sort SelectedSort
-    {
-        get => _selectedSort;
-        set
-        {
-            SetField(ref _selectedSort, value);
-            WeakReferenceMessenger.Default.Send(new SettingsChangedMessage<Sort>(value));
-            _ = UpdateSettingsFile();
-        }
-    }
-
-    public Theme SelectedTheme
-    {
-        get => _selectedTheme;
-        set
-        {
-            SetField(ref _selectedTheme, value);
-            WeakReferenceMessenger.Default.Send(new SettingsChangedMessage<Theme>(value));
-            _ = UpdateSettingsFile();
-        }
-    }
-
-    #endregion
 }

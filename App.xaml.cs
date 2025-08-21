@@ -2,8 +2,9 @@
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
-using NBT_Studio.Enum.Settings;
+using NBT_Studio.Enum;
 using NBT_Studio.Message;
+using NBT_Studio.Service;
 
 namespace NBT_Studio;
 
@@ -21,17 +22,33 @@ public partial class App
         MainWindow = new MainWindow();
         MainWindow.Activate();
         RegisterMessages();
+        SettingsManager.GetInstance();
     }
 
     private void RegisterMessages()
     {
-        WeakReferenceMessenger.Default.Register<SettingsChangedMessage<Theme>>(this, (_, v) => SetTheme(v.Value));
+        WeakReferenceMessenger.Default.Register<SettingsChangedMessage>(this, (_, msg) =>
+        {
+            if (msg.ValueType == typeof(Theme)) ApplyTheme((Theme)msg.NewValue);
+        });
     }
 
-    private static void SetTheme(Theme theme)
+    private static void ApplyTheme(Theme theme)
     {
         if (MainWindow == null) return;
-        ((FrameworkElement)MainWindow.Content).RequestedTheme = ThemeExtensions.ToElementTheme(theme);
-        MainWindow.AppWindow.TitleBar.PreferredTheme = ThemeExtensions.ToTitleBarTheme(theme);
+        var elementTheme = theme switch
+        {
+            Theme.Dark => ElementTheme.Dark,
+            Theme.Light => ElementTheme.Light,
+            _ => ElementTheme.Default,
+        };
+        var titleBarTheme = elementTheme switch
+        {
+            ElementTheme.Dark => TitleBarTheme.Dark,
+            ElementTheme.Light => TitleBarTheme.Light,
+            _ => TitleBarTheme.UseDefaultAppMode,
+        };
+        ((FrameworkElement)MainWindow.Content).RequestedTheme = elementTheme;
+        MainWindow.AppWindow.TitleBar.PreferredTheme = titleBarTheme;
     }
 }

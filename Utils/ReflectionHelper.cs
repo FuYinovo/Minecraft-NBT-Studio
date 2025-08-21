@@ -49,6 +49,11 @@ public static class ReflectionHelper
         return field?.GetCustomAttribute<T>();
     }
 
+    public static T? GetAttribute<T>(object target) where T : System.Attribute
+    {
+        return target.GetType().GetCustomAttribute<T>();
+    }
+
     private static FieldInfo? GetEnumField(System.Enum targetEnum)
     {
         return targetEnum.GetType().GetField(targetEnum.ToString());

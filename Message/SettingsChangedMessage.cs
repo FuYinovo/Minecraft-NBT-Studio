@@ -1,7 +1,9 @@
-﻿namespace NBT_Studio.Message;
+﻿using System;
 
-public class SettingsChangedMessage<T>(T value)
-    where T : System.Enum
+namespace NBT_Studio.Message;
+
+public class SettingsChangedMessage(Type valueType, object newValue)
 {
-    public readonly T Value = value;
+    public readonly Type ValueType = valueType;
+    public readonly object NewValue = newValue;
 }

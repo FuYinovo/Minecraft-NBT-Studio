@@ -14,9 +14,7 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using NBT_Studio.Control.Dialog;
 using NBT_Studio.Enum;
-using NBT_Studio.Enum.Settings;
 using NBT_Studio.Library.NBT_Parser.Class;
 using NBT_Studio.Library.NBT_Parser.Enum;
 using NBT_Studio.Message;
@@ -47,7 +45,7 @@ public sealed partial class TreeViewPageViewModel : ObservableObject
     private void RegisterMessages()
     {
         WeakReferenceMessenger.Default.Register<SelectedNodeChangedMessage>(this, SelectedNodeChanged);
-        WeakReferenceMessenger.Default.Register<SettingsChangedMessage<Sort>>(this, SortChanged);
+        WeakReferenceMessenger.Default.Register<SettingsChangedMessage>(this, SettingChanged);
         WeakReferenceMessenger.Default.Register<NodeModifiedMessage>(this, NodeModified);
         return;
 
@@ -64,7 +62,11 @@ public sealed partial class TreeViewPageViewModel : ObservableObject
             WaitingToSelectMaskVisibility = false;
         }
 
-        void SortChanged(object obj, SettingsChangedMessage<Sort> msg) => ApplySort(msg.Value);
+        void SettingChanged(object obj, SettingsChangedMessage msg)
+        {
+            if (msg.ValueType == typeof(Sort)) ApplySort((Sort)msg.NewValue);
+        }
+
         void NodeModified(object obj, NodeModifiedMessage msg) => IsApplyEnabled = _fileInfo.FilePath != string.Empty;
     }
 
@@ -475,7 +477,7 @@ public sealed partial class TreeViewPageViewModel
     }
 
     /// <summary> 应用节点排序 </summary>
-    private void ApplySort(Sort type)
+    private void ApplySort(Sort sort)
     {
         // TODO)) 节点排序
     }

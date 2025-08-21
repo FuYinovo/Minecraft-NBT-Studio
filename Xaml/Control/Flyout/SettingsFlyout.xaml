@@ -10,6 +10,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:settings="using:NBT_Studio.Enum.Settings"
     xmlns:converter="using:NBT_Studio.Xaml.Converter"
+    xmlns:enum="using:NBT_Studio.Enum"
     mc:Ignorable="d">
 
     <UserControl.Resources>
@@ -26,10 +27,10 @@
                                             Description="设置深浅色模式"
                                             Padding="20,20,160,20"
                                             Width="500">
-                        <ComboBox SelectedItem="{Binding SelectedTheme, Mode=TwoWay}"
-                                  ItemsSource="{ui:EnumValues Type=settings:Theme}">
+                        <ComboBox SelectedItem="{Binding ThemeSetting, Mode=TwoWay}"
+                                  ItemsSource="{ui:EnumValues Type=enum:Theme}">
                             <ComboBox.ItemTemplate>
-                                <DataTemplate x:DataType="settings:Theme">
+                                <DataTemplate x:DataType="enum:Theme">
                                     <TextBlock Text="{Binding Converter={StaticResource EnumToDescriptionConverter}}" />
                                 </DataTemplate>
                             </ComboBox.ItemTemplate>
@@ -46,10 +47,10 @@
                                             Description="节点的排序方式"
                                             Padding="20,20,160,20"
                                             Width="500">
-                        <ComboBox SelectedItem="{Binding SelectedSort, Mode=TwoWay}"
-                                  ItemsSource="{ui:EnumValues Type=settings:Sort}">
+                        <ComboBox SelectedItem="{Binding SortSetting, Mode=TwoWay}"
+                                  ItemsSource="{ui:EnumValues Type=enum:Sort}">
                             <ComboBox.ItemTemplate>
-                                <DataTemplate x:DataType="settings:Sort">
+                                <DataTemplate x:DataType="enum:Sort">
                                     <TextBlock Text="{Binding Converter={StaticResource EnumToDescriptionConverter}}" />
                                 </DataTemplate>
                             </ComboBox.ItemTemplate>

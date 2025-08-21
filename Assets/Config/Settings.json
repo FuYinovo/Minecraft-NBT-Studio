@@ -1,4 +1,5 @@
-﻿{
-  "Theme": 0,
-  "SortType": 1
+{
+  "QuickCreate": false,
+  "Sort": "Default",
+  "Theme": "Light"
 }
