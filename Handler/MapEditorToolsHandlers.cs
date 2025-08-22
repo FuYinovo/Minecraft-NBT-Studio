@@ -9,35 +9,35 @@ namespace NBT_Studio.Handler;
 
 public record MapEditorToolsHandlers
 {
-    /// <summary>选择  </summary>
+    /// <summary> 选择 </summary>
     [MapEditorToolHandler(Tool = MapEditorTool.Select)]
     public class SelectHandler(MapEditor editor) : IPointerEventsHandler
     {
         public MapEditor Editor { get; set; } = editor;
     }
 
-    /// <summary>橡皮  </summary>
+    /// <summary> 橡皮 </summary>
     [MapEditorToolHandler(Tool = MapEditorTool.Eraser)]
     public class EraserHandler(MapEditor editor) : IPointerEventsHandler
     {
         public MapEditor Editor { get; set; } = editor;
     }
 
-    /// <summary>吸色器  </summary>
+    /// <summary> 吸色器 </summary>
     [MapEditorToolHandler(Tool = MapEditorTool.ColorPicker)]
     public class ColorPickerHandler(MapEditor editor) : IPointerEventsHandler
     {
         public MapEditor Editor { get; set; } = editor;
     }
 
-    /// <summary>缩放  </summary>
+    /// <summary> 缩放 </summary>
     [MapEditorToolHandler(Tool = MapEditorTool.Zoom)]
     public class ZoomHandler(MapEditor editor) : IPointerEventsHandler
     {
         public MapEditor Editor { get; set; } = editor;
     }
 
-    /// <summary>笔刷  </summary>
+    /// <summary> 笔刷 </summary>
     [MapEditorToolHandler(Tool = MapEditorTool.Brush)]
     public class BrushHandler(MapEditor editor) : IPointerEventsHandler
     {
