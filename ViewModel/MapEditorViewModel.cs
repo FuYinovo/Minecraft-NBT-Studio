@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using Windows.UI;
 using ABI.Microsoft.UI.Xaml.Media.Animation;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Controls;
 using NBT_Studio.Enum;
@@ -39,6 +40,9 @@ public partial class MapEditorViewModel : ObservableObject, IMutuallyControls
     /// <param name="selectedTreeNode"></param>
     private void UpdateMapDisplay(TreeViewNode selectedTreeNode)
     {
+        Pixels = new MinecraftMapPixel[_size, _size];
+        WeakReferenceMessenger.Default.Send(new DrawMapMessage());
+
         var nbtNode = (NbtNode)selectedTreeNode.Content;
         var dataTag = // 地图数据包含一个 data 字典
             nbtNode?.Tag.Children.Find(i => (i.Name ?? "").Equals("data", StringComparison.CurrentCultureIgnoreCase));
@@ -46,6 +50,7 @@ public partial class MapEditorViewModel : ObservableObject, IMutuallyControls
 
         UpdateMapData(dataTag);
         UpdateColors();
+        WeakReferenceMessenger.Default.Send(new DrawMapMessage());
     }
 
     /// <summary>
@@ -74,8 +79,6 @@ public partial class MapEditorViewModel : ObservableObject, IMutuallyControls
         {
             return;
         }
-
-        WeakReferenceMessenger.Default.Send(new DrawMapMessage());
     }
 
     /// <summary>
@@ -105,6 +108,11 @@ public partial class MapEditorViewModel : ObservableObject, IMutuallyControls
     private void SetDefaultButtonGroupsSelection()
     {
         ((IMutuallyControls)this).SetSelectedValue("MapEditorTools", "All");
+    }
+
+    [RelayCommand]
+    private void SaveValueChanges()
+    {
     }
 
 

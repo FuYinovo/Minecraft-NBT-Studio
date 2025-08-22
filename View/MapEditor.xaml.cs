@@ -4,6 +4,7 @@ using Windows.Foundation;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Graphics.Canvas.UI.Xaml;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Input;
 using NBT_Studio.Manager;
@@ -71,19 +72,23 @@ public sealed partial class MapEditor
     /// </summary>
     private void HookCursorEvents()
     {
-        MapCanvas.PointerEntered += (_, _) => { _cursorManager.ShowCursor(); }; // 光标进入
-        MapCanvas.PointerExited += (_, _) => { _cursorManager.HideCursor(); }; // 光标离开
-        MapCanvas.PointerMoved += (_, args) => // 光标移动
+        // 光标进入
+        MapCanvas.PointerEntered += (_, _) => { _cursorManager.ShowCursor(); };
+        // 光标离开
+        MapCanvas.PointerExited += (_, _) =>
+        {
+            _cursorManager.HideCursor();
+            _isMousePressing = false;
+        };
+        // 光标移动
+        MapCanvas.PointerMoved += (_, args) =>
         {
             if (!_cursorManager.IsVisible) return;
-            var position = args.GetCurrentPoint(MapCanvas).Position;
+
             // 更新笔刷光标
             var color = _viewModel.ClosestMapColor;
-            if (color != _cursorManager.GetCursorColor())
-            {
-                _cursorManager.SetCursorColor(color);
-                _cursorManager.SetCursorSize(MapScale);
-            }
+            if (color != _cursorManager.GetCursorColor()) _cursorManager.SetCursorColor(color);
+            _cursorManager.SetCursorSize(MapScale);
 
             // 修改像素颜色
             if (_isMousePressing)
@@ -92,25 +97,19 @@ public sealed partial class MapEditor
                 if (_isMousePressing) TryModifyMapColor(mapPosition.x, mapPosition.y);
             }
         };
-        MapCanvas.PointerPressed += (_, args) => //光标按下
+        //光标按下
+        MapCanvas.PointerPressed += (_, args) =>
         {
             _isMousePressing = true;
             // 修改像素颜色
             var mapPosition = GetMapPosition(args);
             TryModifyMapColor(mapPosition.x, mapPosition.y);
         };
-        MapCanvas.PointerReleased += (_, _) => // 光标松开
-        {
-            _isMousePressing = false;
-        };
+        // 光标松开
+        MapCanvas.PointerReleased += (_, _) => { _isMousePressing = false; };
 
 
         return;
-
-        (float x, float y) GetAdsorbPosition(float x, float y)
-        {
-            return ((float, float))(Math.Floor(x / MapScale) * MapScale, Math.Floor(y / MapScale) * MapScale);
-        }
 
         (int x, int y) GetMapPosition(PointerRoutedEventArgs args)
         {
@@ -131,10 +130,17 @@ public sealed partial class MapEditor
         if (x > maxIndex || y > maxIndex) return;
         _viewModel.SetColor(x, y);
         MapCanvas.Invalidate();
+        SaveButton.IsEnabled = true;
     }
 
     private void MapZoom_OnValueChanged(object sender, RangeBaseValueChangedEventArgs e)
     {
         MapCanvas?.Invalidate();
+    }
+
+    private void SaveButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        if (sender is not Button btn) return;
+        btn.IsEnabled = false;
     }
 }
