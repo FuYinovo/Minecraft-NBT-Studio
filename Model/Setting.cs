@@ -5,6 +5,8 @@ namespace NBT_Studio.Model;
 
 public class Setting<T>(SettingAttribute attribute) : ISetting
 {
+    private T _value = (T)attribute.DefaultValue;
+
     public object Value
     {
         get => _value;
@@ -12,5 +14,4 @@ public class Setting<T>(SettingAttribute attribute) : ISetting
     }
 
     public SettingAttribute Attribute { get; } = attribute;
-    private T _value = (T)attribute.DefaultValue;
 }

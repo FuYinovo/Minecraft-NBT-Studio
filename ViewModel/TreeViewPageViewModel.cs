@@ -2,7 +2,6 @@
 using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.IO.Compression;
@@ -15,8 +14,6 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Data;
-using NBT_Studio.Attribute;
 using NBT_Studio.Enum;
 using NBT_Studio.Library.NBT_Parser.Class;
 using NBT_Studio.Library.NBT_Parser.Enum;
@@ -70,7 +67,10 @@ public sealed partial class TreeViewPageViewModel : ObservableObject
             if (msg.ValueType == typeof(Sort)) ApplySort((Sort)msg.NewValue);
         }
 
-        void NodeModified(object obj, NodeModifiedMessage msg) => IsApplyEnabled = _fileInfo.FilePath != string.Empty;
+        void NodeModified(object obj, NodeModifiedMessage msg)
+        {
+            IsApplyEnabled = _fileInfo.FilePath != string.Empty;
+        }
     }
 
 

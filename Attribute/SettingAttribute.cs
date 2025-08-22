@@ -1,5 +1,4 @@
 ﻿using System;
-using NBT_Studio.Enum;
 
 namespace NBT_Studio.Attribute;
 

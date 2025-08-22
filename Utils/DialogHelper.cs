@@ -19,7 +19,7 @@ public static class DialogHelper
     /// <returns>用户选择的按钮</returns>
     public static async Task<ContentDialogResult> ShowDialog(string title, string? primary = null,
         string? secondary = null,
-        string? close = null, Microsoft.UI.Xaml.Controls.Control? content = null, string? description = null)
+        string? close = null, Control? content = null, string? description = null)
     {
         var dialog = BuildDialog(title, primary, secondary, close, content, description);
         return await dialog.ShowAsync();
@@ -37,7 +37,7 @@ public static class DialogHelper
     /// <returns>用户选择的按钮</returns>
     public static ContentDialog GetDialog(string title, string? primary = null,
         string? secondary = null,
-        string? close = null, Microsoft.UI.Xaml.Controls.Control? content = null, string? description = null)
+        string? close = null, Control? content = null, string? description = null)
     {
         return BuildDialog(title, primary, secondary, close, content, description);
     }
@@ -64,7 +64,7 @@ public static class DialogHelper
     /// <returns>用户选择的按钮</returns>
     private static ContentDialog BuildDialog(string title, string? primary = null,
         string? secondary = null,
-        string? close = null, Microsoft.UI.Xaml.Controls.Control? content = null, string? description = null)
+        string? close = null, Control? content = null, string? description = null)
     {
         var dialogContent = content switch
         {

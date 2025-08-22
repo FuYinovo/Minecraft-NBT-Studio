@@ -19,13 +19,14 @@ public sealed class SettingsManager
 {
     private static readonly SettingsManager Instance = new();
 
+    private readonly string _filePath;
+
     private readonly JsonSerializerOptions _jsonOptions = new()
     {
         WriteIndented = true,
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
     };
 
-    private readonly string _filePath;
     private readonly Dictionary<string, ISetting> _settings = new();
 
     private SettingsManager()
@@ -37,16 +38,19 @@ public sealed class SettingsManager
     }
 
     /// <summary>
-    /// 获取 <see cref="SettingsManager"/> 的唯一实例
+    ///     获取 <see cref="SettingsManager" /> 的唯一实例
     /// </summary>
-    public static SettingsManager GetInstance() => Instance;
+    public static SettingsManager GetInstance()
+    {
+        return Instance;
+    }
 
 
     /// <summary>
-    /// 获取词条值
+    ///     获取词条值
     /// </summary>
     /// <example>
-    /// <code>
+    ///     <code>
     /// bool x = GetValue&lt;bool>(BooleanSettings.QuickCreate)
     /// Sort y = GetValue&lt;Sort>(EnumSettings.Sort)
     /// </code>
@@ -66,10 +70,10 @@ public sealed class SettingsManager
     }
 
     /// <summary>
-    /// 设置词条值
+    ///     设置词条值
     /// </summary>
     /// <example>
-    /// <code>
+    ///     <code>
     /// SetValue(BooleanSettings.QuickCreate, ture);
     /// SetValue(EnumSettings.Theme, Theme.Dark);
     /// </code>
@@ -95,10 +99,10 @@ public sealed class SettingsManager
     }
 
     /// <summary>
-    /// 从枚举初始化词条
+    ///     从枚举初始化词条
     /// </summary>
     /// <remarks>
-    /// 详情见 <see cref="InitSettingsEnums"/>
+    ///     详情见 <see cref="InitSettingsEnums" />
     /// </remarks>
     private void InitSettingsFromEnums<TEnums, TValue>()
         where TEnums : System.Enum
@@ -114,7 +118,7 @@ public sealed class SettingsManager
     }
 
     /// <summary>
-    /// 从配置文件加载词条值
+    ///     从配置文件加载词条值
     /// </summary>
     private void LoadSettings()
     {
@@ -158,7 +162,7 @@ public sealed class SettingsManager
     }
 
     /// <summary>
-    /// 将词条值保存到配置文件
+    ///     将词条值保存到配置文件
     /// </summary>
     private void ApplySettings()
     {
@@ -171,7 +175,7 @@ public sealed class SettingsManager
     }
 
     /// <summary>
-    /// 重置所有词条
+    ///     重置所有词条
     /// </summary>
     private void ResetSettings()
     {
@@ -179,7 +183,7 @@ public sealed class SettingsManager
     }
 
     /// <summary>
-    /// 通知更新
+    ///     通知更新
     /// </summary>
     private void NotifySettings()
     {

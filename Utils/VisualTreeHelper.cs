@@ -1,4 +1,5 @@
 ﻿using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 
 namespace NBT_Studio.Utils;
 
@@ -16,7 +17,7 @@ public static class VisualTreeHelper
         where T : class
     {
         //  自身即目标 DataContext
-        if (dependencyObject is Microsoft.UI.Xaml.Controls.Control { DataContext: T context })
+        if (dependencyObject is Control { DataContext: T context })
         {
             result = context;
             return true;
@@ -28,7 +29,7 @@ public static class VisualTreeHelper
         while (tried < maxTrying)
         {
             var found = Microsoft.UI.Xaml.Media.VisualTreeHelper.GetParent(child);
-            if (found is Microsoft.UI.Xaml.Controls.Control { DataContext: T dataContext })
+            if (found is Control { DataContext: T dataContext })
             {
                 result = dataContext;
                 return true;

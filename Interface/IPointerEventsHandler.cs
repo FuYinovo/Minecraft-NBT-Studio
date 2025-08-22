@@ -6,6 +6,7 @@ namespace NBT_Studio.Interface;
 public interface IPointerEventsHandler
 {
     MapEditor Editor { get; set; }
+
     void HandleEntered(object sender, PointerRoutedEventArgs args)
     {
     }

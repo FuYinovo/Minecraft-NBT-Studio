@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel;
 using NBT_Studio.Attribute;
-using WinRT;
 
 namespace NBT_Studio.Enum;
 
@@ -15,7 +14,7 @@ public enum EnumSettings
     Sort,
 
     [Setting(Enum.Theme.System, typeof(Theme))]
-    Theme,
+    Theme
 }
 
 public enum Sort

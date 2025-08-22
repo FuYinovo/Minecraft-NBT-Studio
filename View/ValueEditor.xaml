@@ -12,8 +12,8 @@
 
     <Grid DataContext="{x:Bind _viewModel}" x:Name="ControlGrid" Padding="-20, 20, 20, 5" RowSpacing="6">
         <Grid.RowDefinitions>
-            <RowDefinition Height="auto"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0">
@@ -25,8 +25,8 @@
         </Grid>
         <Grid Grid.Row="1" ColumnSpacing="24">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="auto"></ColumnDefinition>
-                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
             <!-- 左侧 -->
@@ -68,9 +68,7 @@
 
             <!-- 右侧 -->
             <Grid Grid.Column="1">
-                <StackPanel>
-                    
-                </StackPanel>
+                <StackPanel />
                 <!-- 普通值 -->
                 <TextBox Header="数据"
                          Margin="0,0,0,56"

@@ -78,7 +78,7 @@ public record MapEditorToolsHandlers
         }
 
         /// <summary>
-        /// 获取地图像素索引坐标
+        ///     获取地图像素索引坐标
         /// </summary>
         private (int x, int y) GetMapPosition(PointerRoutedEventArgs args)
         {
@@ -89,7 +89,7 @@ public record MapEditorToolsHandlers
         }
 
         /// <summary>
-        /// 尝试修改地图像素颜色
+        ///     尝试修改地图像素颜色
         /// </summary>
         /// <remarks>当传入地图坐标超出数组，直接返回</remarks>
         private void TryModifyMapColor(int x, int y)

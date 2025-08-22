@@ -35,7 +35,7 @@ public static class AssetHelper
     }
 
     /// <summary>
-    /// 通过 Uri 获取文件路径
+    ///     通过 Uri 获取文件路径
     /// </summary>
     /// <param name="uri">ms-appx 格式的 Uri</param>
     public static string GetFilePathFromUri(string uri)

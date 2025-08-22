@@ -14,6 +14,7 @@ using NBT_Studio.Enum;
 using NBT_Studio.Library.NBT_Parser.Class;
 using NBT_Studio.Library.NBT_Parser.Enum;
 using NBT_Studio.Message;
+using NBT_Studio.Service;
 using NBT_Studio.Utils;
 using CreateNodeDialog = NBT_Studio.Xaml.Control.Dialog.CreateNodeDialog;
 using RenameNodeDialog = NBT_Studio.Xaml.Control.Dialog.RenameNodeDialog;
@@ -230,7 +231,7 @@ public sealed partial class NbtNode
         var isListElement = parent.TagEnum == NbtTagEnum.List;
 
         // 快速创建 or 弹窗创建
-        if (Service.SettingsManager.GetInstance().GetValue<bool>(BooleanSettings.QuickCreate))
+        if (SettingsManager.GetInstance().GetValue<bool>(BooleanSettings.QuickCreate))
             QuickAppend();
         else await DetailedAppend();
 

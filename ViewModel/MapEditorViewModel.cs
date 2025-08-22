@@ -6,7 +6,6 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Input;
 using NBT_Studio.Enum;
 using NBT_Studio.Interface;
 using NBT_Studio.Library.NBT_Parser.Class;
@@ -93,7 +92,7 @@ public partial class MapEditorViewModel : ObservableObject, IMutuallyControlsMan
     }
 
     /// <summary>
-    /// 将指定像素颜色设置为选定颜色(地图色)
+    ///     将指定像素颜色设置为选定颜色(地图色)
     /// </summary>
     /// <param name="x"></param>
     /// <param name="y"></param>

@@ -6,5 +6,5 @@ public enum PointerEvent
     Exited,
     Pressed,
     Released,
-    Moved,
+    Moved
 }

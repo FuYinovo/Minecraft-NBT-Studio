@@ -9,14 +9,14 @@ public sealed partial class CreateNodeButton
     private readonly DependencyProperty _buttonCommandDp = DependencyProperty.Register(
         nameof(ButtonCommand), typeof(ICommand), typeof(CreateNodeButton), new PropertyMetadata(null));
 
+    private readonly DependencyProperty _buttonEnabledDp = DependencyProperty.Register(
+        nameof(ButtonEnabled), typeof(bool), typeof(CreateNodeButton), new PropertyMetadata(true));
+
     private readonly DependencyProperty _iconUriDp = DependencyProperty.Register(
         nameof(IconUri), typeof(string), typeof(CreateNodeButton), new PropertyMetadata(""));
 
     private readonly DependencyProperty _labelDp = DependencyProperty.Register(
         nameof(Label), typeof(string), typeof(CreateNodeButton), new PropertyMetadata(""));
-
-    private readonly DependencyProperty _buttonEnabledDp = DependencyProperty.Register(
-        nameof(ButtonEnabled), typeof(bool), typeof(CreateNodeButton), new PropertyMetadata(true));
 
     public CreateNodeButton()
     {

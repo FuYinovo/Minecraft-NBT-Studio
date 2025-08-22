@@ -17,11 +17,11 @@ namespace NBT_Studio.View;
 public sealed partial class MapEditor
 {
     private const int InitMapSize = 128;
+    private readonly MapEditorToolsHandlersManager _eventHandlerManager;
     public readonly SquareCursorManager SquareCursorManager;
     public readonly MapEditorViewModel ViewModel = new(InitMapSize);
     private float _mapScale = 1;
     public bool IsMousePressing;
-    private readonly MapEditorToolsHandlersManager _eventHandlerManager;
 
     public MapEditor()
     {

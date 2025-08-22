@@ -40,13 +40,13 @@ public partial class App
         {
             Theme.Dark => ElementTheme.Dark,
             Theme.Light => ElementTheme.Light,
-            _ => ElementTheme.Default,
+            _ => ElementTheme.Default
         };
         var titleBarTheme = elementTheme switch
         {
             ElementTheme.Dark => TitleBarTheme.Dark,
             ElementTheme.Light => TitleBarTheme.Light,
-            _ => TitleBarTheme.UseDefaultAppMode,
+            _ => TitleBarTheme.UseDefaultAppMode
         };
         ((FrameworkElement)MainWindow.Content).RequestedTheme = elementTheme;
         MainWindow.AppWindow.TitleBar.PreferredTheme = titleBarTheme;

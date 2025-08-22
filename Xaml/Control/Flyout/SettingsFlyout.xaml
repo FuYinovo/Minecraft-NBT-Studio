@@ -59,7 +59,7 @@
                                             Description="创建节点时直接应用默认值"
                                             Padding="20,20,160,20"
                                             Width="500">
-                        <ToggleSwitch IsOn="{Binding QuickCreate, Mode=TwoWay}"></ToggleSwitch>
+                        <ToggleSwitch IsOn="{Binding QuickCreate, Mode=TwoWay}" />
                     </community:SettingsCard>
                 </community:SettingsExpander.Items>
             </community:SettingsExpander>
