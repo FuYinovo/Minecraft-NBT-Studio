@@ -2,6 +2,7 @@
 using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.IO.Compression;
@@ -14,6 +15,8 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Data;
+using NBT_Studio.Attribute;
 using NBT_Studio.Enum;
 using NBT_Studio.Library.NBT_Parser.Class;
 using NBT_Studio.Library.NBT_Parser.Enum;
@@ -479,7 +482,33 @@ public sealed partial class TreeViewPageViewModel
     /// <summary> 应用节点排序 </summary>
     private void ApplySort(Sort sort)
     {
-        // TODO)) 节点排序
+        // if (sort != Sort.Alphabetical) return;
+        // Debug.WriteLine($"Try to sort:");
+        // foreach(var x in Nodes) Debug.Write(x.DisplayValue + ", ");
+        // SortAll(Nodes);
+        // Debug.WriteLine($"After sort");
+        // foreach(var x in Nodes) Debug.Write(x.DisplayValue + ", ");
+        //
+        // void SortAll(ObservableCollection<NbtNode> nodes)
+        // {
+        //     var sorted = nodes
+        //         .OrderBy(x => x.DisplayName)
+        //         .ToList();
+        //
+        //     for (var i = 0; i < nodes.Count; i++)
+        //     {
+        //         if (sorted[i] == nodes[i])
+        //         {
+        //             SortAll(nodes[i].Children);
+        //             continue;
+        //         }
+        //
+        //         var oldIndex = nodes.IndexOf(sorted[i]);
+        //         nodes.Move(oldIndex, i);
+        //         Debug.WriteLine($"Moved [{oldIndex}]{nodes[oldIndex].DisplayName} to [{i}]{nodes[i].DisplayName}");
+        //         SortAll(nodes[i].Children);
+        //     }
+        // }
     }
 }
 
