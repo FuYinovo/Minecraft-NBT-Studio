@@ -1,24 +1,24 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Numerics;
-using System.Runtime.CompilerServices;
 using Windows.Foundation;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Graphics.Canvas.UI.Xaml;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls.Primitives;
+using Microsoft.UI.Xaml.Input;
 using NBT_Studio.Manager;
 using NBT_Studio.Message;
 using NBT_Studio.ViewModel;
 
 namespace NBT_Studio.View;
 
-public sealed partial class MapEditor : INotifyPropertyChanged
+public sealed partial class MapEditor
 {
     private const int InitMapSize = 128;
 
     private readonly SquareCursorManager _cursorManager;
     private readonly MapEditorViewModel _viewModel = new(InitMapSize);
+    private bool _isMousePressing;
     private float _mapScale = 1;
 
     public MapEditor()
@@ -29,6 +29,7 @@ public sealed partial class MapEditor : INotifyPropertyChanged
         _cursorManager = new SquareCursorManager(MapCanvas);
         _cursorManager.HideCursor();
     }
+
 
     private float MapScale
     {
@@ -66,22 +67,43 @@ public sealed partial class MapEditor : INotifyPropertyChanged
     }
 
     /// <summary>
-    ///     绑定地图光标事件
-    ///     #
+    ///     绑定地图上的光标事件
     /// </summary>
     private void HookCursorEvents()
     {
-        MapCanvas.PointerEntered += (_, _) => { _cursorManager.ShowCursor(); };
-        MapCanvas.PointerExited += (_, _) => { _cursorManager.HideCursor(); };
-        MapCanvas.PointerMoved += (_, args) =>
+        MapCanvas.PointerEntered += (_, _) => { _cursorManager.ShowCursor(); }; // 光标进入
+        MapCanvas.PointerExited += (_, _) => { _cursorManager.HideCursor(); }; // 光标离开
+        MapCanvas.PointerMoved += (_, args) => // 光标移动
         {
             if (!_cursorManager.IsVisible) return;
-            var color = _viewModel.ClosestMapColor;
             var position = args.GetCurrentPoint(MapCanvas).Position;
-            _cursorManager.SetCursorColor(color);
-            _cursorManager.SetCursorSize(MapScale);
-            _cursorManager.SetPosition(GetAdsorbPosition(position._x, position._y));
+            // 更新笔刷光标
+            var color = _viewModel.ClosestMapColor;
+            if (color != _cursorManager.GetCursorColor())
+            {
+                _cursorManager.SetCursorColor(color);
+                _cursorManager.SetCursorSize(MapScale);
+            }
+
+            // 修改像素颜色
+            if (_isMousePressing)
+            {
+                var mapPosition = GetMapPosition(args);
+                if (_isMousePressing) TryModifyMapColor(mapPosition.x, mapPosition.y);
+            }
         };
+        MapCanvas.PointerPressed += (_, args) => //光标按下
+        {
+            _isMousePressing = true;
+            // 修改像素颜色
+            var mapPosition = GetMapPosition(args);
+            TryModifyMapColor(mapPosition.x, mapPosition.y);
+        };
+        MapCanvas.PointerReleased += (_, _) => // 光标松开
+        {
+            _isMousePressing = false;
+        };
+
 
         return;
 
@@ -89,28 +111,30 @@ public sealed partial class MapEditor : INotifyPropertyChanged
         {
             return ((float, float))(Math.Floor(x / MapScale) * MapScale, Math.Floor(y / MapScale) * MapScale);
         }
+
+        (int x, int y) GetMapPosition(PointerRoutedEventArgs args)
+        {
+            var position = args.GetCurrentPoint(MapCanvas).Position;
+            var mapX = Math.Ceiling(position._x / _mapScale);
+            var mapY = Math.Ceiling(position._y / _mapScale);
+            return ((int)mapX, (int)mapY);
+        }
+    }
+
+    /// <summary>
+    /// 尝试修改地图像素颜色
+    /// </summary>
+    /// <remarks>当传入地图坐标超出数组，直接返回</remarks>
+    private void TryModifyMapColor(int x, int y)
+    {
+        const int maxIndex = InitMapSize - 1;
+        if (x > maxIndex || y > maxIndex) return;
+        _viewModel.SetColor(x, y);
+        MapCanvas.Invalidate();
     }
 
     private void MapZoom_OnValueChanged(object sender, RangeBaseValueChangedEventArgs e)
     {
         MapCanvas?.Invalidate();
     }
-
-    # region INotifyPropertyChanged
-
-    public event PropertyChangedEventHandler? PropertyChanged;
-
-    private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
-
-    private void SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
-    {
-        if (EqualityComparer<T>.Default.Equals(field, value)) return;
-        field = value;
-        OnPropertyChanged(propertyName);
-    }
-
-    #endregion
 }

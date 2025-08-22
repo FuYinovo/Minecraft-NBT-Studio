@@ -1,6 +1,7 @@
 ﻿using System.Numerics;
 using Windows.UI;
 using Microsoft.UI;
+using Microsoft.UI.Composition;
 using Microsoft.UI.Xaml;
 
 namespace NBT_Studio.Manager;
@@ -25,5 +26,11 @@ public class SquareCursorManager : CustomCursorManager
     public void SetCursorSize(float size)
     {
         CursorVisual.Size = new Vector2(size, size);
+    }
+
+    /// <summary>获取光标颜色 </summary>
+    public Color GetCursorColor()
+    {
+        return ((CompositionColorBrush)CursorVisual.Brush).Color;
     }
 }

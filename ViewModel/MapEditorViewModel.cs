@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Windows.UI;
+using ABI.Microsoft.UI.Xaml.Media.Animation;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Controls;
@@ -86,6 +87,16 @@ public partial class MapEditorViewModel : ObservableObject, IMutuallyControls
         foreach (var child in dataTag.Children)
             if (System.Enum.TryParse(child.Name ?? string.Empty, true, out MinecraftMapNecessaryTags tagEnum))
                 _dataTags[tagEnum] = child;
+    }
+
+    /// <summary>
+    /// 将指定像素颜色设置为选定颜色(地图色)
+    /// </summary>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
+    public void SetColor(int x, int y)
+    {
+        Pixels[y, x].Color = ClosestMapColor;
     }
 
     /// <summary>
