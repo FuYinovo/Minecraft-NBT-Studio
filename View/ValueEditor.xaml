@@ -10,124 +10,135 @@
     mc:Ignorable="d">
 
 
-    <Grid DataContext="{x:Bind _viewModel}" x:Name="ControlGrid" Padding="-20, 20, 20, 0" ColumnSpacing="24">
+    <Grid DataContext="{x:Bind _viewModel}" x:Name="ControlGrid" Padding="-20, 20, 20, 15" RowSpacing="6">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
 
-        <StackPanel Spacing="6">
+        <Grid Grid.Row="0">
             <!-- 名称(占整行) -->
             <TextBox
                 Header="名称"
                 TextChanged="TextBox_OnNameChanged"
                 Text="{Binding Name, Mode=TwoWay}" />
-            <Grid ColumnSpacing="24">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="auto" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
+        </Grid>
+        <Grid Grid.Row="1" ColumnSpacing="24">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
 
-                <!-- 左侧 -->
-                <Grid Grid.Column="0">
-                    <StackPanel Spacing="6">
-                        <TextBox Header="类型" Width="130"
-                                 IsReadOnly="True"
-                                 BorderThickness="0" Text="{Binding Type}" />
-                        <TextBox Header="子项类型" Width="130"
-                                 IsReadOnly="True"
-                                 IsEnabled="{Binding IsChildrenTypeEnabled}"
-                                 BorderThickness="0" Text="{Binding ChildrenType}" />
-                        <TextBox Header="长度" Width="130"
-                                 IsReadOnly="True"
-                                 BorderThickness="0" Text="{Binding Length}" />
-                        <TextBox Header="最大值" Width="130"
-                                 IsReadOnly="True"
-                                 BorderThickness="0" Text="{Binding MaxValue}"
-                                 IsEnabled="{Binding IsMaxValueEnabled}" />
-                        <TextBox Header="最小值" Width="130"
-                                 IsReadOnly="True"
-                                 Margin="0,0,0,20"
-                                 BorderThickness="0" Text="{Binding MinValue}"
-                                 IsEnabled="{Binding IsMinValueEnabled}" />
+            <!-- 左侧 -->
+            <Grid Grid.Column="0">
+                <StackPanel Spacing="6">
+                    <TextBox Header="类型" Width="130"
+                             IsReadOnly="True"
+                             BorderThickness="0" Text="{Binding Type}" />
+                    <TextBox Header="子项类型" Width="130"
+                             IsReadOnly="True"
+                             IsEnabled="{Binding IsChildrenTypeEnabled}"
+                             BorderThickness="0" Text="{Binding ChildrenType}" />
+                    <TextBox Header="长度" Width="130"
+                             IsReadOnly="True"
+                             BorderThickness="0" Text="{Binding Length}" />
+                    <TextBox Header="最大值" Width="130"
+                             IsReadOnly="True"
+                             BorderThickness="0" Text="{Binding MaxValue}"
+                             IsEnabled="{Binding IsMaxValueEnabled}" />
+                    <TextBox Header="最小值" Width="130"
+                             IsReadOnly="True"
+                             Margin="0,0,0,20"
+                             BorderThickness="0" Text="{Binding MinValue}"
+                             IsEnabled="{Binding IsMinValueEnabled}" />
 
-                        <CheckBox IsChecked="{Binding AllowNegative}" Content="可以为负值"
-                                  IsEnabled="{Binding IsAllowNegativeEnabled}"
-                                  Click="CheckBox_Prohibit" />
-                        <CheckBox IsChecked="{Binding AllowDecimal}" Content="可以为小数"
-                                  IsEnabled="{Binding IsAllowDecimalEnabled}"
-                                  Click="CheckBox_Prohibit" />
-                        <CheckBox IsChecked="{Binding AllowChildren}" Content="可以含子项"
-                                  Click="CheckBox_Prohibit" />
-                        <CheckBox IsChecked="{Binding AllowDelete}" Content="可以被删除"
-                                  Click="CheckBox_Prohibit" />
-                    </StackPanel>
-                </Grid>
+                    <CheckBox IsChecked="{Binding AllowNegative}" Content="可以为负值"
+                              IsEnabled="{Binding IsAllowNegativeEnabled}"
+                              Click="CheckBox_Prohibit" />
+                    <CheckBox IsChecked="{Binding AllowDecimal}" Content="可以为小数"
+                              IsEnabled="{Binding IsAllowDecimalEnabled}"
+                              Click="CheckBox_Prohibit" />
+                    <CheckBox IsChecked="{Binding AllowChildren}" Content="可以含子项"
+                              Click="CheckBox_Prohibit" />
+                    <CheckBox IsChecked="{Binding AllowDelete}" Content="可以被删除"
+                              Click="CheckBox_Prohibit" />
+                </StackPanel>
 
-                <!-- 右侧 -->
-                <Grid Grid.Column="1">
-                    <!-- 普通值 -->
-                    <TextBox Header="数据"
-                             Visibility="{Binding GenericValueVis}"
-                             Text="{Binding Value, Mode=TwoWay}"
-                             IsEnabled="False"
-                             TextWrapping="Wrap"
-                             IsSpellCheckEnabled="False"
-                             TextChanged="TextBox_OnValueChanged" />
-                    <!-- 数组值 -->
-                    <StackPanel Spacing="12"
-                                Visibility="{Binding ArrayValueVis}">
-                        <TextBlock Text="数组元素" Margin="0,0,0,-3" />
-                        <ItemsControl ItemsSource="{Binding ArrayValues}">
-                            <!-- 容器 -->
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <StackPanel Spacing="6" />
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-                            <!-- 模板 -->
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate x:DataType="model:NodeArrayElement">
-                                    <Grid>
-                                        <!-- 值文本框 -->
-                                        <TextBox HorizontalAlignment="Stretch"
-                                                 Text="{Binding Value, Mode=TwoWay}"
-                                                 Margin="0,0,48,0"
-                                                 PlaceholderText="必须"
-                                                 TextChanged="TextBox_OnValueChanged" />
-                                        <!-- 值删除按钮 -->
-                                        <Button Opacity=".8"
-                                                HorizontalAlignment="Right"
-                                                Click="RemoveArrayValue_OnClicked">
-                                            <FontIcon Glyph="&#xE74D;" />
-                                        </Button>
-                                    </Grid>
-
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                        <!-- 添加按钮 -->
-                        <Button Opacity=".8"
-                                HorizontalAlignment="Stretch"
-                                Height="42"
-                                Click="AddArrayValue_OnClicked">
-                            <StackPanel Orientation="Horizontal" Spacing="4">
-                                <FontIcon Glyph="&#xF8AA;" FontSize="14" />
-                                <TextBlock Text="添加元素" />
-                            </StackPanel>
-                        </Button>
-                    </StackPanel>
-                </Grid>
             </Grid>
-            <!-- 保存按钮 -->
-            <Button
-                x:Name="SaveButton"
-                Margin="0,16,0,0"
-                Width="120"
-                Height="40"
-                HorizontalAlignment="Right"
-                Style="{ThemeResource AccentButtonStyle}"
-                IsEnabled="False"
-                Content="保存修改"
-                Click="SaveButton_OnClick"
-                Command="{Binding SaveValueChangesCommand}" />
-        </StackPanel>
+
+            <!-- 右侧 -->
+            <Grid Grid.Column="1">
+                <StackPanel>
+                    
+                </StackPanel>
+                <!-- 普通值 -->
+                <TextBox Header="数据"
+                         Margin="0,0,0,56"
+                         Visibility="{Binding GenericValueVis}"
+                         Text="{Binding Value, Mode=TwoWay}"
+                         IsEnabled="False"
+                         TextWrapping="Wrap"
+                         IsSpellCheckEnabled="False"
+                         TextChanged="TextBox_OnValueChanged" />
+                <!-- 数组值 -->
+                <StackPanel Spacing="12"
+                            Margin="0,0,0,56"
+                            Visibility="{Binding ArrayValueVis}">
+                    <TextBlock Text="数组元素" Margin="0,0,0,-3" />
+                    <ItemsControl ItemsSource="{Binding ArrayValues}">
+                        <!-- 容器 -->
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Spacing="6" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <!-- 模板 -->
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="model:NodeArrayElement">
+                                <Grid>
+                                    <!-- 值文本框 -->
+                                    <TextBox HorizontalAlignment="Stretch"
+                                             Text="{Binding Value, Mode=TwoWay}"
+                                             Margin="0,0,48,0"
+                                             PlaceholderText="必须"
+                                             TextChanged="TextBox_OnValueChanged" />
+                                    <!-- 值删除按钮 -->
+                                    <Button Opacity=".8"
+                                            HorizontalAlignment="Right"
+                                            Click="RemoveArrayValue_OnClicked">
+                                        <FontIcon Glyph="&#xE74D;" />
+                                    </Button>
+                                </Grid>
+
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <!-- 添加按钮 -->
+                    <Button Opacity=".8"
+                            HorizontalAlignment="Stretch"
+                            Height="42"
+                            Click="AddArrayValue_OnClicked">
+                        <StackPanel Orientation="Horizontal" Spacing="4">
+                            <FontIcon Glyph="&#xF8AA;" FontSize="14" />
+                            <TextBlock Text="添加元素" />
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+                <!-- 保存按钮 -->
+                <Button
+                    x:Name="SaveButton"
+                    Width="120"
+                    Height="40"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Bottom"
+                    Style="{ThemeResource AccentButtonStyle}"
+                    IsEnabled="False"
+                    Content="保存修改"
+                    Click="SaveButton_OnClick"
+                    Command="{Binding SaveValueChangesCommand}" />
+            </Grid>
+        </Grid>
+
 
         <!-- 提供边框笔刷 -->
         <TextBox Visibility="Collapsed" x:Name="BorderRed" BorderBrush="#FF5370" />
