@@ -31,7 +31,7 @@ public class MutuallyToggleButtonsBehavior : Behavior<ToggleButton>, IMutuallyCo
     {
         if (sender is not ToggleButton || MutuallyControlsManager is null) return;
         var selectedValue = MutuallyControlsManager.GetSelectedValue(GroupName);
-        if (selectedValue != Value) MutuallyControlsManager.SetSelectedValue(GroupName, Value);
+        if (selectedValue != Tag) MutuallyControlsManager.SetSelectedValue(GroupName, Tag);
     }
 
     /// <summary>
@@ -41,7 +41,7 @@ public class MutuallyToggleButtonsBehavior : Behavior<ToggleButton>, IMutuallyCo
     {
         if (sender is not ToggleButton toggleButton || MutuallyControlsManager is null) return;
         var selectedValue = MutuallyControlsManager.GetSelectedValue(GroupName);
-        if (selectedValue == Value) toggleButton.IsChecked = true;
+        if (selectedValue == Tag) toggleButton.IsChecked = true;
     }
 
     # region Dependency Properties
@@ -53,7 +53,7 @@ public class MutuallyToggleButtonsBehavior : Behavior<ToggleButton>, IMutuallyCo
         new PropertyMetadata(string.Empty));
 
     private readonly DependencyProperty _valueDependencyProperty = DependencyProperty.Register(
-        nameof(Value),
+        nameof(Tag),
         typeof(object),
         typeof(MutuallyToggleSplitButtonsBehavior),
         new PropertyMetadata(null));
@@ -68,20 +68,20 @@ public class MutuallyToggleButtonsBehavior : Behavior<ToggleButton>, IMutuallyCo
         set => SetValue(_groupNameDependencyProperty, value);
     }
 
-    public object Value
+    public object Tag
     {
-        get => (string)GetValue(_valueDependencyProperty);
+        get => GetValue(_valueDependencyProperty);
         set => SetValue(_valueDependencyProperty, value);
     }
 
-    public IMutuallyControls? MutuallyControlsManager { get; set; }
+    public IMutuallyControlsManager? MutuallyControlsManager { get; set; }
 
     public void UpdateState()
     {
         if (MutuallyControlsManager is null) return;
 
         var currentValue = MutuallyControlsManager.GetSelectedValue(GroupName);
-        AssociatedObject.IsChecked = Equals(currentValue, Value);
+        AssociatedObject.IsChecked = Equals(currentValue, Tag);
     }
 
     # endregion

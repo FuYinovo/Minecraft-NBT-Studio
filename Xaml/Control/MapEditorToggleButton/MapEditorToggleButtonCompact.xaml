@@ -21,7 +21,7 @@
             Background="Transparent">
             <FontIcon Glyph="{x:Bind FontIcon}" FontSize="16" />
             <inter:Interaction.Behaviors>
-                <behavior:MutuallyToggleButtonsBehavior GroupName="{x:Bind GroupName}" Value="{x:Bind MemberName}" />
+                <behavior:MutuallyToggleButtonsBehavior GroupName="{x:Bind GroupName}" Tag="{x:Bind MemberTag}" />
             </inter:Interaction.Behaviors>
         </ToggleButton>
     </Grid>

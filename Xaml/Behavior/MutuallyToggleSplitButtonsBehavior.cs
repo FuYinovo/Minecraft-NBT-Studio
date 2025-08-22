@@ -32,11 +32,11 @@ public class MutuallyToggleSplitButtonsBehavior : Behavior<ToggleSplitButton>, I
         {
             // 尝试选中则设置到 MutuallyControlsManager
             case true:
-                if (selectedValue != Value) MutuallyControlsManager.SetSelectedValue(GroupName, Value);
+                if (selectedValue != Tag) MutuallyControlsManager.SetSelectedValue(GroupName, Tag);
                 break;
             // 尝试取消选中则阻止
             case false:
-                if (selectedValue == Value) sender.IsChecked = false;
+                if (selectedValue == Tag) sender.IsChecked = false;
                 break;
         }
     }
@@ -50,8 +50,8 @@ public class MutuallyToggleSplitButtonsBehavior : Behavior<ToggleSplitButton>, I
         typeof(MutuallyToggleSplitButtonsBehavior),
         new PropertyMetadata(string.Empty));
 
-    private readonly DependencyProperty _valueDependencyProperty = DependencyProperty.Register(
-        nameof(Value),
+    private readonly DependencyProperty _tagDependencyProperty = DependencyProperty.Register(
+        nameof(Tag),
         typeof(object),
         typeof(MutuallyToggleSplitButtonsBehavior),
         new PropertyMetadata(null));
@@ -66,10 +66,10 @@ public class MutuallyToggleSplitButtonsBehavior : Behavior<ToggleSplitButton>, I
         set => SetValue(_groupNameDependencyProperty, value);
     }
 
-    public object Value
+    public object Tag
     {
-        get => (string)GetValue(_valueDependencyProperty);
-        set => SetValue(_valueDependencyProperty, value);
+        get => GetValue(_tagDependencyProperty);
+        set => SetValue(_tagDependencyProperty, value);
     }
 
     public void UpdateState()
@@ -77,10 +77,10 @@ public class MutuallyToggleSplitButtonsBehavior : Behavior<ToggleSplitButton>, I
         if (MutuallyControlsManager is null) return;
 
         var currentValue = MutuallyControlsManager.GetSelectedValue(GroupName);
-        AssociatedObject.IsChecked = Equals(currentValue, Value);
+        AssociatedObject.IsChecked = Equals(currentValue, Tag);
     }
 
-    public IMutuallyControls? MutuallyControlsManager { get; set; }
+    public IMutuallyControlsManager? MutuallyControlsManager { get; set; }
 
     # endregion
 }

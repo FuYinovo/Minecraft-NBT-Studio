@@ -19,9 +19,9 @@ public class MapEditorToggleButtonBase : UserControl
         new PropertyMetadata(null)
     );
 
-    private readonly DependencyProperty _memberNameDp = DependencyProperty.Register(
-        nameof(MemberName),
-        typeof(string),
+    private readonly DependencyProperty _memberTagDp = DependencyProperty.Register(
+        nameof(MemberTag),
+        typeof(object),
         typeof(MapEditorToggleButton),
         new PropertyMetadata(null)
     );
@@ -45,10 +45,10 @@ public class MapEditorToggleButtonBase : UserControl
         set => SetValue(_groupNameDp, value);
     }
 
-    public string MemberName
+    public object MemberTag
     {
-        get => (string)GetValue(_memberNameDp);
-        set => SetValue(_memberNameDp, value);
+        get => GetValue(_memberTagDp);
+        set => SetValue(_memberTagDp, value);
     }
 
     public string Title

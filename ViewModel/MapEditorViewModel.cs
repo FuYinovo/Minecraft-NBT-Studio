@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Windows.UI;
-using ABI.Microsoft.UI.Xaml.Media.Animation;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 using NBT_Studio.Enum;
 using NBT_Studio.Interface;
 using NBT_Studio.Library.NBT_Parser.Class;
@@ -18,7 +18,7 @@ namespace NBT_Studio.ViewModel;
 
 [SuppressMessage("CommunityToolkit.Mvvm.SourceGenerators.ObservablePropertyGenerator",
     "MVVMTK0045:Using [ObservableProperty] on fields is not AOT compatible for WinRT")]
-public partial class MapEditorViewModel : ObservableObject, IMutuallyControls
+public partial class MapEditorViewModel : ObservableObject, IMutuallyControlsManager
 {
     public MapEditorViewModel(int size)
     {
@@ -77,7 +77,7 @@ public partial class MapEditorViewModel : ObservableObject, IMutuallyControls
         }
         catch (Exception)
         {
-            return;
+            // ignored
         }
     }
 
@@ -107,7 +107,7 @@ public partial class MapEditorViewModel : ObservableObject, IMutuallyControls
     /// </summary>
     private void SetDefaultButtonGroupsSelection()
     {
-        ((IMutuallyControls)this).SetSelectedValue("MapEditorTools", "All");
+        ((IMutuallyControlsManager)this).SetSelectedValue("MapEditorTools", MapEditorTool.Select);
     }
 
     [RelayCommand]
@@ -125,12 +125,16 @@ public partial class MapEditorViewModel : ObservableObject, IMutuallyControls
 
     public Color ClosestMapColor => ColorHelper.GetClosest(BrushColor, _minecraftMapColors); // 选中色的最近地图色
     public MinecraftMapPixel[,] Pixels;
+
+    public MapEditorTool SelectedTool =>
+        (MapEditorTool)((IMutuallyControlsManager)this).GetSelectedValue("MapEditorTools");
+
     private readonly int _size;
     private readonly Dictionary<MinecraftMapNecessaryTags, NbtTag> _dataTags = new();
 
     #endregion Properties
 
-    # region IMutuallyControls
+    # region IMutuallyControlsManager
 
     public Dictionary<string, object> GroupToValue { get; } = new();
     public Dictionary<string, List<IMutuallyControlsBehavior>> RegisteredBehaviors { get; } = new();

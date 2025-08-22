@@ -25,7 +25,7 @@
                 Background="Transparent">
                 <FontIcon Glyph="{x:Bind FontIcon}" FontSize="18" />
                 <iter:Interaction.Behaviors>
-                    <behavior:MutuallyToggleButtonsBehavior GroupName="{x:Bind GroupName}" Value="{x:Bind MemberName}" />
+                    <behavior:MutuallyToggleButtonsBehavior GroupName="{x:Bind GroupName}" Tag="{x:Bind MemberTag}" />
                 </iter:Interaction.Behaviors>
             </ToggleButton>
             <TextBlock Style="{StaticResource ToolsLabel}" Text="{x:Bind Title}" />

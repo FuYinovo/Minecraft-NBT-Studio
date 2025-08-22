@@ -7,8 +7,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:graphic="using:Microsoft.Graphics.Canvas.UI.Xaml"
-    xmlns:mapEditorToggleButton="using:NBT_Studio.Control.MapEditorToggleButton"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:enum="using:NBT_Studio.Enum"
     xmlns:converter="using:NBT_Studio.Xaml.Converter"
     xmlns:mapEditorToggleButton1="using:NBT_Studio.Xaml.Control.MapEditorToggleButton"
     mc:Ignorable="d">
@@ -26,7 +26,7 @@
         <converter:ColorToBrushConverter x:Key="ColorToBrushConverter" />
     </UserControl.Resources>
 
-    <Grid DataContext="{x:Bind _viewModel}" x:Name="ControlGrid" Padding="-32,20,20,5" RowSpacing="24">
+    <Grid DataContext="{x:Bind ViewModel}" x:Name="ControlGrid" Padding="-32,20,20,5" RowSpacing="24">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
@@ -44,7 +44,7 @@
                 <mapEditorToggleButton1:MapEditorToggleButton
                     FontIcon="&#xEF20;"
                     GroupName="MapEditorTools"
-                    MemberName="All"
+                    MemberTag="{x:Bind enum:MapEditorTool.Select}"
                     Title="选择" />
                 <AppBarSeparator Margin="0,-5,0,0" />
 
@@ -57,12 +57,12 @@
                             <mapEditorToggleButton1:MapEditorToggleButtonCompact
                                 FontIcon="&#xE75C;"
                                 GroupName="MapEditorTools"
-                                MemberName="Eraser" />
-                            <!-- 文本 -->
+                                MemberTag="{x:Bind enum:MapEditorTool.Eraser}" />
+                            <!-- 移动画布 -->
                             <mapEditorToggleButton1:MapEditorToggleButtonCompact
-                                FontIcon="&#xE8D2;"
+                                FontIcon="&#xE7C2;"
                                 GroupName="MapEditorTools"
-                                MemberName="Text" />
+                                MemberTag="{x:Bind enum:MapEditorTool.Move}" />
                         </StackPanel>
                         <!-- 第二行 -->
                         <StackPanel Orientation="Horizontal" Spacing="2">
@@ -70,12 +70,12 @@
                             <mapEditorToggleButton1:MapEditorToggleButtonCompact
                                 FontIcon="&#xEF3C;"
                                 GroupName="MapEditorTools"
-                                MemberName="ColorPicker" />
+                                MemberTag="{x:Bind enum:MapEditorTool.ColorPicker}" />
                             <!-- 缩放 -->
                             <mapEditorToggleButton1:MapEditorToggleButtonCompact
                                 FontIcon="&#xE8A3;"
                                 GroupName="MapEditorTools"
-                                MemberName="Zoom" />
+                                MemberTag="{x:Bind enum:MapEditorTool.Zoom}" />
                         </StackPanel>
                     </StackPanel>
                     <TextBlock Style="{StaticResource ToolsLabel}" Text="工具" />
@@ -86,7 +86,7 @@
                 <mapEditorToggleButton1:MapEditorToggleSplitButton
                     FontIcon="&#xE771;"
                     GroupName="MapEditorTools"
-                    MemberName="Brush"
+                    MemberTag="{x:Bind enum:MapEditorTool.Brush}"
                     Title="笔刷">
                     <mapEditorToggleButton1:MapEditorToggleSplitButton.Menu>
                         <x:String>{>}像素</x:String>
@@ -128,7 +128,6 @@
         <Grid Grid.Row="1">
             <Slider
                 Value="{x:Bind MapScale, Mode=TwoWay}"
-                ValueChanged="MapZoom_OnValueChanged"
                 Margin="0,0,0,58"
                 Header="缩放"
                 StepFrequency=".1"

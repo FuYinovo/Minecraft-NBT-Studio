@@ -1,11 +1,10 @@
 ﻿using System.Numerics;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Hosting;
-using NBT_Studio.Service;
 using Compositor = Microsoft.UI.Composition.Compositor;
 using SpriteVisual = Microsoft.UI.Composition.SpriteVisual;
 
-namespace NBT_Studio.Manager;
+namespace NBT_Studio.Component.CustomCursor.Class;
 
 public abstract class CustomCursorManager
 {
