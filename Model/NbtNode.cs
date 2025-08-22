@@ -10,6 +10,7 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using NBT_Studio.Enum;
 using NBT_Studio.Library.NBT_Parser.Class;
 using NBT_Studio.Library.NBT_Parser.Enum;
 using NBT_Studio.Message;
@@ -226,25 +227,53 @@ public sealed partial class NbtNode
             return;
         }
 
-
-        // 初始化弹窗
         var isListElement = parent.TagEnum == NbtTagEnum.List;
-        var content = new CreateNodeDialog(tagEnum, isListElement);
-        var dialog = DialogHelper.GetDialog(
-            $"添加「{ReflectionHelper.GetEnumDescription(tagEnum)}」节点",
-            "确认",
-            close: "取消",
-            content: content);
-        content.DialogOkButtonEnabledSetter = b => dialog.IsPrimaryButtonEnabled = b;
-        dialog.IsPrimaryButtonEnabled = NbtTagEnumExtensions.IsCollection(tagEnum);
 
-        // 获取输入的名称、值
-        var choice = await dialog.ShowAsync();
-        if (choice == ContentDialogResult.None) return;
-        var name = content.GetNodeName();
-        var value = content.GetNodeValue();
+        // 快速创建 or 弹窗创建
+        if (Service.SettingsManager.GetInstance().GetValue<bool>(BooleanSettings.QuickCreate))
+            QuickAppend();
+        else await DetailedAppend();
 
-        AppendNewChild(tagEnum, name, value, isListElement, content.GetChildrenType(), parent);
+
+        return;
+
+        async Task DetailedAppend()
+        {
+            // 初始化弹窗
+            var content = new CreateNodeDialog(tagEnum, isListElement);
+            var title = $"添加「{ReflectionHelper.GetEnumDescription(tagEnum)}」节点";
+            var dialog = DialogHelper.GetDialog(title, "确认", close: "取消", content: content);
+            content.DialogOkButtonEnabledSetter = b => dialog.IsPrimaryButtonEnabled = b;
+            dialog.IsPrimaryButtonEnabled = NbtTagEnumExtensions.IsCollection(tagEnum);
+
+            // 获取输入的名称、值
+            var choice = await dialog.ShowAsync();
+            if (choice == ContentDialogResult.None) return;
+            var name = content.GetNodeName();
+            var value = content.GetNodeValue();
+
+            AppendNewChild(tagEnum, name, value, isListElement, content.GetChildrenType(), parent);
+        }
+
+        void QuickAppend()
+        {
+            object? value = tagEnum switch
+            {
+                NbtTagEnum.Byte => (byte)0,
+                NbtTagEnum.Short => (short)0,
+                NbtTagEnum.Int => 0,
+                NbtTagEnum.Long => (long)0,
+                NbtTagEnum.Float => (float)0,
+                NbtTagEnum.Double => (double)0,
+                NbtTagEnum.String => string.Empty,
+                NbtTagEnum.ByteArray => Array.Empty<byte>(),
+                NbtTagEnum.IntArray => Array.Empty<int>(),
+                NbtTagEnum.LongArray => Array.Empty<long>(),
+                _ => null
+            };
+
+            AppendNewChild(tagEnum, value: value, isListElement: isListElement, parentNode: parent);
+        }
     }
 }
 
@@ -304,7 +333,7 @@ public sealed partial class NbtNode
     /// <param name="parentNode">目标节点（默认为自身）</param>
     private void AppendNewChild(
         NbtTagEnum tagEnum,
-        string name,
+        string name = "",
         object? value = null,
         bool isListElement = false,
         NbtTagEnum childrenEnum = NbtTagEnum.Unknown,

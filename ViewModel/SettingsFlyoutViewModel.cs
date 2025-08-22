@@ -4,7 +4,6 @@ using System.Runtime.CompilerServices;
 using CommunityToolkit.Mvvm.ComponentModel;
 using NBT_Studio.Enum;
 using NBT_Studio.Service;
-using Vanara.PInvoke;
 
 namespace NBT_Studio.ViewModel;
 
@@ -16,6 +15,7 @@ public partial class SettingsFlyoutViewModel : ObservableObject
     {
         _sort = _settingsManager.GetValue<Sort>(EnumSettings.Sort);
         _theme = _settingsManager.GetValue<Theme>(EnumSettings.Theme);
+        _quickCreate = _settingsManager.GetValue<bool>(BooleanSettings.QuickCreate);
     }
 
 
