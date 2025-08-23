@@ -7,7 +7,9 @@ using Microsoft.Graphics.Canvas.UI.Xaml;
 using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 using NBT_Studio.Component.CustomCursor.Class;
+using NBT_Studio.Enum;
 using NBT_Studio.Manager;
 using NBT_Studio.Message;
 using NBT_Studio.ViewModel;
@@ -16,16 +18,20 @@ namespace NBT_Studio.View;
 
 public sealed partial class MapEditor
 {
-    private const int InitMapSize = 128;
+    public const int InitMapSize = 128;
+    public const int MaxZoomFactor = 80;
+    public const int MinZoomFactor = 2;
+
     private readonly MapEditorToolsHandlersManager _eventHandlerManager;
     public readonly SquareCursorManager SquareCursorManager;
-    public readonly MapEditorViewModel ViewModel = new(InitMapSize);
+    public readonly MapEditorViewModel ViewModel;
     private float _mapScale = 1;
     public bool IsMousePressing;
-    public (float x, float y) MapOffset = (0,0);
+    public (float x, float y) MapOffset = (0, 0);
 
     public MapEditor()
     {
+        ViewModel = new MapEditorViewModel(InitMapSize);
         _eventHandlerManager = new MapEditorToolsHandlersManager(this);
         InitializeComponent();
         RegisterMessages();
@@ -40,7 +46,7 @@ public sealed partial class MapEditor
         get => _mapScale;
         set
         {
-            _mapScale = (float)Math.Pow(0.05 * (value + 30), 2);
+            _mapScale = (float)Math.Pow(0.05 * (value + 30), 2); // f(x) = [(x+30)/20]^2
             MapCanvas?.Invalidate();
         }
     }
@@ -78,15 +84,27 @@ public sealed partial class MapEditor
     private void HookCursorEvents()
     {
         MapCanvas.PointerEntered += (obj, args) =>
-            _eventHandlerManager.GetHandler(ViewModel.SelectedTool).HandleEntered(obj, args);
+            _eventHandlerManager.GetHandler(GetToolType(args)).HandleEntered(obj, args);
         MapCanvas.PointerExited += (obj, args) =>
-            _eventHandlerManager.GetHandler(ViewModel.SelectedTool).HandleExited(obj, args);
+            _eventHandlerManager.GetHandler(GetToolType(args)).HandleExited(obj, args);
         MapCanvas.PointerMoved += (obj, args) =>
-            _eventHandlerManager.GetHandler(ViewModel.SelectedTool).HandleMoved(obj, args);
-        MapCanvas.PointerPressed += (obj, args) =>
-            _eventHandlerManager.GetHandler(ViewModel.SelectedTool).HandlePressed(obj, args);
+            _eventHandlerManager.GetHandler(GetToolType(args)).HandleMoved(obj, args);
         MapCanvas.PointerReleased += (obj, args) =>
-            _eventHandlerManager.GetHandler(ViewModel.SelectedTool).HandleReleased(obj, args);
+            _eventHandlerManager.GetHandler(GetToolType(args)).HandleReleased(obj, args);
+        MapCanvas.PointerPressed += (obj, args) =>
+            _eventHandlerManager.GetHandler(GetToolType(args)).HandlePressed(obj, args);
+        MapCanvas.PointerWheelChanged += (obj, args) =>
+            _eventHandlerManager.GetHandler(GetToolType(args)).WheelChanged(obj, args);
+
+        return;
+
+        MapEditorTool GetToolType(PointerRoutedEventArgs args)
+        {
+            // 右键则触发移动工具
+            return args.GetCurrentPoint(MapCanvas).Properties.IsRightButtonPressed
+                ? MapEditorTool.Move
+                : ViewModel.SelectedTool;
+        }
     }
 
     /// <summary>  设置此控件下的光标 </summary>

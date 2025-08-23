@@ -21,8 +21,8 @@ public partial class MapEditorViewModel : ObservableObject, IMutuallyControlsMan
 {
     public MapEditorViewModel(int mapSize)
     {
-        MapSize = mapSize;
-        Pixels = new MinecraftMapPixel[MapSize, MapSize];
+        _mapSize = mapSize;
+        Pixels = new MinecraftMapPixel[_mapSize, _mapSize];
         RegisterMessages();
         SetDefaultButtonGroupsSelection();
     }
@@ -39,7 +39,7 @@ public partial class MapEditorViewModel : ObservableObject, IMutuallyControlsMan
     /// <param name="selectedTreeNode"></param>
     private void UpdateMapDisplay(TreeViewNode selectedTreeNode)
     {
-        Pixels = new MinecraftMapPixel[MapSize, MapSize];
+        Pixels = new MinecraftMapPixel[_mapSize, _mapSize];
         WeakReferenceMessenger.Default.Send(new DrawMapMessage());
 
         var nbtNode = (NbtNode)selectedTreeNode.Content;
@@ -61,13 +61,13 @@ public partial class MapEditorViewModel : ObservableObject, IMutuallyControlsMan
 
         try
         {
-            Pixels = new MinecraftMapPixel[MapSize, MapSize];
+            Pixels = new MinecraftMapPixel[_mapSize, _mapSize];
             var colors = (byte[])tag.Value;
 
-            for (var y = 0; y < MapSize; y++)
-            for (var x = 0; x < MapSize; x++)
+            for (var y = 0; y < _mapSize; y++)
+            for (var x = 0; x < _mapSize; x++)
             {
-                var pixel = colors[y * MapSize + x];
+                var pixel = colors[y * _mapSize + x];
                 var baseColor = (MinecraftMapColor)(byte)(pixel >> 2); // 前 6 位
                 var modifyColor = (MinecraftColorModify)(byte)(pixel & 0b00000011); // 后 2 位
                 var color = MinecraftMapColorExtensions.GetColor(baseColor, modifyColor);
@@ -125,10 +125,14 @@ public partial class MapEditorViewModel : ObservableObject, IMutuallyControlsMan
     public Color ClosestMapColor => ColorHelper.GetClosest(BrushColor, _minecraftMapColors); // 选中色的最近地图色
     public MinecraftMapPixel[,] Pixels;
 
-    public MapEditorTool SelectedTool =>
-        (MapEditorTool)((IMutuallyControlsManager)this).GetSelectedValue("MapEditorTools");
+    public MapEditorTool SelectedTool
+    {
+        get => (MapEditorTool)((IMutuallyControlsManager)this).GetSelectedValue("MapEditorTools");
+        set => ((IMutuallyControlsManager)this).SetSelectedValue("MapEditorTools", value);
+    }
 
-    public readonly int MapSize;
+
+    private readonly int _mapSize;
     private readonly Dictionary<MinecraftMapNecessaryTags, NbtTag> _dataTags = new();
 
     #endregion Properties

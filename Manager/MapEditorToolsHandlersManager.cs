@@ -11,16 +11,16 @@ namespace NBT_Studio.Manager;
 
 public class MapEditorToolsHandlersManager(MapEditor editor)
 {
-    private readonly Dictionary<MapEditorTool, IPointerEventsHandler> _handlers = [];
+    private readonly Dictionary<MapEditorTool, IMapEditorPointerEventsHandler> _handlers = [];
 
-    public IPointerEventsHandler GetHandler(MapEditorTool targetType)
+    public IMapEditorPointerEventsHandler GetHandler(MapEditorTool targetType)
     {
         if (_handlers.TryGetValue(targetType, out var handler)) return handler;
         _handlers[targetType] = GetHandlerFromAttribute(targetType);
         return _handlers[targetType];
     }
 
-    private IPointerEventsHandler GetHandlerFromAttribute(MapEditorTool targetType)
+    private IMapEditorPointerEventsHandler GetHandlerFromAttribute(MapEditorTool targetType)
     {
         var members = typeof(MapEditorToolsHandlers).GetMembers();
 
@@ -28,9 +28,9 @@ public class MapEditorToolsHandlersManager(MapEditor editor)
         {
             var toolType = member.GetCustomAttribute<MapEditorToolHandlerAttribute>()?.Tool;
             if (toolType != targetType) continue;
-            // 此处默认 IPointerEventsHandler 的实现者的构造方法只有一个参数 MapEditor
+            // 此处默认 IMapEditorPointerEventsHandler 的实现者的构造方法只有一个参数 MapEditor
             var instance = Activator.CreateInstance((Type)member, editor);
-            if (instance is IPointerEventsHandler handler) return handler;
+            if (instance is IMapEditorPointerEventsHandler handler) return handler;
         }
 
         throw new Exception($"未找到地图编辑器[{targetType}]的Handler!");

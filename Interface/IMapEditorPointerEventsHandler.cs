@@ -1,9 +1,12 @@
-﻿using Microsoft.UI.Xaml.Input;
+﻿using System;
+using System.Diagnostics;
+using Microsoft.UI.Xaml.Input;
+using NBT_Studio.Enum;
 using NBT_Studio.View;
 
 namespace NBT_Studio.Interface;
 
-public interface IPointerEventsHandler
+public interface IMapEditorPointerEventsHandler
 {
     MapEditor Editor { get; set; }
 
@@ -28,5 +31,14 @@ public interface IPointerEventsHandler
     void HandleReleased(object sender, PointerRoutedEventArgs args)
     {
         Editor.IsMousePressing = false;
+    }
+
+    void WheelChanged(object sender, PointerRoutedEventArgs args)
+    {
+        var wheelDelta = args.GetCurrentPoint(Editor.GetMapCanvas()).Properties.MouseWheelDelta;
+        var zoomFactor = Math.Sqrt(Editor.MapScale) * 20 - 30;
+        var newZoomFactor = (float)(zoomFactor + 0.03 * wheelDelta);
+        if (newZoomFactor is < MapEditor.MinZoomFactor or > MapEditor.MaxZoomFactor) return;
+        Editor.MapScale = newZoomFactor;
     }
 }

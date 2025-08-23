@@ -3,12 +3,14 @@ using System.Diagnostics;
 using System.Numerics;
 using Windows.Foundation;
 using Windows.UI.Core;
+using CommunityToolkit.WinUI.Helpers;
 using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 using NBT_Studio.Attribute;
 using NBT_Studio.Enum;
 using NBT_Studio.Interface;
+using NBT_Studio.Utils;
 using NBT_Studio.View;
 
 namespace NBT_Studio.Handler;
@@ -17,35 +19,50 @@ public record MapEditorToolsHandlers
 {
     /// <summary> 选择 </summary>
     [MapEditorToolHandler(Tool = MapEditorTool.Select)]
-    public class SelectHandler(MapEditor editor) : IPointerEventsHandler
+    public class SelectHandler(MapEditor editor) : IMapEditorPointerEventsHandler
     {
         public MapEditor Editor { get; set; } = editor;
     }
 
     /// <summary> 橡皮 </summary>
     [MapEditorToolHandler(Tool = MapEditorTool.Eraser)]
-    public class EraserHandler(MapEditor editor) : IPointerEventsHandler
+    public class EraserHandler(MapEditor editor) : IMapEditorPointerEventsHandler
     {
         public MapEditor Editor { get; set; } = editor;
     }
 
     /// <summary> 吸色器 </summary>
     [MapEditorToolHandler(Tool = MapEditorTool.ColorPicker)]
-    public class ColorPickerHandler(MapEditor editor) : IPointerEventsHandler
+    public class ColorPickerHandler(MapEditor editor) : IMapEditorPointerEventsHandler
     {
         public MapEditor Editor { get; set; } = editor;
+
+        public void HandleEntered(object sender, PointerRoutedEventArgs args)
+        {
+            Editor.SetCursor(CoreCursorType.Cross);
+        }
+
+        public void HandleExited(object sender, PointerRoutedEventArgs args)
+        {
+            Editor.SetCursor(CoreCursorType.Arrow);
+        }
+
+        public void HandlePressed(object sender, PointerRoutedEventArgs args)
+        {
+            Editor.ViewModel.BrushColor = Win32Helper.GetCursorPixelColor();
+        }
     }
 
     /// <summary> 缩放 </summary>
     [MapEditorToolHandler(Tool = MapEditorTool.Zoom)]
-    public class ZoomHandler(MapEditor editor) : IPointerEventsHandler
+    public class ZoomHandler(MapEditor editor) : IMapEditorPointerEventsHandler
     {
         public MapEditor Editor { get; set; } = editor;
     }
 
     /// <summary> 移动 </summary>
     [MapEditorToolHandler(Tool = MapEditorTool.Move)]
-    public class MoveHandler(MapEditor editor) : IPointerEventsHandler
+    public class MoveHandler(MapEditor editor) : IMapEditorPointerEventsHandler
     {
         public MapEditor Editor { get; set; } = editor;
         private Point _originPoint;
@@ -55,7 +72,7 @@ public record MapEditorToolsHandlers
         {
             if (!Editor.IsMousePressing) return;
             var position = GetMousePosition(args);
-            var maxOffset = Editor.ViewModel.MapSize * Editor.MapScale;
+            var maxOffset = MapEditor.InitMapSize * Editor.MapScale;
 
             (float x, float y) extraOffset = (
                 MovingSpeedFactor * (position._x - _originPoint._x),
@@ -87,9 +104,10 @@ public record MapEditorToolsHandlers
 
     /// <summary> 笔刷 </summary>
     [MapEditorToolHandler(Tool = MapEditorTool.Brush)]
-    public class BrushHandler(MapEditor editor) : IPointerEventsHandler
+    public class BrushHandler(MapEditor editor) : IMapEditorPointerEventsHandler
     {
         public MapEditor Editor { get; set; } = editor;
+
 
         public void HandleEntered(object sender, PointerRoutedEventArgs args)
         {
@@ -142,8 +160,8 @@ public record MapEditorToolsHandlers
         /// <remarks>当传入地图坐标超出数组，直接返回</remarks>
         private void TryModifyMapColor(int x, int y)
         {
-            var maxIndex = Editor.ViewModel.MapSize;
-            if (x > maxIndex - 1 || y > maxIndex - 1) return;
+            const int maxIndex = MapEditor.InitMapSize - 1;
+            if (x > maxIndex || y > maxIndex || x < 0 || y < 0) return;
             Editor.ViewModel.SetColor(x, y);
             Editor.GetMapCanvas().Invalidate();
             Editor.GetSaveButton().IsEnabled = true;
