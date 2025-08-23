@@ -30,8 +30,8 @@ public class MutuallyToggleButtonsBehavior : Behavior<ToggleButton>, IMutuallyCo
     private void OnChecked(object sender, RoutedEventArgs routedEventArgs)
     {
         if (sender is not ToggleButton || MutuallyControlsManager is null) return;
-        var selectedValue = MutuallyControlsManager.GetSelectedValue(GroupName);
-        if (selectedValue != Tag) MutuallyControlsManager.SetSelectedValue(GroupName, Tag);
+        var selectedValue = MutuallyControlsManager.GetValue<object>(GroupName);
+        if (selectedValue != Tag) MutuallyControlsManager.SetValue(GroupName, Tag);
     }
 
     /// <summary>
@@ -40,7 +40,7 @@ public class MutuallyToggleButtonsBehavior : Behavior<ToggleButton>, IMutuallyCo
     private void OnUnchecked(object sender, RoutedEventArgs e)
     {
         if (sender is not ToggleButton toggleButton || MutuallyControlsManager is null) return;
-        var selectedValue = MutuallyControlsManager.GetSelectedValue(GroupName);
+        var selectedValue = MutuallyControlsManager.GetValue<object>(GroupName);
         if (selectedValue == Tag) toggleButton.IsChecked = true;
     }
 
@@ -80,7 +80,7 @@ public class MutuallyToggleButtonsBehavior : Behavior<ToggleButton>, IMutuallyCo
     {
         if (MutuallyControlsManager is null) return;
 
-        var currentValue = MutuallyControlsManager.GetSelectedValue(GroupName);
+        var currentValue = MutuallyControlsManager.GetValue<object>(GroupName);
         AssociatedObject.IsChecked = Equals(currentValue, Tag);
     }
 

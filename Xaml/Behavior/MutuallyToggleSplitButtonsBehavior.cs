@@ -27,12 +27,12 @@ public class MutuallyToggleSplitButtonsBehavior : Behavior<ToggleSplitButton>, I
     private void OnCheckedChanged(ToggleSplitButton sender, ToggleSplitButtonIsCheckedChangedEventArgs args)
     {
         if (MutuallyControlsManager is null) return;
-        var selectedValue = MutuallyControlsManager.GetSelectedValue(GroupName);
+        var selectedValue = MutuallyControlsManager.GetValue<object>(GroupName);
         switch (sender.IsChecked)
         {
             // 尝试选中则设置到 MutuallyControlsManager
             case true:
-                if (selectedValue != Tag) MutuallyControlsManager.SetSelectedValue(GroupName, Tag);
+                if (selectedValue != Tag) MutuallyControlsManager.SetValue(GroupName, Tag);
                 break;
             // 尝试取消选中则阻止
             case false:
@@ -76,7 +76,7 @@ public class MutuallyToggleSplitButtonsBehavior : Behavior<ToggleSplitButton>, I
     {
         if (MutuallyControlsManager is null) return;
 
-        var currentValue = MutuallyControlsManager.GetSelectedValue(GroupName);
+        var currentValue = MutuallyControlsManager.GetValue<object>(GroupName);
         AssociatedObject.IsChecked = Equals(currentValue, Tag);
     }
 

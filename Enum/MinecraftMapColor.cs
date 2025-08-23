@@ -99,6 +99,31 @@ public struct MinecraftMapColorExtensions
         };
     }
 
+    /// <summary>
+    /// 获取 Minecraft 地图色的字节
+    /// </summary>
+    /// <param name="color">颜色</param>
+    /// <returns>如果 color 是 Minecraft 地图色，返回对应字节，否则返回 0</returns>
+    public static byte GetColorByte(Color color)
+    {
+        foreach (var (baseType, (lowest, low, normal, high)) in Colors)
+        {
+            if (lowest == color) return BuildByte(baseType, MinecraftColorModify.Lowest);
+            if (low == color) return BuildByte(baseType, MinecraftColorModify.Low);
+            if (normal == color) return BuildByte(baseType, MinecraftColorModify.Normal);
+            if (high == color) return BuildByte(baseType, MinecraftColorModify.High);
+        }
+
+        return 0;
+
+        byte BuildByte(MinecraftMapColor baseColor, MinecraftColorModify modifier)
+        {
+            var baseField = (byte)((byte)baseColor << 2);
+            var modifyField = (byte)modifier;
+            return (byte)(baseField | modifyField);
+        }
+    }
+
 
     /// <summary>
     ///     获取所有颜色
@@ -113,6 +138,7 @@ public struct MinecraftMapColorExtensions
             group.Value.high
         }).ToArray();
     }
+
 
     public static readonly Dictionary<MinecraftMapColor, (Color lowest, Color low, Color normal, Color high )> Colors =
         new()

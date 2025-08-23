@@ -106,34 +106,52 @@ public partial class MapEditorViewModel : ObservableObject, IMutuallyControlsMan
     /// </summary>
     private void SetDefaultButtonGroupsSelection()
     {
-        ((IMutuallyControlsManager)this).SetSelectedValue("MapEditorTools", MapEditorTool.Select);
+        ((IMutuallyControlsManager)this).SetValue("MapEditorTools", MapEditorTool.Select);
     }
 
+    /// <summary>
+    /// 保存地图修改
+    /// </summary>
     [RelayCommand]
     private void SaveValueChanges()
     {
+        // 将颜色转换为字节
+        var colorBytes = new byte[Pixels.Length];
+        var index = 0;
+        foreach (var pixel in Pixels)
+        {
+            if (_colorToByte.TryGetValue(pixel.Color, out var colorByte)) colorBytes[index] = colorByte;
+            else
+            {
+                var color = pixel.Color;
+                _colorToByte[color] = MinecraftMapColorExtensions.GetColorByte(color);
+                colorBytes[index] = _colorToByte[color];
+            }
+
+            index++;
+        }
+
+        // 保存到 NBT 标签
+        _dataTags[MinecraftMapNecessaryTags.Colors].SetValue(colorBytes);
+        // 通知修改消息
+        WeakReferenceMessenger.Default.Send(new NodeModifiedMessage());
     }
 
 
     #region Properties
 
     private readonly Color[] _minecraftMapColors = MinecraftMapColorExtensions.GetAllColors(); // 所有地图色
+    private readonly int _mapSize;
+    private readonly Dictionary<MinecraftMapNecessaryTags, NbtTag> _dataTags = new();
+    private readonly Dictionary<Color, byte> _colorToByte = new();
+
+    public MapEditorTool SelectedTool => ((IMutuallyControlsManager)this).GetValue<MapEditorTool>("MapEditorTools");
+    public Color ClosestMapColor => ColorHelper.GetClosest(BrushColor, _minecraftMapColors); // 选中色的最近地图色
 
     [ObservableProperty] [NotifyPropertyChangedFor(nameof(ClosestMapColor))]
     private Color _brushColor; // 选中色
 
-    public Color ClosestMapColor => ColorHelper.GetClosest(BrushColor, _minecraftMapColors); // 选中色的最近地图色
     public MinecraftMapPixel[,] Pixels;
-
-    public MapEditorTool SelectedTool
-    {
-        get => (MapEditorTool)((IMutuallyControlsManager)this).GetSelectedValue("MapEditorTools");
-        set => ((IMutuallyControlsManager)this).SetSelectedValue("MapEditorTools", value);
-    }
-
-
-    private readonly int _mapSize;
-    private readonly Dictionary<MinecraftMapNecessaryTags, NbtTag> _dataTags = new();
 
     #endregion Properties
 

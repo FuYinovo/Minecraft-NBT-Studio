@@ -2,7 +2,7 @@
 
 namespace NBT_Studio.Message;
 
-public class NodeModifiedMessage(NbtNode node)
+public class NodeModifiedMessage(NbtNode? node = null)
 {
-    public readonly NbtNode Value = node;
+    public NbtNode? Node { get; } = node;
 }

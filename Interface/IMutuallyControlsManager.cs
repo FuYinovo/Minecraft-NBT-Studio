@@ -12,16 +12,16 @@ public interface IMutuallyControlsManager
     Dictionary<string, List<IMutuallyControlsBehavior>> RegisteredBehaviors { get; }
 
     /// <summary>设置组值 </summary>
-    void SetSelectedValue(string groupName, object value)
+    void SetValue(string groupName, object value)
     {
         GroupToValue[groupName] = value;
         UpdateMembers(groupName);
     }
 
     /// <summary>获取组值 </summary>
-    object GetSelectedValue(string groupName)
+    T GetValue<T>(string groupName)
     {
-        return GroupToValue[groupName];
+        return (T)GroupToValue[groupName];
     }
 
     /// <summary>注册</summary>
