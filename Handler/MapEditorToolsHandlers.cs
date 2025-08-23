@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Numerics;
 using Windows.Foundation;
@@ -132,7 +133,7 @@ public record MapEditorToolsHandlers
             // 修改像素颜色
             if (!Editor.IsMousePressing) return;
             var mapPosition = GetMapPosition(args);
-            if (Editor.IsMousePressing) TryModifyMapColor(mapPosition.x, mapPosition.y);
+            if (Editor.IsMousePressing) PaintToMap(mapPosition.x, mapPosition.y, Editor.BrushRadius);
         }
 
         public void HandlePressed(object sender, PointerRoutedEventArgs args)
@@ -140,7 +141,7 @@ public record MapEditorToolsHandlers
             Editor.IsMousePressing = true;
             // 修改像素颜色
             var mapPosition = GetMapPosition(args);
-            TryModifyMapColor(mapPosition.x, mapPosition.y);
+            PaintToMap(mapPosition.x, mapPosition.y, Editor.BrushRadius);
         }
 
         /// <summary>
@@ -155,14 +156,34 @@ public record MapEditorToolsHandlers
         }
 
         /// <summary>
-        ///     尝试修改地图像素颜色
+        ///     以一个坐标为园心，向地图绘制颜色
         /// </summary>
-        /// <remarks>当传入地图坐标超出数组，直接返回</remarks>
-        private void TryModifyMapColor(int x, int y)
+        /// <remarks>当半径为 0 时，只绘制一个像素</remarks>
+        private void PaintToMap(int pointX, int pointY, int radius)
         {
+            if (radius != 0)
+            {
+                // 获取所有在圆内的点
+                var validPoints = new List<(int x, int y)>();
+                (int x, int y) recBegin = (pointX - radius, pointY + radius);
+                (int x, int y) recEnd = (pointX + radius, pointY - radius);
+                for (var y = recBegin.y; y >= recEnd.y; y--)
+                {
+                    for (var x = recBegin.x; x <= recEnd.x; x++)
+                    {
+                        if (Math.Sqrt(Math.Pow(x - pointX, 2) + Math.Pow(y - pointY, 2)) <= radius)
+                            validPoints.Add((x, y));
+                    }
+                }
+
+                // 绘制像素
+                foreach (var validPoint in validPoints) PaintToMap(validPoint.x, validPoint.y, 0);
+                return;
+            }
+
             const int maxIndex = MapEditor.InitMapSize - 1;
-            if (x > maxIndex || y > maxIndex || x < 0 || y < 0) return;
-            Editor.ViewModel.SetColor(x, y);
+            if (pointX > maxIndex || pointY > maxIndex || pointX < 0 || pointY < 0) return;
+            Editor.ViewModel.SetColor(pointX, pointY);
             Editor.GetMapCanvas().Invalidate();
             Editor.GetSaveButton().IsEnabled = true;
         }

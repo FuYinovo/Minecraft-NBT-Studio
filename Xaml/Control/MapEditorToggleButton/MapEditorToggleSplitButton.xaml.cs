@@ -24,7 +24,7 @@ public partial class MapEditorToggleSplitButton
     }
 
     /// <summary> 子菜单</summary>
-    /// <remarks>默认选中包含 {>} 的子菜单（若有多个则取第一个、包含花括号）</remarks>
+    /// <remarks>默认选中包含 <see cref="DefaultSymbol"/> 的子菜单（若有多个则取第一个）</remarks>
     public List<string> Menu
     {
         get => (List<string>)GetValue(_menuDp);
@@ -48,5 +48,19 @@ public partial class MapEditorToggleSplitButton
 
             MenuFlyout.Items.Add(item);
         }
+    }
+
+    /// <summary>
+    /// 获取选中的 <see cref="RadioMenuFlyoutItem"/> 选项文本
+    /// </summary>
+    public string? GetChecked()
+    {
+        foreach (var item in MenuFlyout.Items)
+        {
+            if (item is not RadioMenuFlyoutItem menuItem) continue;
+            if (menuItem.IsChecked) return menuItem.Text;
+        }
+
+        return null;
     }
 }

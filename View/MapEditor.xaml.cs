@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using Windows.Foundation;
 using Windows.UI.Core;
 using CommunityToolkit.Mvvm.Messaging;
@@ -16,18 +19,21 @@ using NBT_Studio.ViewModel;
 
 namespace NBT_Studio.View;
 
-public sealed partial class MapEditor
+public sealed partial class MapEditor : INotifyPropertyChanged
 {
     public const int InitMapSize = 128;
     public const int MaxZoomFactor = 80;
     public const int MinZoomFactor = 2;
+    public const int MinBrushRadius = 0;
+    public const int MaxBrushRadius = 8;
 
-    private readonly MapEditorToolsHandlersManager _eventHandlerManager;
     public readonly SquareCursorManager SquareCursorManager;
     public readonly MapEditorViewModel ViewModel;
-    private float _mapScale = 1;
-    public bool IsMousePressing;
     public (float x, float y) MapOffset = (0, 0);
+    public bool IsMousePressing;
+    private readonly MapEditorToolsHandlersManager _eventHandlerManager;
+    private float _mapScale = (float)6.25;
+    private int _brushRadius;
 
     public MapEditor()
     {
@@ -49,6 +55,12 @@ public sealed partial class MapEditor
             _mapScale = (float)Math.Pow(0.05 * (value + 30), 2); // f(x) = [(x+30)/20]^2
             MapCanvas?.Invalidate();
         }
+    }
+
+    public int BrushRadius
+    {
+        get => _brushRadius;
+        set => SetField(ref _brushRadius, value);
     }
 
 
@@ -107,7 +119,7 @@ public sealed partial class MapEditor
         }
     }
 
-    /// <summary>  设置此控件下的光标 </summary>
+    /// <summary> 设置此控件下的光标 </summary>
     public void SetCursor(CoreCursorType cursorType)
     {
         if (cursorType == CoreCursorType.Custom) return;
@@ -122,4 +134,23 @@ public sealed partial class MapEditor
 
     public Button GetSaveButton() => SaveButton;
     public CanvasControl GetMapCanvas() => MapCanvas;
+
+    # region INotifyPropertyChanged
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+
+    private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    private void SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
+    {
+        if (EqualityComparer<T>.Default.Equals(field, value)) return;
+        field = value;
+        OnPropertyChanged(propertyName);
+    }
+
+    #endregion
 }
