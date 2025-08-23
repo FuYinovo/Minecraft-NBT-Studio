@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
 using NBT_Studio.Attribute;
 using NBT_Studio.Enum;
@@ -10,7 +11,16 @@ namespace NBT_Studio.Manager;
 
 public class MapEditorToolsHandlersManager(MapEditor editor)
 {
+    private readonly Dictionary<MapEditorTool, IPointerEventsHandler> _handlers = [];
+
     public IPointerEventsHandler GetHandler(MapEditorTool targetType)
+    {
+        if (_handlers.TryGetValue(targetType, out var handler)) return handler;
+        _handlers[targetType] = GetHandlerFromAttribute(targetType);
+        return _handlers[targetType];
+    }
+
+    private IPointerEventsHandler GetHandlerFromAttribute(MapEditorTool targetType)
     {
         var members = typeof(MapEditorToolsHandlers).GetMembers();
 

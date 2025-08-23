@@ -19,10 +19,10 @@ namespace NBT_Studio.ViewModel;
     "MVVMTK0045:Using [ObservableProperty] on fields is not AOT compatible for WinRT")]
 public partial class MapEditorViewModel : ObservableObject, IMutuallyControlsManager
 {
-    public MapEditorViewModel(int size)
+    public MapEditorViewModel(int mapSize)
     {
-        _size = size;
-        Pixels = new MinecraftMapPixel[_size, _size];
+        MapSize = mapSize;
+        Pixels = new MinecraftMapPixel[MapSize, MapSize];
         RegisterMessages();
         SetDefaultButtonGroupsSelection();
     }
@@ -39,7 +39,7 @@ public partial class MapEditorViewModel : ObservableObject, IMutuallyControlsMan
     /// <param name="selectedTreeNode"></param>
     private void UpdateMapDisplay(TreeViewNode selectedTreeNode)
     {
-        Pixels = new MinecraftMapPixel[_size, _size];
+        Pixels = new MinecraftMapPixel[MapSize, MapSize];
         WeakReferenceMessenger.Default.Send(new DrawMapMessage());
 
         var nbtNode = (NbtNode)selectedTreeNode.Content;
@@ -61,13 +61,13 @@ public partial class MapEditorViewModel : ObservableObject, IMutuallyControlsMan
 
         try
         {
-            Pixels = new MinecraftMapPixel[_size, _size];
+            Pixels = new MinecraftMapPixel[MapSize, MapSize];
             var colors = (byte[])tag.Value;
 
-            for (var y = 0; y < _size; y++)
-            for (var x = 0; x < _size; x++)
+            for (var y = 0; y < MapSize; y++)
+            for (var x = 0; x < MapSize; x++)
             {
-                var pixel = colors[y * _size + x];
+                var pixel = colors[y * MapSize + x];
                 var baseColor = (MinecraftMapColor)(byte)(pixel >> 2); // 前 6 位
                 var modifyColor = (MinecraftColorModify)(byte)(pixel & 0b00000011); // 后 2 位
                 var color = MinecraftMapColorExtensions.GetColor(baseColor, modifyColor);
@@ -128,7 +128,7 @@ public partial class MapEditorViewModel : ObservableObject, IMutuallyControlsMan
     public MapEditorTool SelectedTool =>
         (MapEditorTool)((IMutuallyControlsManager)this).GetSelectedValue("MapEditorTools");
 
-    private readonly int _size;
+    public readonly int MapSize;
     private readonly Dictionary<MinecraftMapNecessaryTags, NbtTag> _dataTags = new();
 
     #endregion Properties

@@ -13,11 +13,11 @@ public interface IPointerEventsHandler
 
     void HandleExited(object sender, PointerRoutedEventArgs args)
     {
+        Editor.IsMousePressing = false;
     }
 
     void HandleMoved(object sender, PointerRoutedEventArgs args)
     {
-        Editor.IsMousePressing = false;
     }
 
     void HandlePressed(object sender, PointerRoutedEventArgs args)

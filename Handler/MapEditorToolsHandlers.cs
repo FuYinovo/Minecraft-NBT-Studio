@@ -1,4 +1,10 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Numerics;
+using Windows.Foundation;
+using Windows.UI.Core;
+using Microsoft.UI.Input;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 using NBT_Studio.Attribute;
 using NBT_Studio.Enum;
@@ -35,6 +41,48 @@ public record MapEditorToolsHandlers
     public class ZoomHandler(MapEditor editor) : IPointerEventsHandler
     {
         public MapEditor Editor { get; set; } = editor;
+    }
+
+    /// <summary> 移动 </summary>
+    [MapEditorToolHandler(Tool = MapEditorTool.Move)]
+    public class MoveHandler(MapEditor editor) : IPointerEventsHandler
+    {
+        public MapEditor Editor { get; set; } = editor;
+        private Point _originPoint;
+        private const float MovingSpeedFactor = (float)0.05;
+
+        public void HandleMoved(object sender, PointerRoutedEventArgs args)
+        {
+            if (!Editor.IsMousePressing) return;
+            var position = GetMousePosition(args);
+            var maxOffset = Editor.ViewModel.MapSize * Editor.MapScale;
+
+            (float x, float y) extraOffset = (
+                MovingSpeedFactor * (position._x - _originPoint._x),
+                MovingSpeedFactor * (position._y - _originPoint._y));
+
+            if (!(Editor.MapOffset.x + extraOffset.x > maxOffset))
+                Editor.MapOffset.x += extraOffset.x;
+            if (!(Editor.MapOffset.y + extraOffset.y > maxOffset))
+                Editor.MapOffset.y += extraOffset.y;
+            Editor.GetMapCanvas().Invalidate();
+        }
+
+        public void HandlePressed(object sender, PointerRoutedEventArgs args)
+        {
+            Editor.IsMousePressing = true;
+            Editor.SetCursor(CoreCursorType.Hand);
+            _originPoint = GetMousePosition(args);
+        }
+
+        public void HandleReleased(object sender, PointerRoutedEventArgs args)
+        {
+            Editor.IsMousePressing = false;
+            Editor.SetCursor(CoreCursorType.Arrow);
+        }
+
+        private Point GetMousePosition(PointerRoutedEventArgs args) =>
+            args.GetCurrentPoint(Editor.GetMapCanvas()).Position;
     }
 
     /// <summary> 笔刷 </summary>
@@ -82,9 +130,9 @@ public record MapEditorToolsHandlers
         /// </summary>
         private (int x, int y) GetMapPosition(PointerRoutedEventArgs args)
         {
-            var position = args.GetCurrentPoint(Editor.MapCanvasControl).Position;
-            var mapX = Math.Ceiling(position._x / Editor.MapScale);
-            var mapY = Math.Ceiling(position._y / Editor.MapScale);
+            var position = args.GetCurrentPoint(Editor.GetMapCanvas()).Position;
+            var mapX = Math.Ceiling((position._x - Editor.MapOffset.x) / Editor.MapScale);
+            var mapY = Math.Ceiling((position._y - Editor.MapOffset.y) / Editor.MapScale);
             return ((int)mapX, (int)mapY);
         }
 
@@ -94,11 +142,11 @@ public record MapEditorToolsHandlers
         /// <remarks>当传入地图坐标超出数组，直接返回</remarks>
         private void TryModifyMapColor(int x, int y)
         {
-            var maxIndex = Editor.ViewModel.Pixels.Length;
-            if (x > maxIndex || y > maxIndex) return;
+            var maxIndex = Editor.ViewModel.MapSize;
+            if (x > maxIndex - 1 || y > maxIndex - 1) return;
             Editor.ViewModel.SetColor(x, y);
-            Editor.MapCanvasControl.Invalidate();
-            Editor.SaveButtonControl.IsEnabled = true;
+            Editor.GetMapCanvas().Invalidate();
+            Editor.GetSaveButton().IsEnabled = true;
         }
     }
 }

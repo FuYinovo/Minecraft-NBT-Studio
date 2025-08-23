@@ -22,6 +22,7 @@ public sealed partial class MapEditor
     public readonly MapEditorViewModel ViewModel = new(InitMapSize);
     private float _mapScale = 1;
     public bool IsMousePressing;
+    public (float x, float y) MapOffset = (0,0);
 
     public MapEditor()
     {
@@ -44,8 +45,6 @@ public sealed partial class MapEditor
         }
     }
 
-    public CanvasControl MapCanvasControl => MapCanvas;
-    public Button SaveButtonControl => SaveButton;
 
     private void RegisterMessages()
     {
@@ -67,7 +66,9 @@ public sealed partial class MapEditor
     private void DrawMap(CanvasControl sender, CanvasDrawEventArgs args)
     {
         var session = args.DrawingSession;
-        session.Transform = Matrix3x2.CreateScale(MapScale, MapScale);
+        session.Transform =
+            Matrix3x2.CreateScale(MapScale, MapScale) *
+            Matrix3x2.CreateTranslation(MapOffset.x, MapOffset.y);
         for (var y = 0; y < InitMapSize; y++)
         for (var x = 0; x < InitMapSize; x++)
             session.FillRectangle(x, y, 1, 1, ViewModel.Pixels[y, x].Color);
@@ -100,4 +101,7 @@ public sealed partial class MapEditor
         if (sender is not Button btn) return;
         btn.IsEnabled = false;
     }
+
+    public Button GetSaveButton() => SaveButton;
+    public CanvasControl GetMapCanvas() => MapCanvas;
 }
