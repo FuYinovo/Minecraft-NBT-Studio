@@ -3,10 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
-using Windows.Storage;
-using ABI.Windows.Foundation;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -20,13 +17,9 @@ using NBT_Studio.Utils;
 using NBT_Studio.Xaml.Control.Dialog;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
-using WinRT.Interop;
 using Color = Windows.UI.Color;
 using ColorHelper = NBT_Studio.Utils.ColorHelper;
 using Image = SixLabors.ImageSharp.Image;
-using Rect = Windows.Foundation.Rect;
-using Rectangle = SixLabors.ImageSharp.Rectangle;
-using Size = SixLabors.ImageSharp.Size;
 
 namespace NBT_Studio.ViewModel;
 
@@ -126,7 +119,7 @@ public partial class MapEditorViewModel : ObservableObject, IMutuallyControlsMan
     }
 
     /// <summary>
-    /// 保存地图修改
+    ///     保存地图修改
     /// </summary>
     [RelayCommand]
     private void SaveValueChanges()
@@ -136,7 +129,10 @@ public partial class MapEditorViewModel : ObservableObject, IMutuallyControlsMan
         var index = 0;
         foreach (var pixel in Pixels)
         {
-            if (_colorToByte.TryGetValue(pixel.Color, out var colorByte)) colorBytes[index] = colorByte;
+            if (_colorToByte.TryGetValue(pixel.Color, out var colorByte))
+            {
+                colorBytes[index] = colorByte;
+            }
             else
             {
                 var color = pixel.Color;
@@ -154,7 +150,7 @@ public partial class MapEditorViewModel : ObservableObject, IMutuallyControlsMan
     }
 
     /// <summary>
-    /// 导入图片
+    ///     导入图片
     /// </summary>
     [RelayCommand]
     private async Task ImportImage()
@@ -169,7 +165,9 @@ public partial class MapEditorViewModel : ObservableObject, IMutuallyControlsMan
         // 对于正方形
         if (sourceImage.Width == sourceImage.Height && sourceImage.Width != _mapSize)
             // 尺寸矫正
+        {
             CompressFileHelper.CompressImage(ref sourceImage, _mapSize, _mapSize);
+        }
         // 对于非正方形
         else if (sourceImage.Width != sourceImage.Height)
         {

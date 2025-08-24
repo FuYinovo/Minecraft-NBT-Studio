@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Numerics;
 using Windows.Foundation;
 using Windows.UI;
 using Windows.UI.Core;
@@ -67,9 +66,9 @@ public record MapEditorToolsHandlers
     [MapEditorToolHandler(Tool = MapEditorTool.Move)]
     public class MoveHandler(MapEditor editor) : IMapEditorPointerEventsHandler
     {
-        public MapEditor Editor { get; set; } = editor;
-        private Point _originPoint;
         private const float MovingSpeedFactor = (float)0.05;
+        private Point _originPoint;
+        public MapEditor Editor { get; set; } = editor;
 
         public void HandleMoved(object sender, PointerRoutedEventArgs args)
         {
@@ -101,8 +100,10 @@ public record MapEditorToolsHandlers
             Editor.SetCursor(CoreCursorType.Arrow);
         }
 
-        private Point GetMousePosition(PointerRoutedEventArgs args) =>
-            args.GetCurrentPoint(Editor.GetMapCanvas()).Position;
+        private Point GetMousePosition(PointerRoutedEventArgs args)
+        {
+            return args.GetCurrentPoint(Editor.GetMapCanvas()).Position;
+        }
     }
 
     /// <summary> 笔刷 </summary>
@@ -133,7 +134,7 @@ public record MapEditorToolsHandlers
 
             // 修改像素颜色
             if (!Editor.IsMousePressing) return;
-            var mapPosition = GetMapPosition(this,args);
+            var mapPosition = GetMapPosition(this, args);
             if (Editor.IsMousePressing) PaintToMap(mapPosition.x, mapPosition.y, Editor.BrushRadius);
         }
 
@@ -141,7 +142,7 @@ public record MapEditorToolsHandlers
         {
             Editor.IsMousePressing = true;
             // 修改像素颜色
-            var mapPosition = GetMapPosition(this,args);
+            var mapPosition = GetMapPosition(this, args);
             PaintToMap(mapPosition.x, mapPosition.y, Editor.BrushRadius);
         }
 
@@ -167,13 +168,9 @@ public record MapEditorToolsHandlers
                 (int x, int y) recBegin = (pointX - radius, pointY + radius);
                 (int x, int y) recEnd = (pointX + radius, pointY - radius);
                 for (var y = recBegin.y; y >= recEnd.y; y--)
-                {
-                    for (var x = recBegin.x; x <= recEnd.x; x++)
-                    {
-                        if (Math.Sqrt(Math.Pow(x - pointX, 2) + Math.Pow(y - pointY, 2)) <= radius)
-                            validPoints.Add((x, y));
-                    }
-                }
+                for (var x = recBegin.x; x <= recEnd.x; x++)
+                    if (Math.Sqrt(Math.Pow(x - pointX, 2) + Math.Pow(y - pointY, 2)) <= radius)
+                        validPoints.Add((x, y));
 
                 // 绘制像素
                 foreach (var validPoint in validPoints) PaintToMap(validPoint.x, validPoint.y, 0);

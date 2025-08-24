@@ -89,8 +89,7 @@
                     FontIcon="&#xE771;"
                     GroupName="MapEditorTools"
                     MemberTag="{x:Bind enum:MapEditorTool.Brush}"
-                    Title="笔刷">
-                </mapEditorButton:ToggleButtonMutually>
+                    Title="笔刷" />
                 <AppBarSeparator Margin="0,-5,0,0" />
 
                 <!-- 颜色 -->
@@ -125,8 +124,7 @@
                 <mapEditorButton:ButtonSeparate
                     FontIcon="&#xE78B;"
                     Title="导入"
-                    ButtonCommand="{Binding ImportImageCommand}">
-                </mapEditorButton:ButtonSeparate>
+                    ButtonCommand="{Binding ImportImageCommand}" />
             </StackPanel>
         </Grid>
 

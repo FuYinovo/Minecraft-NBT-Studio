@@ -26,15 +26,16 @@ public sealed partial class MapEditor : INotifyPropertyChanged
     public const int MinZoomFactor = 2;
     public const int MinBrushRadius = 0;
     public const int MaxBrushRadius = 8;
+    private readonly MapEditorToolsHandlersManager _eventHandlerManager;
 
     public readonly SquareCursorManager SquareCursorManager;
     public readonly MapEditorViewModel ViewModel;
+    private int _brushRadius;
+    public Matrix3x2 MapTransform;
+    private float _mapScale = (float)6.25;
+    public bool IsMousePressing;
     public (float x, float y) MapOffset = (0, 0);
     public Vector2 ScaleCenter = new((float)InitMapSize / 2, (float)InitMapSize / 2);
-    public bool IsMousePressing;
-    private readonly MapEditorToolsHandlersManager _eventHandlerManager;
-    private float _mapScale = (float)6.25;
-    private int _brushRadius;
 
     public MapEditor()
     {
@@ -53,7 +54,7 @@ public sealed partial class MapEditor : INotifyPropertyChanged
         get => _mapScale;
         set
         {
-            _mapScale = (float)Math.Pow(0.05 * (value + 30), 2); // f(x) = [(x+30)/20]^2
+            _mapScale = GetMapScale(value);
             MapCanvas?.Invalidate();
         }
     }
@@ -88,6 +89,7 @@ public sealed partial class MapEditor : INotifyPropertyChanged
         session.Transform =
             Matrix3x2.CreateScale(MapScale, MapScale, ScaleCenter) *
             Matrix3x2.CreateTranslation(MapOffset.x, MapOffset.y);
+        MapTransform = session.Transform;
         for (var y = 0; y < InitMapSize; y++)
         for (var x = 0; x < InitMapSize; x++)
             session.FillRectangle(x, y, 1, 1, ViewModel.Pixels[y, x].Color);
@@ -133,8 +135,25 @@ public sealed partial class MapEditor : INotifyPropertyChanged
         btn.IsEnabled = false;
     }
 
-    public Button GetSaveButton() => SaveButton;
-    public CanvasControl GetMapCanvas() => MapCanvas;
+    public Button GetSaveButton()
+    {
+        return SaveButton;
+    }
+
+    public CanvasControl GetMapCanvas()
+    {
+        return MapCanvas;
+    }
+
+    public float GetMapScale(float origin)
+    {
+        return (float)Math.Pow(0.05 * (origin + 30), 2);
+    }
+
+    public float GetMapScaleOrigin()
+    {
+        return (float)(Math.Sqrt(_mapScale) * 20 - 30);
+    }
 
     # region INotifyPropertyChanged
 

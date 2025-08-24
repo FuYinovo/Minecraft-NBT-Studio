@@ -1,13 +1,12 @@
 ﻿using Windows.UI;
 using Vanara.PInvoke;
-using WinRT.Interop;
 
 namespace NBT_Studio.Utils;
 
 public static class Win32Helper
 {
     /// <summary>
-    /// 获取光标处像素颜色
+    ///     获取光标处像素颜色
     /// </summary>
     public static Color GetCursorPixelColor()
     {

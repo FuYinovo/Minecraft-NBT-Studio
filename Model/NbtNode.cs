@@ -114,7 +114,7 @@ public sealed partial class NbtNode
         }
     }
 
-    private string GetDisplayValue(object? value)
+    private static string GetDisplayValue(object? value)
     {
         if (value is IEnumerable enumerable and not string) return string.Join(", ", enumerable.Cast<object>());
         return value?.ToString() ?? string.Empty;
