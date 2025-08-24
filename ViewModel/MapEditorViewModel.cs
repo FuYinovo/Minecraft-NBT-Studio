@@ -159,18 +159,8 @@ public partial class MapEditorViewModel : ObservableObject, IMutuallyControlsMan
     [RelayCommand]
     private async Task ImportImage()
     {
-        // 初始化 FilePicker
-        var picker = new Windows.Storage.Pickers.FileOpenPicker
-        {
-            ViewMode = Windows.Storage.Pickers.PickerViewMode.Thumbnail
-        };
-        var supportedFileTypes = new[] { ".png", ".jpg", ".jpeg", ".bmp" };
-        foreach(var type in supportedFileTypes) picker.FileTypeFilter.Add(type);
-        var hWnd = WindowNative.GetWindowHandle(App.MainWindow);
-        InitializeWithWindow.Initialize(picker, hWnd);
-
         // 加载选择的 PNG 图片
-        var file = await picker.PickSingleFileAsync();
+        var file = await PickerHelper.PickFileAsync([".png", ".jpg", ".jpeg", ".bmp"]);
         if (file is null) return;
         var sourceImage = await Image.LoadAsync(file.Path);
 
@@ -197,7 +187,7 @@ public partial class MapEditorViewModel : ObservableObject, IMutuallyControlsMan
         # endregion
 
         // 转换为 MinecraftMapPixel 数组
-        using var memoryStream = new MemoryStream();
+        var memoryStream = new MemoryStream();
         await sourceImage.SaveAsPngAsync(memoryStream);
         var pixelImage = new Bitmap(memoryStream);
         var pixels = new MinecraftMapPixel[pixelImage.Width, pixelImage.Height];
@@ -216,6 +206,8 @@ public partial class MapEditorViewModel : ObservableObject, IMutuallyControlsMan
                 }, _minecraftMapColors)
             };
         }
+
+        memoryStream.Close();
 
         // 更新地图预览
         Pixels = pixels;

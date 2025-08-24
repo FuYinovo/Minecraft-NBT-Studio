@@ -190,18 +190,8 @@ public sealed partial class TreeViewPageViewModel
             }
         }
 
-        // 初始化 Picker
-        var openPicker = new FileOpenPicker
-        {
-            ViewMode = PickerViewMode.Thumbnail
-        };
-        openPicker.FileTypeFilter.Add(".nbt");
-        openPicker.FileTypeFilter.Add(".dat");
-        var hWnd = WindowNative.GetWindowHandle(App.MainWindow);
-        InitializeWithWindow.Initialize(openPicker, hWnd);
-
         // 选择文件
-        var file = await openPicker.PickSingleFileAsync();
+        var file = await PickerHelper.PickFileAsync([".nbt", ".dat"]);
         if (file == null) return;
         _fileInfo.FilePath = file.Path;
 
