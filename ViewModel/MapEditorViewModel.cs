@@ -96,9 +96,10 @@ public partial class MapEditorViewModel : ObservableObject, IMutuallyControlsMan
     /// </summary>
     /// <param name="x"></param>
     /// <param name="y"></param>
-    public void SetColor(int x, int y)
+    /// <param name="color"></param>
+    public void SetColor(int x, int y, Color color)
     {
-        Pixels[y, x].Color = ClosestMapColor;
+        Pixels[y, x].Color = color;
     }
 
     /// <summary>

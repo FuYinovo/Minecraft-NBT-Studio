@@ -30,6 +30,7 @@ public sealed partial class MapEditor : INotifyPropertyChanged
     public readonly SquareCursorManager SquareCursorManager;
     public readonly MapEditorViewModel ViewModel;
     public (float x, float y) MapOffset = (0, 0);
+    public Vector2 ScaleCenter = new((float)InitMapSize / 2, (float)InitMapSize / 2);
     public bool IsMousePressing;
     private readonly MapEditorToolsHandlersManager _eventHandlerManager;
     private float _mapScale = (float)6.25;
@@ -85,7 +86,7 @@ public sealed partial class MapEditor : INotifyPropertyChanged
     {
         var session = args.DrawingSession;
         session.Transform =
-            Matrix3x2.CreateScale(MapScale, MapScale) *
+            Matrix3x2.CreateScale(MapScale, MapScale, ScaleCenter) *
             Matrix3x2.CreateTranslation(MapOffset.x, MapOffset.y);
         for (var y = 0; y < InitMapSize; y++)
         for (var x = 0; x < InitMapSize; x++)

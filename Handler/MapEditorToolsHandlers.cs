@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Numerics;
 using Windows.Foundation;
+using Windows.UI;
 using Windows.UI.Core;
-using CommunityToolkit.WinUI.Helpers;
-using Microsoft.UI.Input;
-using Microsoft.UI.Xaml;
+using Microsoft.UI;
 using Microsoft.UI.Xaml.Input;
 using NBT_Studio.Attribute;
 using NBT_Studio.Enum;
@@ -26,10 +24,14 @@ public record MapEditorToolsHandlers
     }
 
     /// <summary> 橡皮 </summary>
+    /// <remarks> 继承笔刷所有方法，仅 SetColor 替换为透明色 </remarks>
     [MapEditorToolHandler(Tool = MapEditorTool.Eraser)]
-    public class EraserHandler(MapEditor editor) : IMapEditorPointerEventsHandler
+    public class EraserHandler(MapEditor editor) : BrushHandler(editor)
     {
-        public MapEditor Editor { get; set; } = editor;
+        protected override void SetColor(int x, int y, Color color)
+        {
+            Editor.ViewModel.SetColor(x, y, Colors.Transparent);
+        }
     }
 
     /// <summary> 吸色器 </summary>
@@ -109,7 +111,6 @@ public record MapEditorToolsHandlers
     {
         public MapEditor Editor { get; set; } = editor;
 
-
         public void HandleEntered(object sender, PointerRoutedEventArgs args)
         {
             Editor.SquareCursorManager.ShowCursor();
@@ -132,7 +133,7 @@ public record MapEditorToolsHandlers
 
             // 修改像素颜色
             if (!Editor.IsMousePressing) return;
-            var mapPosition = GetMapPosition(args);
+            var mapPosition = GetMapPosition(this,args);
             if (Editor.IsMousePressing) PaintToMap(mapPosition.x, mapPosition.y, Editor.BrushRadius);
         }
 
@@ -140,19 +141,17 @@ public record MapEditorToolsHandlers
         {
             Editor.IsMousePressing = true;
             // 修改像素颜色
-            var mapPosition = GetMapPosition(args);
+            var mapPosition = GetMapPosition(this,args);
             PaintToMap(mapPosition.x, mapPosition.y, Editor.BrushRadius);
         }
 
         /// <summary>
         ///     获取地图像素索引坐标
         /// </summary>
-        private (int x, int y) GetMapPosition(PointerRoutedEventArgs args)
+        private static (int x, int y) GetMapPosition(IMapEditorPointerEventsHandler handler,
+            PointerRoutedEventArgs args)
         {
-            var position = args.GetCurrentPoint(Editor.GetMapCanvas()).Position;
-            var mapX = Math.Ceiling((position._x - Editor.MapOffset.x) / Editor.MapScale);
-            var mapY = Math.Ceiling((position._y - Editor.MapOffset.y) / Editor.MapScale);
-            return ((int)mapX, (int)mapY);
+            return handler.GetMapPosition(args);
         }
 
         /// <summary>
@@ -183,9 +182,14 @@ public record MapEditorToolsHandlers
 
             const int maxIndex = MapEditor.InitMapSize - 1;
             if (pointX > maxIndex || pointY > maxIndex || pointX < 0 || pointY < 0) return;
-            Editor.ViewModel.SetColor(pointX, pointY);
+            SetColor(pointX, pointY, Editor.ViewModel.ClosestMapColor);
             Editor.GetMapCanvas().Invalidate();
             Editor.GetSaveButton().IsEnabled = true;
+        }
+
+        protected virtual void SetColor(int x, int y, Color color)
+        {
+            Editor.ViewModel.SetColor(x, y, color);
         }
     }
 }
