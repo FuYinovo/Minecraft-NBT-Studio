@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<mapEditorToggleButton1:MapEditorToggleButtonBase
-    x:Class="NBT_Studio.Xaml.Control.MapEditorToggleButton.MapEditorToggleButtonCompact"
+<mapEditorButton:ButtonBase
+    x:Class="NBT_Studio.Xaml.Control.MapEditorButton.ToggleButtonCompact"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:inter="using:Microsoft.Xaml.Interactivity"
     xmlns:behavior="using:NBT_Studio.Xaml.Behavior"
-    xmlns:mapEditorToggleButton1="using:NBT_Studio.Xaml.Control.MapEditorToggleButton"
+    xmlns:mapEditorButton="using:NBT_Studio.Xaml.Control.MapEditorButton"
     mc:Ignorable="d">
 
 
@@ -24,4 +24,4 @@
             </inter:Interaction.Behaviors>
         </ToggleButton>
     </Grid>
-</mapEditorToggleButton1:MapEditorToggleButtonBase>
+</mapEditorButton:ButtonBase>

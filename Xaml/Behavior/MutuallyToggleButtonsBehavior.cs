@@ -46,13 +46,13 @@ public class MutuallyToggleButtonsBehavior : Behavior<ToggleButton>, IMutuallyCo
 
     # region Dependency Properties
 
-    private readonly DependencyProperty _groupNameDependencyProperty = DependencyProperty.Register(
+    private readonly DependencyProperty _groupNameDp = DependencyProperty.Register(
         nameof(GroupName),
         typeof(string),
         typeof(MutuallyToggleSplitButtonsBehavior),
         new PropertyMetadata(string.Empty));
 
-    private readonly DependencyProperty _valueDependencyProperty = DependencyProperty.Register(
+    private readonly DependencyProperty _valueDp = DependencyProperty.Register(
         nameof(Tag),
         typeof(object),
         typeof(MutuallyToggleSplitButtonsBehavior),
@@ -64,14 +64,14 @@ public class MutuallyToggleButtonsBehavior : Behavior<ToggleButton>, IMutuallyCo
 
     public string GroupName
     {
-        get => (string)GetValue(_groupNameDependencyProperty);
-        set => SetValue(_groupNameDependencyProperty, value);
+        get => (string)GetValue(_groupNameDp);
+        set => SetValue(_groupNameDp, value);
     }
 
     public object Tag
     {
-        get => GetValue(_valueDependencyProperty);
-        set => SetValue(_valueDependencyProperty, value);
+        get => GetValue(_valueDp);
+        set => SetValue(_valueDp, value);
     }
 
     public IMutuallyControlsManager? MutuallyControlsManager { get; set; }

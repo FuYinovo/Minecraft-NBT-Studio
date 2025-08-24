@@ -2,7 +2,11 @@
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using Windows.Foundation;
 using NBT_Studio.Enum;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
+using Size = SixLabors.ImageSharp.Size;
 
 namespace NBT_Studio.Utils;
 
@@ -62,5 +66,29 @@ public static class CompressFileHelper
 
         compressStream.CopyTo(memoryStream);
         return memoryStream.ToArray();
+    }
+
+    /// <summary>
+    /// 压缩图像
+    /// </summary>
+    /// <param name="image">图像</param>
+    /// <param name="targetWidth">目标宽度</param>
+    /// <param name="targetHeight">目标高度</param>
+    /// <param name="cropRegion">裁切矩形(null表示不裁切)</param>
+    public static void CompressImage(ref Image image, int targetWidth, int targetHeight,
+        Rect? cropRegion = null)
+    {
+        var option = new ResizeOptions
+        {
+            Size = new Size(targetWidth, targetHeight),
+            Mode = ResizeMode.Max
+        };
+        if (cropRegion != null)
+            image.Mutate(x => x.Crop(new Rectangle(
+                (int)cropRegion.Value.X,
+                (int)cropRegion.Value.Y,
+                (int)cropRegion.Value.Width,
+                (int)cropRegion.Value.Height)));
+        image.Mutate(x => x.Resize(option));
     }
 }

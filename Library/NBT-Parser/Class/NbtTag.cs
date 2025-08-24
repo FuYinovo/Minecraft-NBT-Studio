@@ -408,7 +408,7 @@ public class NbtTag : ICloneable
             _ => throw new Exception($"反序列化失败: [{Tag}]不是动态负载长度标签!")
         };
         bytes.AddRange(IsBigEndian ? lengthField.Reverse() : lengthField); // 大小端序反转
-        bytes.AddRange(IsBigEndian ? valueField.Reverse() : valueField);
+        bytes.AddRange(valueField);
 
         return bytes.ToArray();
 

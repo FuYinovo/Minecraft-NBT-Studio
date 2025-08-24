@@ -2,22 +2,22 @@ using System.Collections.Generic;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
-namespace NBT_Studio.Xaml.Control.MapEditorToggleButton;
+namespace NBT_Studio.Xaml.Control.MapEditorButton;
 
-public partial class MapEditorToggleSplitButton
+public partial class ToggleSplitButtonMutually
 {
     private const string DefaultSymbol = "{>}";
 
     private readonly DependencyProperty _menuDp = DependencyProperty.Register(
         nameof(Menu),
         typeof(List<string>),
-        typeof(MapEditorToggleButton),
+        typeof(ToggleButtonMutually),
         new PropertyMetadata(new List<string>())
     );
 
     private bool _addedDefault;
 
-    public MapEditorToggleSplitButton()
+    public ToggleSplitButtonMutually()
     {
         InitializeComponent();
         Loaded += CreateMenuFlyoutItems;

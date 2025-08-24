@@ -1,7 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using Windows.UI;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using Windows.Storage;
+using ABI.Windows.Foundation;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -11,7 +16,17 @@ using NBT_Studio.Interface;
 using NBT_Studio.Library.NBT_Parser.Class;
 using NBT_Studio.Message;
 using NBT_Studio.Model;
+using NBT_Studio.Utils;
+using NBT_Studio.Xaml.Control.Dialog;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
+using WinRT.Interop;
+using Color = Windows.UI.Color;
 using ColorHelper = NBT_Studio.Utils.ColorHelper;
+using Image = SixLabors.ImageSharp.Image;
+using Rect = Windows.Foundation.Rect;
+using Rectangle = SixLabors.ImageSharp.Rectangle;
+using Size = SixLabors.ImageSharp.Size;
 
 namespace NBT_Studio.ViewModel;
 
@@ -135,6 +150,76 @@ public partial class MapEditorViewModel : ObservableObject, IMutuallyControlsMan
         // 保存到 NBT 标签
         _dataTags[MinecraftMapNecessaryTags.Colors].SetValue(colorBytes);
         // 通知修改消息
+        WeakReferenceMessenger.Default.Send(new NodeModifiedMessage());
+    }
+
+    /// <summary>
+    /// 导入图片
+    /// </summary>
+    [RelayCommand]
+    private async Task ImportImage()
+    {
+        // 初始化 FilePicker
+        var picker = new Windows.Storage.Pickers.FileOpenPicker
+        {
+            ViewMode = Windows.Storage.Pickers.PickerViewMode.Thumbnail
+        };
+        var supportedFileTypes = new[] { ".png", ".jpg", ".jpeg", ".bmp" };
+        foreach(var type in supportedFileTypes) picker.FileTypeFilter.Add(type);
+        var hWnd = WindowNative.GetWindowHandle(App.MainWindow);
+        InitializeWithWindow.Initialize(picker, hWnd);
+
+        // 加载选择的 PNG 图片
+        var file = await picker.PickSingleFileAsync();
+        if (file is null) return;
+        var sourceImage = await Image.LoadAsync(file.Path);
+
+        #region 处理图像
+
+        // 对于正方形
+        if (sourceImage.Width == sourceImage.Height && sourceImage.Width != _mapSize)
+            // 尺寸矫正
+            CompressFileHelper.CompressImage(ref sourceImage, _mapSize, _mapSize);
+        // 对于非正方形
+        else if (sourceImage.Width != sourceImage.Height)
+        {
+            // 裁切
+            var content = new ResizeSquareImageDialog(file);
+            var clicked = await DialogHelper.ShowDialog("裁切图片", "确认", "取消", content: content);
+            if (clicked != ContentDialogResult.Primary) return;
+            // 尺寸矫正
+            CompressFileHelper.CompressImage(ref sourceImage, _mapSize, _mapSize, content.GetCroppedRegion());
+        }
+
+        // 右转 90° + 水平翻转
+        sourceImage.Mutate(x => x.RotateFlip(RotateMode.Rotate90, FlipMode.Horizontal));
+
+        # endregion
+
+        // 转换为 MinecraftMapPixel 数组
+        using var memoryStream = new MemoryStream();
+        await sourceImage.SaveAsPngAsync(memoryStream);
+        var pixelImage = new Bitmap(memoryStream);
+        var pixels = new MinecraftMapPixel[pixelImage.Width, pixelImage.Height];
+        for (var i = 0; i < pixelImage.Width; i++)
+        for (var j = 0; j < pixelImage.Height; j++)
+        {
+            var color = pixelImage.GetPixel(i, j);
+            pixels[i, j] = new MinecraftMapPixel
+            {
+                // 将颜色转换为最近 Minecraft 地图色
+                Color = ColorHelper.GetClosest(new Color
+                {
+                    R = color.R,
+                    G = color.G,
+                    B = color.B
+                }, _minecraftMapColors)
+            };
+        }
+
+        // 更新地图预览
+        Pixels = pixels;
+        WeakReferenceMessenger.Default.Send(new DrawMapMessage());
         WeakReferenceMessenger.Default.Send(new NodeModifiedMessage());
     }
 

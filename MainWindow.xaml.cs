@@ -10,7 +10,7 @@ public sealed partial class MainWindow
         InitializeComponent();
 
         var presenter = OverlappedPresenter.Create();
-        presenter.PreferredMinimumWidth = 1100;
+        presenter.PreferredMinimumWidth = 1160;
         presenter.PreferredMinimumHeight = 765;
         AppWindow.SetPresenter(presenter);
 
