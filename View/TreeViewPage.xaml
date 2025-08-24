@@ -13,7 +13,7 @@
     xmlns:model="using:NBT_Studio.Model"
     xmlns:system="using:System"
     xmlns:converter="using:NBT_Studio.Xaml.Converter"
-    xmlns:flyout1="using:NBT_Studio.Xaml.Control.Flyout"
+    xmlns:flyout="using:NBT_Studio.Xaml.Control.Flyout"
     xmlns:control1="using:NBT_Studio.Xaml.Control"
     mc:Ignorable="d">
 
@@ -40,6 +40,7 @@
                 <community:TabbedCommandBar>
                     <!-- 头部 -->
                     <community:TabbedCommandBar.AutoSuggestBox>
+                        <!-- 搜索框 -->
                         <AutoSuggestBox
                             QueryIcon="Find"
                             PlaceholderText="搜索节点"
@@ -48,14 +49,22 @@
                     </community:TabbedCommandBar.AutoSuggestBox>
                     <community:TabbedCommandBar.PaneFooter>
                         <CommandBar Background="Transparent" DefaultLabelPosition="Right">
+                            <!-- 设置 -->
                             <AppBarButton Label="设置" Icon="Setting" AllowFocusOnInteraction="True">
                                 <AppBarButton.Flyout>
                                     <Flyout>
-                                        <flyout1:SettingsFlyout />
+                                        <flyout:SettingsFlyout />
                                     </Flyout>
                                 </AppBarButton.Flyout>
                             </AppBarButton>
-                            <AppBarButton Label="关于" Icon="Help" />
+                            <!-- 关于 -->
+                            <AppBarButton Label="关于" Icon="Help">
+                                <AppBarButton.Flyout>
+                                    <Flyout>
+                                        <flyout:AboutFlyout />
+                                    </Flyout>
+                                </AppBarButton.Flyout>
+                            </AppBarButton>
                         </CommandBar>
                     </community:TabbedCommandBar.PaneFooter>
                     <!-- 子页面 -->

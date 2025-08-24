@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<UserControl
+    x:Class="NBT_Studio.Xaml.Control.Flyout.AboutFlyout"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+
+    <Grid Padding="64,0">
+        <StackPanel>
+            <Border>
+                <Image Width="64" Height="64" Source="/Assets/PNG/AppLogo.png"/>
+            </Border>
+            <TextBlock 
+                HorizontalAlignment="Center"
+                Text="NBT Studio" 
+                Margin="0,0,0,10"
+                Style="{StaticResource SubtitleTextBlockStyle}"/>
+            <StackPanel Orientation="Horizontal">
+                <HyperlinkButton
+                    NavigateUri="https://github.com/FuYinovo/Minecraft-NBT-Studio/">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Width="32" Height="32" Margin="0,0,0,-6">
+                            <Image.Source>
+                                <SvgImageSource  UriSource="/Assets/SVG/Github.svg"/>
+                            </Image.Source>
+                        </Image>
+                        <TextBlock Text="Github" 
+                                   Style="{StaticResource BodyStrongTextBlockStyle}" 
+                                   FontSize="16"></TextBlock>
+
+                    </StackPanel>
+                </HyperlinkButton>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</UserControl>

@@ -62,7 +62,6 @@
         <PackageReference Include="Vanara.PInvoke.User32" Version="4.1.6"/>
     </ItemGroup>
     <ItemGroup>
-        <Folder Include="Assets\ItemIcon\"/>
         <Folder Include="Component\"/>
     </ItemGroup>
     <ItemGroup>
