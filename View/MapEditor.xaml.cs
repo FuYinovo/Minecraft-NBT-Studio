@@ -26,15 +26,15 @@ public sealed partial class MapEditor : INotifyPropertyChanged
     public const int MinZoomFactor = 2;
     public const int MinBrushRadius = 0;
     public const int MaxBrushRadius = 8;
+    private readonly MapEditorToolsHandlersManager _eventHandlerManager;
 
     public readonly SquareCursorManager SquareCursorManager;
     public readonly MapEditorViewModel ViewModel;
+    private int _brushRadius;
+    private float _mapScale = (float)6.25;
+    public bool IsMousePressing;
     public (float x, float y) MapOffset = (0, 0);
     public Vector2 ScaleCenter = new((float)InitMapSize / 2, (float)InitMapSize / 2);
-    public bool IsMousePressing;
-    private readonly MapEditorToolsHandlersManager _eventHandlerManager;
-    private float _mapScale = (float)6.25;
-    private int _brushRadius;
 
     public MapEditor()
     {
@@ -133,8 +133,15 @@ public sealed partial class MapEditor : INotifyPropertyChanged
         btn.IsEnabled = false;
     }
 
-    public Button GetSaveButton() => SaveButton;
-    public CanvasControl GetMapCanvas() => MapCanvas;
+    public Button GetSaveButton()
+    {
+        return SaveButton;
+    }
+
+    public CanvasControl GetMapCanvas()
+    {
+        return MapCanvas;
+    }
 
     # region INotifyPropertyChanged
 

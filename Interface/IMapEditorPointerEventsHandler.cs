@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Numerics;
 using Microsoft.UI.Xaml.Input;
-using NBT_Studio.Enum;
 using NBT_Studio.View;
 
 namespace NBT_Studio.Interface;
@@ -47,7 +45,6 @@ public interface IMapEditorPointerEventsHandler
         var newZoomFactor = (float)(zoomFactor + 0.03 * dWheel);
         if (newZoomFactor is < MapEditor.MinZoomFactor or > MapEditor.MaxZoomFactor) return;
         Editor.MapScale = newZoomFactor;
-
     }
 
     /// <summary>

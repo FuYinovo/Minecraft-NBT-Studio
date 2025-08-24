@@ -100,7 +100,7 @@ public struct MinecraftMapColorExtensions
     }
 
     /// <summary>
-    /// 获取 Minecraft 地图色的字节
+    ///     获取 Minecraft 地图色的字节
     /// </summary>
     /// <param name="color">颜色</param>
     /// <returns>如果 color 是 Minecraft 地图色，返回对应字节，否则返回 0</returns>

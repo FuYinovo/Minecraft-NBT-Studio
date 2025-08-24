@@ -15,7 +15,6 @@
                                 Height="400"
                                 ThumbPlacement="Corners"
                                 CropShape="Rectangular"
-                                AspectRatio="1">
-        </community:ImageCropper>
+                                AspectRatio="1" />
     </Grid>
 </UserControl>

@@ -12,25 +12,25 @@
     <Grid Padding="64,0">
         <StackPanel>
             <Border>
-                <Image Width="64" Height="64" Source="/Assets/PNG/AppLogo.png"/>
+                <Image Width="64" Height="64" Source="/Assets/PNG/AppLogo.png" />
             </Border>
-            <TextBlock 
+            <TextBlock
                 HorizontalAlignment="Center"
-                Text="NBT Studio" 
+                Text="NBT Studio"
                 Margin="0,0,0,10"
-                Style="{StaticResource SubtitleTextBlockStyle}"/>
+                Style="{StaticResource SubtitleTextBlockStyle}" />
             <StackPanel Orientation="Horizontal">
                 <HyperlinkButton
                     NavigateUri="https://github.com/FuYinovo/Minecraft-NBT-Studio/">
                     <StackPanel Orientation="Horizontal">
                         <Image Width="32" Height="32" Margin="0,0,0,-6">
                             <Image.Source>
-                                <SvgImageSource  UriSource="/Assets/SVG/Github.svg"/>
+                                <SvgImageSource UriSource="/Assets/SVG/Github.svg" />
                             </Image.Source>
                         </Image>
-                        <TextBlock Text="Github" 
-                                   Style="{StaticResource BodyStrongTextBlockStyle}" 
-                                   FontSize="16"></TextBlock>
+                        <TextBlock Text="Github"
+                                   Style="{StaticResource BodyStrongTextBlockStyle}"
+                                   FontSize="16" />
 
                     </StackPanel>
                 </HyperlinkButton>

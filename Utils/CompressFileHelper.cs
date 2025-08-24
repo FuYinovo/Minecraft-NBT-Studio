@@ -69,7 +69,7 @@ public static class CompressFileHelper
     }
 
     /// <summary>
-    /// 压缩图像
+    ///     压缩图像
     /// </summary>
     /// <param name="image">图像</param>
     /// <param name="targetWidth">目标宽度</param>

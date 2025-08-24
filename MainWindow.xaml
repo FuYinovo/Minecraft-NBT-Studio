@@ -18,7 +18,6 @@
             IsBackEnabled="False"
             IsBackButtonVisible="Collapsed"
             IsPaneVisible="False">
-
             <Frame x:Name="Frame" />
         </NavigationView>
     </Grid>
