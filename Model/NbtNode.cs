@@ -233,7 +233,7 @@ public sealed partial class NbtNode
         var isListElement = parent.TagEnum == NbtTagEnum.List;
 
         // 快速创建 or 弹窗创建
-        if (SettingsManager.GetInstance().GetValue<bool>(BooleanSettings.QuickCreate))
+        if (SettingsService.GetInstance().GetValue<bool>(BooleanSettings.QuickCreate))
             QuickAppend();
         else await DetailedAppend();
 

@@ -15,9 +15,9 @@ using NBT_Studio.Utils;
 
 namespace NBT_Studio.Service;
 
-public sealed class SettingsManager
+public sealed class SettingsService
 {
-    private static readonly SettingsManager Instance = new();
+    private static readonly SettingsService Instance = new();
 
     private readonly string _filePath;
 
@@ -29,7 +29,7 @@ public sealed class SettingsManager
 
     private readonly Dictionary<string, ISetting> _settings = new();
 
-    private SettingsManager()
+    private SettingsService()
     {
         _filePath = AssetHelper.GetFilePathFromUri(AssetHelper.GetConfigUri());
         InitSettingsEnums();
@@ -38,9 +38,9 @@ public sealed class SettingsManager
     }
 
     /// <summary>
-    ///     获取 <see cref="SettingsManager" /> 的唯一实例
+    ///     获取 <see cref="SettingsService" /> 的唯一实例
     /// </summary>
-    public static SettingsManager GetInstance()
+    public static SettingsService GetInstance()
     {
         return Instance;
     }

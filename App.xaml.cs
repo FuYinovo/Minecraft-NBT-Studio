@@ -14,7 +14,7 @@ public partial class App
     public App()
     {
         InitializeComponent();
-        SettingsManager.GetInstance();
+        SettingsService.GetInstance();
     }
 
     protected override void OnLaunched(LaunchActivatedEventArgs args)
@@ -22,7 +22,7 @@ public partial class App
         MainWindow = new MainWindow();
         MainWindow.Activate();
         RegisterMessages();
-        SettingsManager.GetInstance();
+        SettingsService.GetInstance();
     }
 
     private void RegisterMessages()

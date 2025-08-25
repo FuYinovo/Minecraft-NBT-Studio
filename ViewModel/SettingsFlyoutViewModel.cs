@@ -9,13 +9,13 @@ namespace NBT_Studio.ViewModel;
 
 public partial class SettingsFlyoutViewModel : ObservableObject
 {
-    private readonly SettingsManager _settingsManager = SettingsManager.GetInstance();
+    private readonly SettingsService _settingsService = SettingsService.GetInstance();
 
     public SettingsFlyoutViewModel()
     {
-        _sort = _settingsManager.GetValue<Sort>(EnumSettings.Sort);
-        _theme = _settingsManager.GetValue<Theme>(EnumSettings.Theme);
-        _quickCreate = _settingsManager.GetValue<bool>(BooleanSettings.QuickCreate);
+        _sort = _settingsService.GetValue<Sort>(EnumSettings.Sort);
+        _theme = _settingsService.GetValue<Theme>(EnumSettings.Theme);
+        _quickCreate = _settingsService.GetValue<bool>(BooleanSettings.QuickCreate);
     }
 
 
@@ -60,7 +60,7 @@ public partial class SettingsFlyoutViewModel : ObservableObject
         where T : IConvertible
     {
         SetField(ref field, value, propertyName);
-        _settingsManager.SetValue(settingEnum, value);
+        _settingsService.SetValue(settingEnum, value);
     }
 
     #endregion NotifyPropertyChanged
