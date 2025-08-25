@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -16,6 +17,7 @@ using NBT_Studio.Library.NBT_Parser.Enum;
 using NBT_Studio.Message;
 using NBT_Studio.Service;
 using NBT_Studio.Utils;
+using NBT_Studio.Xaml.Control.Dialog;
 using CreateNodeDialog = NBT_Studio.Xaml.Control.Dialog.CreateNodeDialog;
 using RenameNodeDialog = NBT_Studio.Xaml.Control.Dialog.RenameNodeDialog;
 
@@ -275,6 +277,52 @@ public sealed partial class NbtNode
 
             AppendNewChild(tagEnum, value: value, isListElement: isListElement, parentNode: parent);
         }
+    }
+
+    /// <summary>
+    /// 保存节点到单独文件
+    /// </summary>
+    [RelayCommand]
+    public async Task Save()
+    {
+        // 获取保存参数
+        var content = new SaveNodeDialog();
+        if (await DialogHelper.ShowDialog($"单独保存「{DisplayName}」节点", "保存", close: "取消", content: content) ==
+            ContentDialogResult.None) return;
+        var isBigEndian = content.GameEdition == MinecraftEdition.Java;
+        var compressType = content.FileCompress;
+
+        // 选择保存位置
+        var fileTypes = new Dictionary<string, List<string>> { { "NBT Files", [".nbt", ".dat"] } };
+        var suggestedFileName = string.IsNullOrWhiteSpace(DisplayName)
+            ? "Unnamed NBT File"
+            : DisplayName;
+        var path = await PickerHelper.SaveFileAsync(fileTypes, suggestedFileName);
+        if (path == null) return;
+
+
+        // 准备 NBT 标签
+        var targetTag = (isBigEndian == Tag.IsBigEndian) switch
+        {
+            true => ((NbtTag)Tag.Clone()).SetEndianness(isBigEndian), // 拷贝节点
+            false => Tag
+        };
+        if (targetTag.Tag != NbtTagEnum.Dictionary)
+            // 使用一个字典标签包裹
+            targetTag = new NbtTagBuilder(isBigEndian).Dictionary(string.Empty, [targetTag]);
+
+        // 获取字节数组
+        var bytes = targetTag.GetBytes();
+
+        // 写入文件
+        await using var fileStream = new FileStream(path.Path, FileMode.Create, FileAccess.Write);
+        if (compressType == FileCompress.None)
+        {
+            await fileStream.WriteAsync(bytes);
+            return;
+        }
+
+        await CompressFileHelper.CompressWriteBytes(fileStream, bytes, compressType);
     }
 }
 

@@ -288,18 +288,18 @@ public sealed partial class TreeViewPageViewModel
         // 获取字节数组
         var bytes = Nodes.First().Tag.GetBytes();
 
-        // 初始化 Picker
-        var savePicker = new FileSavePicker();
-        savePicker.FileTypeChoices.Add("NBT Files", new List<string> { ".nbt", ".dat" });
-        savePicker.SuggestedFileName =
-            string.IsNullOrWhiteSpace(Nodes.First().DisplayName) ? "unnamed_nbt_file" : Nodes.First().DisplayName;
-        var hWnd = WindowNative.GetWindowHandle(App.MainWindow);
-        InitializeWithWindow.Initialize(savePicker, hWnd);
-
         // 选择保存位置
-        var path = await savePicker.PickSaveFileAsync();
+        var fileTypes = new Dictionary<string, List<string>> { { "NBT Files", [".nbt", ".dat"] } };
+        var suggestedFileName = string.IsNullOrWhiteSpace(Nodes.First().DisplayName)
+            ? "Unnamed NBT File"
+            : Nodes.First().DisplayName;
+        var path = await PickerHelper.SaveFileAsync(fileTypes, suggestedFileName);
         if (path == null) return;
+
+        // 写入文件
         await WriteFile(bytes, path.Path);
+
+        // 更新界面
         _fileInfo.FilePath = path.Path;
         IsApplyEnabled = false;
     }
@@ -383,20 +383,19 @@ public sealed partial class TreeViewPageViewModel
 
         return;
 
-        // 根据 _fileInfo 决定是否压缩后保存
         async Task WriteBytes(byte[] data)
         {
             await using var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write);
-
             var compressType = _fileInfo.CompressType;
-            await using Stream outStream = _fileInfo.IsCompressed switch
+            // 不压缩
+            if (compressType == FileCompress.None)
             {
-                true when compressType == FileCompress.Gzip => new GZipStream(fileStream, CompressionMode.Compress),
-                true when compressType == FileCompress.Zlib => new ZLibStream(fileStream, CompressionMode.Compress),
-                false => fileStream,
-                _ => throw new NotSupportedException($"不支持对将文件压缩为[{compressType}]类型!")
-            };
-            await outStream.WriteAsync(data);
+                await fileStream.WriteAsync(data);
+                return;
+            }
+
+            // 压缩
+            await CompressFileHelper.CompressWriteBytes(fileStream, data, _fileInfo.CompressType);
         }
     }
 

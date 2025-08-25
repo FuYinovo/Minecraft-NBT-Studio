@@ -68,6 +68,16 @@
                                 <KeyboardAccelerator Key="Delete" />
                             </MenuFlyoutItem.KeyboardAccelerators>
                         </MenuFlyoutItem>
+                        <MenuFlyoutSeparator />
+                        <!-- 独立保存 -->
+                        <MenuFlyoutItem Text="独立保存" Command="{Binding SaveCommand}">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE74E;" />
+                            </MenuFlyoutItem.Icon>
+                            <MenuFlyoutItem.KeyboardAccelerators>
+                                <KeyboardAccelerator Key="S"></KeyboardAccelerator>
+                            </MenuFlyoutItem.KeyboardAccelerators>
+                        </MenuFlyoutItem>
                     </MenuFlyout>
                 </TreeViewItem.ContextFlyout>
                 <!-- 节点 -->

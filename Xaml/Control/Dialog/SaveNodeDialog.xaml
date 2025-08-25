@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<UserControl
+    x:Class="NBT_Studio.Xaml.Control.Dialog.SaveNodeDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:markup="using:NBT_Studio.Xaml.Markup"
+    xmlns:enum="using:NBT_Studio.Enum"
+    xmlns:converter="using:NBT_Studio.Xaml.Converter"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <converter:EnumToDescriptionConverter x:Key="EnumToDescriptionConverter"></converter:EnumToDescriptionConverter>
+    </UserControl.Resources>
+
+    <Grid>
+        <StackPanel Spacing="16" >
+            <ComboBox ItemsSource="{markup:AdvancedEnumValues Type=enum:MinecraftEdition}"
+                      SelectedItem="{x:Bind GameEdition, Mode=TwoWay}"
+                      Header="游戏版本">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource EnumToDescriptionConverter}}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+            <ComboBox ItemsSource="{markup:AdvancedEnumValues Type=enum:FileCompress}"
+                      SelectedItem="{x:Bind FileCompress, Mode=TwoWay}"
+                      Header="压缩类型">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource EnumToDescriptionConverter}}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+        </StackPanel>
+    </Grid>
+</UserControl>

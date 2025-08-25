@@ -2,6 +2,7 @@
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using NBT_Studio.Enum;
 using SixLabors.ImageSharp;
@@ -90,5 +91,16 @@ public static class CompressFileHelper
                 (int)cropRegion.Value.Width,
                 (int)cropRegion.Value.Height)));
         image.Mutate(x => x.Resize(option));
+    }
+
+    public static async Task CompressWriteBytes( Stream fileStream, byte[] data, FileCompress compressType)
+    {
+        await using Stream outStream = compressType switch
+        {
+            FileCompress.Gzip => new GZipStream(fileStream, CompressionMode.Compress),
+            FileCompress.Zlib => new ZLibStream(fileStream, CompressionMode.Compress),
+            _ => throw new NotSupportedException($"不支持对将文件压缩为[{compressType}]类型!")
+        };
+        await outStream.WriteAsync(data);
     }
 }

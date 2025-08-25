@@ -21,14 +21,14 @@ public static class PickerHelper
         return await picker.PickSingleFileAsync();
     }
 
-    public static async Task<StorageFile?> SaveFileAsync(IDictionary<string, IList<string>> fileTypes,
+    public static async Task<StorageFile?> SaveFileAsync(Dictionary<string, List<string>> fileTypes,
         string suggestedName)
     {
         var picker = new FileSavePicker
         {
             SuggestedFileName = suggestedName
         };
-        foreach (var type in fileTypes) picker.FileTypeChoices.Add(type);
+        foreach (var type in fileTypes) picker.FileTypeChoices.Add(type.Key, type.Value);
         var hWnd = WindowNative.GetWindowHandle(App.MainWindow);
         InitializeWithWindow.Initialize(picker, hWnd);
         return await picker.PickSaveFileAsync();

@@ -13,7 +13,7 @@ public class NbtTag : ICloneable
 {
     private static readonly int[] ZeroBeginArray = [0];
     public readonly NbtTagEnum ChildrenTag;
-    public readonly bool IsBigEndian;
+    public bool IsBigEndian;
     public readonly NbtTagEnum Tag;
     private Memory<byte> _bytes; // 不包含子元素 (终止于「首个子元素头部 - 1」)
     private string _floatValueTemp = string.Empty;
@@ -82,6 +82,17 @@ public class NbtTag : ICloneable
     {
         var childrenCopy = Children.Select(child => (NbtTag)child.Clone()).ToList();
         return new NbtTag(Tag, IsBigEndian, Name, Value, childrenCopy, ChildrenTag, IsListDirectElement);
+    }
+
+    /// <summary>
+    /// 设置字节序
+    /// </summary>
+    /// <param name="isBigEndian">是否大端序</param>
+    /// <returns>自身的引用</returns>
+    public NbtTag SetEndianness(bool isBigEndian)
+    {
+        IsBigEndian = isBigEndian;
+        return this;
     }
 
     /// <summary>
@@ -229,7 +240,6 @@ public class NbtTag : ICloneable
             return this;
         }
     }
-
 
     /// <summary>
     ///     设置标签名称

@@ -1,8 +1,10 @@
-﻿namespace NBT_Studio.Enum;
+﻿using System.ComponentModel;
+
+namespace NBT_Studio.Enum;
 
 public enum FileCompress
 {
     Gzip,
     Zlib,
-    None
+    [Description("不压缩")]None
 }
