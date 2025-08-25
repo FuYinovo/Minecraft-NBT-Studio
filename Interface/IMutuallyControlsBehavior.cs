@@ -17,7 +17,7 @@ public interface IMutuallyControlsBehavior
     /// </summary>
     static IMutuallyControlsManager GetManager(DependencyObject associatedObject)
     {
-        if (VisualTreeHelper.GetSpecificDataContext<IMutuallyControlsManager>(associatedObject,
+        if (ElementTreeHelper.GetSpecificDataContext<IMutuallyControlsManager>(associatedObject,
                 out var managerViewModel))
             return managerViewModel;
         throw new InvalidOperationException(

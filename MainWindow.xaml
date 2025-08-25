@@ -20,5 +20,12 @@
             IsPaneVisible="False">
             <Frame x:Name="Frame" />
         </NavigationView>
+
+        <Grid
+            x:Name="BottomGrid"
+            Height="100" 
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Bottom">
+        </Grid>
     </Grid>
 </Window>

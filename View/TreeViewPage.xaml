@@ -15,6 +15,7 @@
     xmlns:converter="using:NBT_Studio.Xaml.Converter"
     xmlns:flyout="using:NBT_Studio.Xaml.Control.Flyout"
     xmlns:control1="using:NBT_Studio.Xaml.Control"
+    xmlns:popup="using:NBT_Studio.Xaml.Control.Popup"
     mc:Ignorable="d">
 
     <Page.Resources>
@@ -61,7 +62,7 @@
                             <AppBarButton Label="关于" Icon="Help">
                                 <AppBarButton.Flyout>
                                     <Flyout>
-                                        <flyout:AboutFlyout />
+                                        <flyout:AboutFlyout/>
                                     </Flyout>
                                 </AppBarButton.Flyout>
                             </AppBarButton>
