@@ -15,7 +15,7 @@
                 Storyboard.TargetProperty="Y"
                 From="350"
                 To="25"
-                Duration="0:0:0.6"
+                Duration="{x:Bind AnimationDuration}"
                >
                 <DoubleAnimation.EasingFunction>
                     <QuinticEase EasingMode="EaseInOut"/>
@@ -28,7 +28,7 @@
                 Storyboard.TargetProperty="Y"
                 From="25"
                 To="350"
-                Duration="0:0:0.6"
+                Duration="{x:Bind AnimationDuration}"
                 >
                 <DoubleAnimation.EasingFunction>
                     <QuinticEase EasingMode="EaseInOut"/>
@@ -46,11 +46,10 @@
                 <TranslateTransform x:Name="PopupTranslation"></TranslateTransform>
             </Popup.RenderTransform>
             <InfoBar
+                x:Name="InfoBar"
                 IsClosable="False"
                 IsOpen="True"
-                Severity="{x:Bind Severity, Mode=OneWay}"
-                Title="{x:Bind Title, Mode=OneWay}"
-                Message="{x:Bind Message, Mode=OneWay}" />
+                />
         </Popup>
     </Grid>
 </UserControl>

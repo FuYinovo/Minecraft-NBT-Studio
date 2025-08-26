@@ -192,7 +192,9 @@ public sealed partial class NbtNode
     [RelayCommand]
     public async Task Delete()
     {
-        if (IsRootNode) await DialogHelper.ShowDialog("删除失败", "确认", description: "不允许删除根节点");
+        if (IsRootNode)
+            await NotificationService.GetInstance()
+                .Send(new NotificationInfo("删除失败", "不允许删除根节点", InfoBarSeverity.Error));
         else Remove();
     }
 
@@ -234,7 +236,7 @@ public sealed partial class NbtNode
 
         // 快速创建 or 弹窗创建
         if (SettingsService.GetInstance().GetValue<bool>(BooleanSettings.QuickCreate))
-            QuickAppend();
+            await QuickAppend();
         else await DetailedAppend();
 
 
@@ -256,9 +258,10 @@ public sealed partial class NbtNode
             var value = content.GetNodeValue();
 
             AppendNewChild(tagEnum, name, value, isListElement, content.GetChildrenType(), parent);
+            await SendSuccessNotification();
         }
 
-        void QuickAppend()
+        async Task QuickAppend()
         {
             object? value = tagEnum switch
             {
@@ -276,6 +279,13 @@ public sealed partial class NbtNode
             };
 
             AppendNewChild(tagEnum, value: value, isListElement: isListElement, parentNode: parent);
+            await SendSuccessNotification();
+        }
+
+        async Task SendSuccessNotification()
+        {
+            await DialogHelper.ShowDialog("添加成功", "确认",
+                description: $"成功添加<{ReflectionHelper.GetEnumDescription(tagEnum)}>节点");
         }
     }
 
@@ -297,8 +307,8 @@ public sealed partial class NbtNode
         var suggestedFileName = string.IsNullOrWhiteSpace(DisplayName)
             ? "Unnamed NBT File"
             : DisplayName;
-        var path = await PickerHelper.SaveFileAsync(fileTypes, suggestedFileName);
-        if (path == null) return;
+        var file = await PickerHelper.SaveFileAsync(fileTypes, suggestedFileName);
+        if (file == null) return;
 
 
         // 准备 NBT 标签
@@ -315,7 +325,7 @@ public sealed partial class NbtNode
         var bytes = targetTag.GetBytes();
 
         // 写入文件
-        await using var fileStream = new FileStream(path.Path, FileMode.Create, FileAccess.Write);
+        await using var fileStream = new FileStream(file.Path, FileMode.Create, FileAccess.Write);
         if (compressType == FileCompress.None)
         {
             await fileStream.WriteAsync(bytes);
@@ -323,6 +333,9 @@ public sealed partial class NbtNode
         }
 
         await CompressFileHelper.CompressWriteBytes(fileStream, bytes, compressType);
+        await NotificationService.GetInstance()
+            .Send(new NotificationInfo("保存成功", $"成功保存「{DisplayName}」到「{file.Path}」",
+                InfoBarSeverity.Success));
     }
 }
 

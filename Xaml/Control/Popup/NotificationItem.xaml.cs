@@ -1,3 +1,5 @@
+using System;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using NBT_Studio.Model;
 
@@ -5,20 +7,18 @@ namespace NBT_Studio.Xaml.Control.Popup;
 
 public sealed partial class NotificationItem
 {
-    private InfoBarSeverity Severity { get; set; } = InfoBarSeverity.Informational;
-    private string Title { get; set; } = string.Empty;
-    private string Message { get; set; } = string.Empty;
-
-    public NotificationItem()
+    private Duration AnimationDuration { get; }
+    public NotificationItem(TimeSpan animationDuration)
     {
         InitializeComponent();
+        AnimationDuration = animationDuration;
     }
 
     public void SetInfo(NotificationInfo info)
     {
-        Title = info.Title;
-        Message = info.Message;
-        Severity = info.Severity;
+        InfoBar.Title = info.Title;
+        InfoBar.Message = info.Message;
+        InfoBar.Severity = info.Severity;
     }
 
     public void Show()

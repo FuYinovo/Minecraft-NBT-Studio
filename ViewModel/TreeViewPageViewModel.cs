@@ -19,6 +19,7 @@ using NBT_Studio.Library.NBT_Parser.Class;
 using NBT_Studio.Library.NBT_Parser.Enum;
 using NBT_Studio.Message;
 using NBT_Studio.Model;
+using NBT_Studio.Service;
 using NBT_Studio.Utils;
 using WinRT.Interop;
 using FileInfo = NBT_Studio.Model.FileInfo;
@@ -515,7 +516,8 @@ public sealed partial class TreeViewPageViewModel
     {
         if (SelectedNode == null)
         {
-            await DialogHelper.ShowDialog("添加失败", "确认", description: "请选择一个目标节点");
+            await NotificationService.GetInstance()
+                .Send(new NotificationInfo("添加失败", "未选择目标节点", InfoBarSeverity.Error));
             return;
         }
 
