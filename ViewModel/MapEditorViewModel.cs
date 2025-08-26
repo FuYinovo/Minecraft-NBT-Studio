@@ -57,7 +57,7 @@ public partial class MapEditorViewModel : ObservableObject, IMutuallyControlsMan
 
         UpdateMapData(dataTag);
         UpdateColors();
-        WeakReferenceMessenger.Default.Send(new DrawMapMessage());
+        WeakReferenceMessenger.Default.Send(new DrawMapMessage(false));
     }
 
     /// <summary>
@@ -209,7 +209,7 @@ public partial class MapEditorViewModel : ObservableObject, IMutuallyControlsMan
 
         // 更新地图预览
         Pixels = pixels;
-        WeakReferenceMessenger.Default.Send(new DrawMapMessage());
+        WeakReferenceMessenger.Default.Send(new DrawMapMessage(false));
         WeakReferenceMessenger.Default.Send(new NodeModifiedMessage());
     }
 

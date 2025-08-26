@@ -215,14 +215,14 @@
                             <view:ValueEditor />
                         </AppBarElementContainer>
                     </community:TabbedCommandBarItem>
-                    <community:TabbedCommandBarItem Header="物品编辑器" IsContextual="True" IsDynamicOverflowEnabled="False"
-                                                    IsEnabled="False">
+                    <community:TabbedCommandBarItem Visibility="Collapsed" Header="物品编辑器" IsContextual="True" IsDynamicOverflowEnabled="False"
+                                                    >
                         <AppBarElementContainer
                             Visibility="{Binding WaitingToSelectMaskVisibility, Converter={StaticResource BoolNotConverter}}">
                             <view:ItemEditor />
                         </AppBarElementContainer>
                     </community:TabbedCommandBarItem>
-                    <community:TabbedCommandBarItem Header="地图编辑器" IsContextual="True" IsDynamicOverflowEnabled="False">
+                    <community:TabbedCommandBarItem IsEnabled="{Binding IsMapEditorEnabled}" Header="地图编辑器" IsContextual="True" IsDynamicOverflowEnabled="False">
                         <AppBarElementContainer
                             Visibility="{Binding WaitingToSelectMaskVisibility, Converter={StaticResource BoolNotConverter}}">
                             <view:MapEditor />

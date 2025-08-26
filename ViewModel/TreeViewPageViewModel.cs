@@ -48,6 +48,7 @@ public sealed partial class TreeViewPageViewModel : ObservableObject
         WeakReferenceMessenger.Default.Register<SelectedNodeChangedMessage>(this, SelectedNodeChanged);
         WeakReferenceMessenger.Default.Register<SettingsChangedMessage>(this, SettingChanged);
         WeakReferenceMessenger.Default.Register<NodeModifiedMessage>(this, NodeModified);
+        WeakReferenceMessenger.Default.Register<DrawMapMessage>(this, DrawMap);
         return;
 
         void SelectedNodeChanged(object obj, SelectedNodeChangedMessage msg)
@@ -61,6 +62,7 @@ public sealed partial class TreeViewPageViewModel : ObservableObject
                 foreach (var btn in group)
                     btn.IsEnabled = node.TagEnum != NbtTagEnum.List || btn.Tag == node.Tag.ChildrenTag;
             WaitingToSelectMaskVisibility = false;
+            IsMapEditorEnabled = false;
         }
 
         void SettingChanged(object obj, SettingsChangedMessage msg)
@@ -71,6 +73,12 @@ public sealed partial class TreeViewPageViewModel : ObservableObject
         void NodeModified(object obj, NodeModifiedMessage msg)
         {
             IsApplyEnabled = _fileInfo.FilePath != string.Empty;
+        }
+
+        void DrawMap(object obj, DrawMapMessage msg)
+        {
+            if (!msg.IsClear)
+                IsMapEditorEnabled = true;
         }
     }
 
@@ -96,6 +104,7 @@ public sealed partial class TreeViewPageViewModel : ObservableObject
     [ObservableProperty] private bool _isSaveEnabled;
     [ObservableProperty] private bool _isSearchBoxEnabled;
     [ObservableProperty] private bool _isAddNodeEnabled;
+    [ObservableProperty] private bool _isMapEditorEnabled;
     private int _nodeFilterIndex;
     [ObservableProperty] private ObservableCollection<NbtNode> _nodes = [];
     private string _searchBoxText = string.Empty;

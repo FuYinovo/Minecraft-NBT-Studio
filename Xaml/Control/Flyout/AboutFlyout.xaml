@@ -9,32 +9,56 @@
     mc:Ignorable="d">
 
 
-    <Grid Padding="64,0">
+    <Grid Padding="32,0">
         <StackPanel>
             <Border>
                 <Image Width="64" Height="64" Source="/Assets/PNG/AppLogo.png" />
             </Border>
-            <TextBlock
-                HorizontalAlignment="Center"
+            <TextBlock HorizontalAlignment="Center"
                 Text="NBT Studio"
                 Margin="0,0,0,10"
                 Style="{StaticResource SubtitleTextBlockStyle}" />
-            <StackPanel Orientation="Horizontal">
-                <HyperlinkButton
-                    NavigateUri="https://github.com/FuYinovo/Minecraft-NBT-Studio/">
-                    <StackPanel Orientation="Horizontal">
-                        <Image Width="32" Height="32" Margin="0,0,0,-6">
-                            <Image.Source>
-                                <SvgImageSource UriSource="/Assets/SVG/Github.svg" />
-                            </Image.Source>
-                        </Image>
-                        <TextBlock Text="Github"
-                                   Style="{StaticResource BodyStrongTextBlockStyle}"
-                                   FontSize="16" />
+            <TextBlock Text="一个 Minecraft NBT 文件编辑器"
+                       Style="{StaticResource BaseTextBlockStyle}"
+                       HorizontalAlignment="Center"
+                       MaxWidth="240"
+                       TextWrapping="Wrap"
+                       Margin="0,0,0,20"
+                       />
 
-                    </StackPanel>
-                </HyperlinkButton>
+            <StackPanel Orientation="Horizontal">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <HyperlinkButton
+        NavigateUri="https://github.com/FuYinovo/Minecraft-NBT-Studio/">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Width="32" Height="32" Margin="0,0,0,-6">
+                                <Image.Source>
+                                    <SvgImageSource UriSource="/Assets/SVG/Github.svg" />
+                                </Image.Source>
+                            </Image>
+                            <TextBlock Text="Github"
+                       Style="{StaticResource BodyStrongTextBlockStyle}"
+                       FontSize="16" />
+                        </StackPanel>
+                    </HyperlinkButton>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <HyperlinkButton
+        NavigateUri="https://space.bilibili.com/418002247">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Width="32" Height="32" Margin="-6,-4,0,0">
+                                <Image.Source>
+                                    <SvgImageSource UriSource="/Assets/SVG/Bilibili.svg" />
+                                </Image.Source>
+                            </Image>
+                            <TextBlock Text="浮音ovo"
+                       Style="{StaticResource BodyStrongTextBlockStyle}"
+                       FontSize="16" />
+                        </StackPanel>
+                    </HyperlinkButton>
+                </StackPanel>
             </StackPanel>
+            
         </StackPanel>
     </Grid>
 </UserControl>
