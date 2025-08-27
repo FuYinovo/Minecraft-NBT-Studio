@@ -10,18 +10,8 @@ public enum BooleanSettings
 
 public enum EnumSettings
 {
-    [Setting(Enum.Sort.Default, typeof(Sort))]
-    Sort,
-
     [Setting(Enum.Theme.System, typeof(Theme))]
     Theme
-}
-
-public enum Sort
-{
-    [Description("默认")] Default,
-    [Description("首字母")] Alphabetical,
-    [Description("类型")] Type
 }
 
 public enum Theme

@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -61,7 +64,24 @@ public sealed partial class ValueEditorViewModel : ObservableObject
         {
             ArrayValues.Clear();
             foreach (var value in values)
-                ArrayValues.Add(new NodeArrayElement { Value = value?.ToString() ?? string.Empty, IsValid = true });
+                ArrayValues.Add(new NodeArrayElement
+                    { Value = value?.ToString() ?? string.Empty, IsValid = true });
+            // Task.Run(async () =>
+            // {
+            //     const int groupSize = 10;
+            //     var added = 0;
+            //     for (var i = 0; i < values.Length; i++)
+            //     {
+            //         if (added >= groupSize)
+            //         {
+            //             await Task.Delay(2000);
+            //             added = 0;
+            //         }
+            //         ArrayValues.Add(new NodeArrayElement
+            //             { Value = values.GetValue(i)?.ToString() ?? string.Empty, IsValid = true });
+            //         added++;
+            //     }
+            // });
         }
         else
         {

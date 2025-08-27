@@ -13,7 +13,6 @@ public partial class SettingsFlyoutViewModel : ObservableObject
 
     public SettingsFlyoutViewModel()
     {
-        _sort = _settingsService.GetValue<Sort>(EnumSettings.Sort);
         _theme = _settingsService.GetValue<Theme>(EnumSettings.Theme);
         _quickCreate = _settingsService.GetValue<bool>(BooleanSettings.QuickCreate);
     }
@@ -21,16 +20,8 @@ public partial class SettingsFlyoutViewModel : ObservableObject
 
     #region Properties
 
-    private Sort _sort;
     private Theme _theme;
     private bool _quickCreate;
-
-
-    public Sort Sort
-    {
-        get => _sort;
-        set => SetSetting(ref _sort, value, EnumSettings.Sort);
-    }
 
     public Theme Theme
     {

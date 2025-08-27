@@ -46,7 +46,6 @@ public sealed partial class TreeViewPageViewModel : ObservableObject
     private void RegisterMessages()
     {
         WeakReferenceMessenger.Default.Register<SelectedNodeChangedMessage>(this, SelectedNodeChanged);
-        WeakReferenceMessenger.Default.Register<SettingsChangedMessage>(this, SettingChanged);
         WeakReferenceMessenger.Default.Register<NodeModifiedMessage>(this, NodeModified);
         WeakReferenceMessenger.Default.Register<DrawMapMessage>(this, DrawMap);
         return;
@@ -63,11 +62,6 @@ public sealed partial class TreeViewPageViewModel : ObservableObject
                     btn.IsEnabled = node.TagEnum != NbtTagEnum.List || btn.Tag == node.Tag.ChildrenTag;
             WaitingToSelectMaskVisibility = false;
             IsMapEditorEnabled = false;
-        }
-
-        void SettingChanged(object obj, SettingsChangedMessage msg)
-        {
-            if (msg.ValueType == typeof(Sort)) ApplySort((Sort)msg.NewValue);
         }
 
         void NodeModified(object obj, NodeModifiedMessage msg)
@@ -476,38 +470,6 @@ public sealed partial class TreeViewPageViewModel
 
         // 四、更新子项数量
         foreach (var child in childrenAll) child.UpdateChildrenCount();
-    }
-
-    /// <summary> 应用节点排序 </summary>
-    private void ApplySort(Sort sort)
-    {
-        // if (sort != Sort.Alphabetical) return;
-        // Debug.WriteLine($"Try to sort:");
-        // foreach(var x in Nodes) Debug.Write(x.DisplayValue + ", ");
-        // SortAll(Nodes);
-        // Debug.WriteLine($"After sort");
-        // foreach(var x in Nodes) Debug.Write(x.DisplayValue + ", ");
-        //
-        // void SortAll(ObservableCollection<NbtNode> nodes)
-        // {
-        //     var sorted = nodes
-        //         .OrderBy(x => x.DisplayName)
-        //         .ToList();
-        //
-        //     for (var i = 0; i < nodes.Count; i++)
-        //     {
-        //         if (sorted[i] == nodes[i])
-        //         {
-        //             SortAll(nodes[i].Children);
-        //             continue;
-        //         }
-        //
-        //         var oldIndex = nodes.IndexOf(sorted[i]);
-        //         nodes.Move(oldIndex, i);
-        //         Debug.WriteLine($"Moved [{oldIndex}]{nodes[oldIndex].DisplayName} to [{i}]{nodes[i].DisplayName}");
-        //         SortAll(nodes[i].Children);
-        //     }
-        // }
     }
 }
 

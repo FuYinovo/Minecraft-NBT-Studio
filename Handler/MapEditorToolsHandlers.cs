@@ -80,9 +80,9 @@ public record MapEditorToolsHandlers
                 MovingSpeedFactor * (position._x - _originPoint._x),
                 MovingSpeedFactor * (position._y - _originPoint._y));
 
-            if (!(Editor.MapOffset.x + extraOffset.x > maxOffset))
+            if (!(Editor.MapOffset.x + extraOffset.x > maxOffset + 64))
                 Editor.MapOffset.x += extraOffset.x;
-            if (!(Editor.MapOffset.y + extraOffset.y > maxOffset))
+            if (!(Editor.MapOffset.y + extraOffset.y > maxOffset + 64))
                 Editor.MapOffset.y += extraOffset.y;
             Editor.GetMapCanvas().Invalidate();
         }

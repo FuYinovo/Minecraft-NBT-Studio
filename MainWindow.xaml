@@ -6,6 +6,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:community="using:CommunityToolkit.WinUI.Controls"
     mc:Ignorable="d"
     Title="NBT-Studio">
 
@@ -14,18 +15,32 @@
     </Window.SystemBackdrop>
 
     <Grid>
+        <community:TitleBar
+            VerticalAlignment="Top"
+            Title="NBT Studio"
+            DisplayMode="Tall"
+            Subtitle="Beta"
+            IsBackButtonVisible="False"
+            IsPaneButtonVisible="False">
+            <community:TitleBar.Icon>
+                <ImageIcon Source="/Assets/PNG/AppLogo.png" />
+            </community:TitleBar.Icon>
+        </community:TitleBar>
         <NavigationView
+            Margin="0,48,0,0"
+            BorderBrush="Transparent"
             IsBackEnabled="False"
             IsBackButtonVisible="Collapsed"
             IsPaneVisible="False">
             <Frame x:Name="Frame" />
         </NavigationView>
-
         <Grid
             x:Name="BottomGrid"
-            Height="100" 
+            Height="100"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Bottom">
         </Grid>
+
+
     </Grid>
 </Window>
