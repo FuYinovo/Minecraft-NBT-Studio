@@ -3,7 +3,7 @@ using Microsoft.UI.Xaml.Data;
 
 namespace NBT_Studio.Xaml.Converter;
 
-public class BoolNotConverter : IValueConverter
+public class BoolReverseConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, string language)
     {

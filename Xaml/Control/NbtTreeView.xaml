@@ -91,7 +91,8 @@
                         </Image>
                         <!-- 名称 -->
                         <TextBlock Style="{StaticResource TreeNodeText}"
-                                   Text="{Binding DisplayName}" />
+                                   Text="{Binding DisplayName ,
+                                    Converter={StaticResource StringTruncateConverter}, ConverterParameter=10}" />
                         <!-- 子项数量 -->
                         <TextBlock Style="{StaticResource TreeNodeSubText}"
                                    Visibility="{Binding ChildrenCountVis}"
@@ -102,7 +103,8 @@
                                    Text="=" />
                         <!-- 值 -->
                         <TextBlock Style="{StaticResource TreeNodeText}"
-                                   Text="{Binding DisplayValue , Converter={StaticResource StringTruncateConverter}}" />
+                                   Text="{Binding DisplayValue ,
+                                    Converter={StaticResource StringTruncateConverter}, ConverterParameter=35}" />
                     </StackPanel>
                 </TreeViewItem.Content>
             </TreeViewItem>

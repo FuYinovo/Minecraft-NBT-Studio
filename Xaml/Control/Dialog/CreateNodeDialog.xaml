@@ -21,6 +21,8 @@
             <StackPanel Spacing="16">
                 <!-- 名称 -->
                 <TextBox Header="名称"
+                         TextWrapping="Wrap"
+                         MaxWidth="270"
                          PlaceholderText="可选"
                          Visibility="{x:Bind NodeNameVis}"
                          Text="{x:Bind NodeName, Mode=TwoWay}" />
@@ -28,6 +30,8 @@
                 <!-- 普通值 -->
                 <TextBox
                     Header="值"
+                    TextWrapping="Wrap"
+                    MaxWidth="270"
                     PlaceholderText="必须"
                     Text="{x:Bind NodeValue, Mode=TwoWay}"
                     Visibility="{x:Bind NodeValueVis, Mode=OneWay}"
