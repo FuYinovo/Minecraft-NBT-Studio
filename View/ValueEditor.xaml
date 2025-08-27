@@ -69,15 +69,6 @@
             <!-- 右侧 -->
             <Grid Grid.Column="1">
                 <StackPanel />
-                <!-- 普通值 -->
-                <TextBox Header="数据"
-                         Margin="0,0,0,56"
-                         Visibility="{Binding GenericValueVis}"
-                         Text="{Binding Value, Mode=TwoWay}"
-                         IsEnabled="False"
-                         TextWrapping="Wrap"
-                         IsSpellCheckEnabled="False"
-                         TextChanged="TextBox_OnValueChanged" />
                 <!-- 数组值 -->
                 <ScrollView>
                 <StackPanel Spacing="12"
@@ -124,6 +115,16 @@
                     </Button>
                 </StackPanel>
                 </ScrollView>
+
+                <!-- 普通值 -->
+                <TextBox Header="数据"
+                         Margin="0,0,0,56"
+                         Visibility="{Binding GenericValueVis}"
+                         Text="{Binding Value, Mode=TwoWay}"
+                         IsEnabled="False"
+                         TextWrapping="Wrap"
+                         IsSpellCheckEnabled="False"
+                         TextChanged="TextBox_OnValueChanged" />
 
                 <!-- 保存按钮 -->
                 <Button

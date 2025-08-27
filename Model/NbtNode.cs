@@ -284,8 +284,14 @@ public sealed partial class NbtNode
 
         async Task SendSuccessNotification()
         {
-            await DialogHelper.ShowDialog("添加成功", "确认",
-                description: $"成功添加<{ReflectionHelper.GetEnumDescription(tagEnum)}>节点");
+            await NotificationService
+                .GetInstance()
+                .Send(new NotificationInfo(
+                    "添加成功", 
+                    $"成功添加<{ReflectionHelper.GetEnumDescription(tagEnum)}>节点", 
+                    InfoBarSeverity.Success
+                    )
+                ) ;
         }
     }
 
