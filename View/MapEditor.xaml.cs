@@ -16,6 +16,7 @@ using NBT_Studio.Enum;
 using NBT_Studio.Manager;
 using NBT_Studio.Message;
 using NBT_Studio.ViewModel;
+using System.Diagnostics;
 
 namespace NBT_Studio.View;
 
@@ -34,8 +35,10 @@ public sealed partial class MapEditor : INotifyPropertyChanged
     public Matrix3x2 MapTransform;
     private float _mapScale = (float)6.25;
     public bool IsMousePressing;
+    public bool IsMoving;
     public (float x, float y) MapOffset = (0, 0);
     public Vector2 ScaleCenter = new((float)InitMapSize / 2, (float)InitMapSize / 2);
+    public InputCursor SystemCursor=> ProtectedCursor;
 
     public MapEditor()
     {
@@ -46,6 +49,7 @@ public sealed partial class MapEditor : INotifyPropertyChanged
         HookCursorEvents();
         SquareCursorManager = new SquareCursorManager(MapCanvas);
         SquareCursorManager.HideCursor();
+        ProtectedCursor = InputCursor.CreateFromCoreCursor(new CoreCursor(CoreCursorType.Arrow, 0));
     }
 
 
@@ -116,17 +120,30 @@ public sealed partial class MapEditor : INotifyPropertyChanged
         MapEditorTool GetToolType(PointerRoutedEventArgs args)
         {
             // 右键则触发移动工具
-            return args.GetCurrentPoint(MapCanvas).Properties.IsRightButtonPressed
+            // Tip: 松开右键时, IsRightButtonPressed 为 false, 无法触发移动工具的 HandleReleased
+            // 故增添 IsMoving 变量
+            return args.GetCurrentPoint(MapCanvas).Properties.IsRightButtonPressed || IsMoving 
                 ? MapEditorTool.Move
                 : ViewModel.SelectedTool;
         }
     }
 
     /// <summary> 设置此控件下的光标 </summary>
-    public void SetCursor(CoreCursorType cursorType)
+    public void SetCursor(CoreCursorType? cursorType)
     {
         if (cursorType == CoreCursorType.Custom) return;
-        ProtectedCursor = InputCursor.CreateFromCoreCursor(new CoreCursor(cursorType, 0));
+        if(cursorType is null )
+        {
+            ProtectedCursor.Dispose();
+            return;
+        }
+        ProtectedCursor = InputCursor.CreateFromCoreCursor(new CoreCursor(cursorType.Value, 0));
+    }
+
+    /// <summary> 获取系统光标是否隐藏 </summary>
+    public bool IsCursorHide()
+    {
+        return ProtectedCursor == null;
     }
 
     private void SaveButton_OnClick(object sender, RoutedEventArgs e)

@@ -10,6 +10,8 @@ using NBT_Studio.Enum;
 using NBT_Studio.Interface;
 using NBT_Studio.Utils;
 using NBT_Studio.View;
+using System.Diagnostics;
+using Microsoft.UI.Input;
 
 namespace NBT_Studio.Handler;
 
@@ -19,17 +21,25 @@ public record MapEditorToolsHandlers
     [MapEditorToolHandler(Tool = MapEditorTool.Select)]
     public class SelectHandler(MapEditor editor) : IMapEditorPointerEventsHandler
     {
-        public MapEditor Editor { get; set; } = editor;
+        public MapEditor Editor { get; set; } = editor;     
     }
 
     /// <summary> 橡皮 </summary>
-    /// <remarks> 继承笔刷所有方法，仅 SetColor 替换为透明色 </remarks>
+    /// <remarks> 继承笔刷</remarks>
     [MapEditorToolHandler(Tool = MapEditorTool.Eraser)]
     public class EraserHandler(MapEditor editor) : BrushHandler(editor)
     {
         protected override void SetColor(int x, int y, Color color)
         {
+            // SetColor 替换为透明色
             Editor.ViewModel.SetColor(x, y, Colors.Transparent);
+        }
+
+        public override void HandleMoved(object sender, PointerRoutedEventArgs args)
+        {
+            base.HandleMoved(sender, args);
+            // 像素光标颜色替换为白色
+            Editor.SquareCursorManager.SetCursorColor(Colors.White);
         }
     }
 
@@ -47,6 +57,11 @@ public record MapEditorToolsHandlers
         public void HandleExited(object sender, PointerRoutedEventArgs args)
         {
             Editor.SetCursor(CoreCursorType.Arrow);
+        }
+
+        public void HandleMoved(object sender, PointerRoutedEventArgs args)
+        {
+            Editor.SetCursor(CoreCursorType.Cross); 
         }
 
         public void HandlePressed(object sender, PointerRoutedEventArgs args)
@@ -90,13 +105,17 @@ public record MapEditorToolsHandlers
         public void HandlePressed(object sender, PointerRoutedEventArgs args)
         {
             Editor.IsMousePressing = true;
+            Editor.IsMoving = true;
             Editor.SetCursor(CoreCursorType.Hand);
+            Editor.SquareCursorManager.HideCursor();
+
             _originPoint = GetMousePosition(args);
         }
 
         public void HandleReleased(object sender, PointerRoutedEventArgs args)
         {
             Editor.IsMousePressing = false;
+            Editor.IsMoving = false;
             Editor.SetCursor(CoreCursorType.Arrow);
         }
 
@@ -115,22 +134,26 @@ public record MapEditorToolsHandlers
         public void HandleEntered(object sender, PointerRoutedEventArgs args)
         {
             Editor.SquareCursorManager.ShowCursor();
+            Editor.SetCursor(null); // 隐藏系统光标
         }
 
         public void HandleExited(object sender, PointerRoutedEventArgs args)
         {
             Editor.SquareCursorManager.HideCursor();
+            Editor.SetCursor(CoreCursorType.Arrow); // 显示系统光标
             Editor.IsMousePressing = false;
         }
 
-        public void HandleMoved(object sender, PointerRoutedEventArgs args)
+        public virtual void HandleMoved(object sender, PointerRoutedEventArgs args)
         {
-            if (!Editor.SquareCursorManager.IsVisible) return;
-
             // 更新笔刷光标
             var color = Editor.ViewModel.ClosestMapColor;
+            var position = GetRelativeCursorPosition(this, args);
+            Editor.SquareCursorManager.ShowCursor();
             Editor.SquareCursorManager.SetCursorColor(color);
             Editor.SquareCursorManager.SetCursorSize(Editor.MapScale);
+            Editor.SquareCursorManager.SetCursorPosition(position.x, position.y);
+            Editor.SetCursor(null); // 隐藏系统光标
 
             // 修改像素颜色
             if (!Editor.IsMousePressing) return;
@@ -156,6 +179,14 @@ public record MapEditorToolsHandlers
         }
 
         /// <summary>
+        ///     获取光标相对于地图画布位置
+        /// </summary>
+        private static (float x, float y) GetRelativeCursorPosition(IMapEditorPointerEventsHandler handler, PointerRoutedEventArgs args)
+        {
+            return handler.GetCursorRelativePosition(args);
+        }
+
+        /// <summary>
         ///     以一个坐标为园心，向地图绘制颜色
         /// </summary>
         /// <remarks>当半径为 0 时，只绘制一个像素</remarks>
@@ -178,7 +209,10 @@ public record MapEditorToolsHandlers
             }
 
             const int maxIndex = MapEditor.InitMapSize - 1;
-            if (pointX > maxIndex || pointY > maxIndex || pointX < 0 || pointY < 0) return;
+            if (pointX > maxIndex || 
+                pointY > maxIndex ||
+                pointX < 0 || 
+                pointY < 0) return;
             SetColor(pointX, pointY, Editor.ViewModel.ClosestMapColor);
             Editor.GetMapCanvas().Invalidate();
             Editor.GetSaveButton().IsEnabled = true;
