@@ -286,9 +286,6 @@ public sealed partial class TreeViewPageViewModel
     [RelayCommand]
     private async Task SaveFile()
     {
-        // 获取字节数组
-        var bytes = Nodes.First().Tag.GetBytes();
-
         // 选择保存位置
         var fileTypes = new Dictionary<string, List<string>> { { "NBT Files", [".nbt", ".dat"] } };
         var suggestedFileName = string.IsNullOrWhiteSpace(Nodes.First().DisplayName)
@@ -296,6 +293,9 @@ public sealed partial class TreeViewPageViewModel
             : Nodes.First().DisplayName;
         var path = await PickerHelper.SaveFileAsync(fileTypes, suggestedFileName);
         if (path == null) return;
+
+        // 获取字节数组
+        var bytes = Nodes.First().Tag.GetBytes();
 
         // 写入文件
         await WriteFile(bytes, path.Path);

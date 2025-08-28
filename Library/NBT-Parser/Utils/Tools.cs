@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
-using System.IO;
 
 namespace NBT_Studio.Library.NBT_Parser.Utils;
 
@@ -53,16 +52,5 @@ public static class Tools
         {
             throw new NotSupportedException($"不支持类型为 [{typeof(T)}] 的数字读取!");
         }
-    }
-
-    public static byte[] ReadBytes(string path)
-    {
-        var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read);
-        var binaryReader = new BinaryReader(fileStream);
-        if (fileStream.Length > int.MaxValue) throw new Exception("不支持超过 Int32 长度文件!");
-        var bytes = binaryReader.ReadBytes((int)fileStream.Length);
-        fileStream.Close();
-        binaryReader.Close();
-        return bytes;
     }
 }

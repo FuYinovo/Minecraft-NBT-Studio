@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Linq;
 using NBT_Studio.Attribute;
 
@@ -97,6 +98,28 @@ public static class NbtTagEnumExtensions
             NbtTagEnum.IntArray => NbtTagEnum.Int,
             NbtTagEnum.LongArray => NbtTagEnum.Long,
             _ => NbtTagEnum.Unknown
+        };
+    }
+
+    public static object GetDefaultValue(NbtTagEnum tagEnum)
+    {
+        return tagEnum switch
+        {
+            NbtTagEnum.Unknown => throw new InvalidOperationException(),
+            NbtTagEnum.End => throw new InvalidOperationException(),
+            NbtTagEnum.Byte => (byte)0,
+            NbtTagEnum.Short => (short)0,
+            NbtTagEnum.Int => 0,
+            NbtTagEnum.Long => (long)0,
+            NbtTagEnum.Float => (float)0,
+            NbtTagEnum.Double => (double)0,
+            NbtTagEnum.ByteArray => Array.Empty<byte>(),
+            NbtTagEnum.String => string.Empty,
+            NbtTagEnum.List => throw new InvalidOperationException(),
+            NbtTagEnum.Dictionary => throw new InvalidOperationException(),
+            NbtTagEnum.IntArray => Array.Empty<int>(),
+            NbtTagEnum.LongArray => Array.Empty<long>(),
+            _ => throw new ArgumentOutOfRangeException(nameof(tagEnum), tagEnum, null)
         };
     }
 }
