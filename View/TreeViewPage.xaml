@@ -16,6 +16,7 @@
     xmlns:flyout="using:NBT_Studio.Xaml.Control.Flyout"
     xmlns:control1="using:NBT_Studio.Xaml.Control"
     xmlns:popup="using:NBT_Studio.Xaml.Control.Popup"
+    xmlns:tag="using:NBT_Studio.Library.NBT_Parser.Enum"
     mc:Ignorable="d">
 
     <Page.Resources>
@@ -23,6 +24,7 @@
     </Page.Resources>
 
     <Grid DataContext="{x:Bind _viewModel}" Padding="10,5">
+        
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto" />
             <ColumnDefinition Width="auto" />
@@ -30,19 +32,20 @@
         </Grid.ColumnDefinitions>
 
         <!-- 左侧节点区 -->
-        <Grid Grid.Column="0">
+        <Grid Grid.Column="0" x:Name="TreeViewGrid" MinWidth="370">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
             <!-- 操作区 -->
-            <Grid Grid.Row="0" Width="900" MinWidth="630" x:Name="TreeViewGrid">
+            <Grid Grid.Row="0">
                 <community:TabbedCommandBar>
                     <!-- 头部 -->
                     <community:TabbedCommandBar.AutoSuggestBox>
                         <!-- 搜索框 -->
                         <AutoSuggestBox
+                            Margin="-40,0,0,0"
                             QueryIcon="Find"
                             PlaceholderText="搜索节点"
                             Text="{Binding SearchBoxText, Mode=TwoWay}"
@@ -182,7 +185,7 @@
                             <labs:TokenItem Content="长整数" />
                             <labs:TokenItem Content="单精浮点" />
                             <labs:TokenItem Content="双精浮点" />
-                            <labs:TokenItem Content="字符串" />
+                            <labs:TokenItem Content="字符串"/>
                         </labs:TokenView>
                         <!-- 节点树 -->
                         <control1:NbtTreeView Nodes="{Binding Nodes, Mode=TwoWay}" />

@@ -65,7 +65,7 @@ public sealed partial class NbtNode : ObservableObject
     public readonly NbtTagEnum TagEnum;
     public readonly bool IsRootNode;
     public string Icon { get; }
-    [ObservableProperty] private string _displayValue;
+    [ObservableProperty] private string _displayValue = string.Empty;
     [ObservableProperty] private string _displayName = string.Empty;
     [ObservableProperty] private string _displayChildrenCount = string.Empty;
     [ObservableProperty] private Visibility _visibility = Visibility.Visible;

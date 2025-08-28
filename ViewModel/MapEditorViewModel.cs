@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.UI;
 using Microsoft.UI.Xaml.Controls;
 using NBT_Studio.Enum;
 using NBT_Studio.Interface;
@@ -225,7 +226,7 @@ public partial class MapEditorViewModel : ObservableObject, IMutuallyControlsMan
     public Color ClosestMapColor => ColorHelper.GetClosest(BrushColor, _minecraftMapColors); // 选中色的最近地图色
 
     [ObservableProperty] [NotifyPropertyChangedFor(nameof(ClosestMapColor))]
-    private Color _brushColor; // 选中色
+    private Color _brushColor = Colors.White; // 选中色
 
     public MinecraftMapPixel[,] Pixels;
 

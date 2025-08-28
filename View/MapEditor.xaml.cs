@@ -16,7 +16,6 @@ using NBT_Studio.Enum;
 using NBT_Studio.Manager;
 using NBT_Studio.Message;
 using NBT_Studio.ViewModel;
-using System.Diagnostics;
 
 namespace NBT_Studio.View;
 
@@ -37,8 +36,7 @@ public sealed partial class MapEditor : INotifyPropertyChanged
     public bool IsMousePressing;
     public bool IsMoving;
     public (float x, float y) MapOffset = (0, 0);
-    public Vector2 ScaleCenter = new((float)InitMapSize / 2, (float)InitMapSize / 2);
-    public InputCursor SystemCursor=> ProtectedCursor;
+    private readonly Vector2 _scaleCenter = new((float)InitMapSize / 2, (float)InitMapSize / 2);
 
     public MapEditor()
     {
@@ -91,7 +89,7 @@ public sealed partial class MapEditor : INotifyPropertyChanged
     {
         var session = args.DrawingSession;
         session.Transform =
-            Matrix3x2.CreateScale(MapScale, MapScale, ScaleCenter) *
+            Matrix3x2.CreateScale(MapScale, MapScale, _scaleCenter) *
             Matrix3x2.CreateTranslation(MapOffset.x, MapOffset.y);
         MapTransform = session.Transform;
         for (var y = 0; y < InitMapSize; y++)
