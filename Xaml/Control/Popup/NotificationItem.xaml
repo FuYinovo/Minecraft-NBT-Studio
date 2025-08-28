@@ -15,10 +15,9 @@
                 Storyboard.TargetProperty="Y"
                 From="350"
                 To="25"
-                Duration="{x:Bind AnimationDuration}"
-               >
+                Duration="{x:Bind AnimationDuration}">
                 <DoubleAnimation.EasingFunction>
-                    <QuinticEase EasingMode="EaseInOut"/>
+                    <QuinticEase EasingMode="EaseInOut" />
                 </DoubleAnimation.EasingFunction>
             </DoubleAnimation>
         </Storyboard>
@@ -28,10 +27,9 @@
                 Storyboard.TargetProperty="Y"
                 From="25"
                 To="350"
-                Duration="{x:Bind AnimationDuration}"
-                >
+                Duration="{x:Bind AnimationDuration}">
                 <DoubleAnimation.EasingFunction>
-                    <QuinticEase EasingMode="EaseInOut"/>
+                    <QuinticEase EasingMode="EaseInOut" />
                 </DoubleAnimation.EasingFunction>
             </DoubleAnimation>
         </Storyboard>
@@ -43,13 +41,12 @@
             x:Name="Popup"
             IsLightDismissEnabled="False">
             <Popup.RenderTransform>
-                <TranslateTransform x:Name="PopupTranslation"></TranslateTransform>
+                <TranslateTransform x:Name="PopupTranslation" />
             </Popup.RenderTransform>
             <InfoBar
                 x:Name="InfoBar"
                 IsClosable="False"
-                IsOpen="True"
-                />
+                IsOpen="True" />
         </Popup>
     </Grid>
 </UserControl>

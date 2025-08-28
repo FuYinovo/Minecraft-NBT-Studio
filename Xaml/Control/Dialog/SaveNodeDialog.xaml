@@ -12,11 +12,11 @@
     mc:Ignorable="d">
 
     <UserControl.Resources>
-        <converter:EnumToDescriptionConverter x:Key="EnumToDescriptionConverter"></converter:EnumToDescriptionConverter>
+        <converter:EnumToDescriptionConverter x:Key="EnumToDescriptionConverter" />
     </UserControl.Resources>
 
     <Grid>
-        <StackPanel Spacing="16" >
+        <StackPanel Spacing="16">
             <ComboBox ItemsSource="{markup:AdvancedEnumValues Type=enum:MinecraftEdition}"
                       SelectedItem="{x:Bind GameEdition, Mode=TwoWay}"
                       Header="游戏版本">

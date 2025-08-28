@@ -75,7 +75,7 @@
                                 <FontIcon Glyph="&#xE74E;" />
                             </MenuFlyoutItem.Icon>
                             <MenuFlyoutItem.KeyboardAccelerators>
-                                <KeyboardAccelerator Key="S"></KeyboardAccelerator>
+                                <KeyboardAccelerator Key="S" />
                             </MenuFlyoutItem.KeyboardAccelerators>
                         </MenuFlyoutItem>
                     </MenuFlyout>

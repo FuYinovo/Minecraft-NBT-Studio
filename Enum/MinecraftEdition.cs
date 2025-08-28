@@ -7,5 +7,5 @@ public enum MinecraftEdition
 {
     [Description("Java 版")] Java,
     [Description("基岩版")] Bedrock,
-    [Hide]Unknown
+    [Hide] Unknown
 }

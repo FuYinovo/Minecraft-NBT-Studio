@@ -93,7 +93,7 @@ public static class CompressFileHelper
         image.Mutate(x => x.Resize(option));
     }
 
-    public static async Task CompressWriteBytes( Stream fileStream, byte[] data, FileCompress compressType)
+    public static async Task CompressWriteBytes(Stream fileStream, byte[] data, FileCompress compressType)
     {
         await using Stream outStream = compressType switch
         {

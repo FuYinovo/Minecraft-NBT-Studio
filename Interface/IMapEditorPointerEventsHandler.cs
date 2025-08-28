@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Numerics;
 using Microsoft.UI.Xaml.Input;
 using NBT_Studio.View;
@@ -59,7 +58,7 @@ public interface IMapEditorPointerEventsHandler
     }
 
     /// <summary>
-    /// 获取光标相对于地图画布位置
+    ///     获取光标相对于地图画布位置
     /// </summary>
     public (float x, float y) GetCursorRelativePosition(PointerRoutedEventArgs args)
     {

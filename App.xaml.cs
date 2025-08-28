@@ -1,14 +1,9 @@
-﻿using System;
-using System.Diagnostics;
-using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.Messaging;
+﻿using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using NBT_Studio.Enum;
 using NBT_Studio.Message;
 using NBT_Studio.Service;
-using NBT_Studio.Utils;
-using UnhandledExceptionEventArgs = Microsoft.UI.Xaml.UnhandledExceptionEventArgs;
 
 namespace NBT_Studio;
 

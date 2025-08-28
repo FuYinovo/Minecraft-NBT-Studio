@@ -10,8 +10,6 @@ using NBT_Studio.Enum;
 using NBT_Studio.Interface;
 using NBT_Studio.Utils;
 using NBT_Studio.View;
-using System.Diagnostics;
-using Microsoft.UI.Input;
 
 namespace NBT_Studio.Handler;
 
@@ -21,7 +19,7 @@ public record MapEditorToolsHandlers
     [MapEditorToolHandler(Tool = MapEditorTool.Select)]
     public class SelectHandler(MapEditor editor) : IMapEditorPointerEventsHandler
     {
-        public MapEditor Editor { get; set; } = editor;     
+        public MapEditor Editor { get; set; } = editor;
     }
 
     /// <summary> 橡皮 </summary>
@@ -61,7 +59,7 @@ public record MapEditorToolsHandlers
 
         public void HandleMoved(object sender, PointerRoutedEventArgs args)
         {
-            Editor.SetCursor(CoreCursorType.Cross); 
+            Editor.SetCursor(CoreCursorType.Cross);
         }
 
         public void HandlePressed(object sender, PointerRoutedEventArgs args)
@@ -181,7 +179,8 @@ public record MapEditorToolsHandlers
         /// <summary>
         ///     获取光标相对于地图画布位置
         /// </summary>
-        private static (float x, float y) GetRelativeCursorPosition(IMapEditorPointerEventsHandler handler, PointerRoutedEventArgs args)
+        private static (float x, float y) GetRelativeCursorPosition(IMapEditorPointerEventsHandler handler,
+            PointerRoutedEventArgs args)
         {
             return handler.GetCursorRelativePosition(args);
         }
@@ -209,9 +208,9 @@ public record MapEditorToolsHandlers
             }
 
             const int maxIndex = MapEditor.InitMapSize - 1;
-            if (pointX > maxIndex || 
+            if (pointX > maxIndex ||
                 pointY > maxIndex ||
-                pointX < 0 || 
+                pointX < 0 ||
                 pointY < 0) return;
             SetColor(pointX, pointY, Editor.ViewModel.ClosestMapColor);
             Editor.GetMapCanvas().Invalidate();

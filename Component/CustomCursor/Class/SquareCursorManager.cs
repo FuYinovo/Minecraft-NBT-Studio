@@ -1,9 +1,9 @@
-﻿using System.Numerics;
+﻿using System;
+using System.Numerics;
 using Windows.UI;
 using Microsoft.UI;
 using Microsoft.UI.Composition;
 using Microsoft.UI.Xaml;
-using System;
 
 namespace NBT_Studio.Component.CustomCursor.Class;
 

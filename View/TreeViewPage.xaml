@@ -15,8 +15,6 @@
     xmlns:converter="using:NBT_Studio.Xaml.Converter"
     xmlns:flyout="using:NBT_Studio.Xaml.Control.Flyout"
     xmlns:control1="using:NBT_Studio.Xaml.Control"
-    xmlns:popup="using:NBT_Studio.Xaml.Control.Popup"
-    xmlns:tag="using:NBT_Studio.Library.NBT_Parser.Enum"
     mc:Ignorable="d">
 
     <Page.Resources>
@@ -24,7 +22,7 @@
     </Page.Resources>
 
     <Grid DataContext="{x:Bind _viewModel}" Padding="10,5">
-        
+
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto" />
             <ColumnDefinition Width="auto" />
@@ -65,7 +63,7 @@
                             <AppBarButton Label="关于" Icon="Help">
                                 <AppBarButton.Flyout>
                                     <Flyout>
-                                        <flyout:AboutFlyout/>
+                                        <flyout:AboutFlyout />
                                     </Flyout>
                                 </AppBarButton.Flyout>
                             </AppBarButton>
@@ -185,7 +183,7 @@
                             <labs:TokenItem Content="长整数" />
                             <labs:TokenItem Content="单精浮点" />
                             <labs:TokenItem Content="双精浮点" />
-                            <labs:TokenItem Content="字符串"/>
+                            <labs:TokenItem Content="字符串" />
                         </labs:TokenView>
                         <!-- 节点树 -->
                         <control1:NbtTreeView Nodes="{Binding Nodes, Mode=TwoWay}" />
@@ -218,14 +216,15 @@
                             <view:ValueEditor />
                         </AppBarElementContainer>
                     </community:TabbedCommandBarItem>
-                    <community:TabbedCommandBarItem Visibility="Collapsed" Header="物品编辑器" IsContextual="True" IsDynamicOverflowEnabled="False"
-                                                    >
+                    <community:TabbedCommandBarItem Visibility="Collapsed" Header="物品编辑器" IsContextual="True"
+                                                    IsDynamicOverflowEnabled="False">
                         <AppBarElementContainer
                             Visibility="{Binding WaitingToSelectMaskVisibility, Converter={StaticResource BoolReverseConverter}}">
                             <view:ItemEditor />
                         </AppBarElementContainer>
                     </community:TabbedCommandBarItem>
-                    <community:TabbedCommandBarItem IsEnabled="{Binding IsMapEditorEnabled}" Header="地图编辑器" IsContextual="True" IsDynamicOverflowEnabled="False">
+                    <community:TabbedCommandBarItem IsEnabled="{Binding IsMapEditorEnabled}" Header="地图编辑器"
+                                                    IsContextual="True" IsDynamicOverflowEnabled="False">
                         <AppBarElementContainer
                             Visibility="{Binding WaitingToSelectMaskVisibility, Converter={StaticResource BoolReverseConverter}}">
                             <view:MapEditor />

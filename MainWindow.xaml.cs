@@ -1,15 +1,13 @@
+using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml.Controls;
 using NBT_Studio.Utils;
 using NBT_Studio.View;
-using NBT_Studio.Xaml.Control.Popup;
-using Microsoft.UI;
 
 namespace NBT_Studio;
 
 public sealed partial class MainWindow
 {
-    public Grid NotificationGrid => BottomGrid;
     public MainWindow()
     {
         InitializeComponent();
@@ -18,6 +16,7 @@ public sealed partial class MainWindow
         presenter.PreferredMinimumWidth = 856;
         presenter.PreferredMinimumHeight = 651;
         AppWindow.SetPresenter(presenter);
+        AppWindow.SetIcon(AssetHelper.GetFilePathFromUri(AssetHelper.GetTitleBarIconUri()));
 
         AppWindow.TitleBar.ExtendsContentIntoTitleBar = true;
         AppWindow.TitleBar.ButtonBackgroundColor = Colors.Transparent;
@@ -25,4 +24,6 @@ public sealed partial class MainWindow
 
         Frame.Navigate(typeof(TreeViewPage));
     }
+
+    public Grid NotificationGrid => BottomGrid;
 }

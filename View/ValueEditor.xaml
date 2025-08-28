@@ -10,30 +10,30 @@
     mc:Ignorable="d">
 
 
-    <Grid DataContext="{x:Bind _viewModel}" 
-          x:Name="ControlGrid" 
-          Padding="-20, 20, 20, 0" 
+    <Grid DataContext="{x:Bind _viewModel}"
+          x:Name="ControlGrid"
+          Padding="-20, 20, 20, 0"
           RowSpacing="6">
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="MetaDataPanelStates">
                 <VisualState x:Name="Narrow">
                     <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowHeight="0"/>
+                        <AdaptiveTrigger MinWindowHeight="0" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="MetaDataPanel.Spacing" Value="0" />
-                        <Setter Target="ControlGrid.Padding" Value="-20, 20, 20, 5"  />
-                        <Setter Target="MinValueMetaData.Margin" Value="0,0,0,5"  />
+                        <Setter Target="ControlGrid.Padding" Value="-20, 20, 20, 5" />
+                        <Setter Target="MinValueMetaData.Margin" Value="0,0,0,5" />
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Normal">
                     <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowHeight="705"/>
+                        <AdaptiveTrigger MinWindowHeight="705" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="MetaDataPanel.Spacing" Value="6" />
-                        <Setter Target="ControlGrid.Padding" Value="-20, 20, 20, 0"  />
-                        <Setter Target="MinValueMetaData.Margin" Value="0,0,0,20"  />
+                        <Setter Target="ControlGrid.Padding" Value="-20, 20, 20, 0" />
+                        <Setter Target="MinValueMetaData.Margin" Value="0,0,0,20" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -78,8 +78,8 @@
                              IsReadOnly="True"
                              Margin="0,0,0,20"
                              BorderThickness="0" Text="{Binding MinValue}"
-                             IsEnabled="{Binding IsMinValueEnabled}" 
-                             x:Name="MinValueMetaData"/>
+                             IsEnabled="{Binding IsMinValueEnabled}"
+                             x:Name="MinValueMetaData" />
 
                     <CheckBox IsChecked="{Binding AllowNegative}" Content="可以为负值"
                               IsEnabled="{Binding IsAllowNegativeEnabled}"
@@ -100,49 +100,49 @@
                 <StackPanel />
                 <!-- 数组值 -->
                 <ScrollView>
-                <StackPanel Spacing="12"
-                            Margin="0,0,0,56"
-                            Visibility="{Binding ArrayValueVis}">
-                    <TextBlock Text="数组元素" Margin="0,0,0,-3" />
-                    <ItemsControl ItemsSource="{Binding ArrayValues}">
-                        <!-- 容器 -->
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <StackPanel Spacing="6" />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                        <!-- 模板 -->
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate x:DataType="model:NodeArrayElement">
-                                <Grid>
-                                    <!-- 值文本框 -->
-                                    <TextBox HorizontalAlignment="Stretch"
-                                             Text="{Binding Value, Mode=TwoWay}"
-                                             Margin="0,0,48,0"
-                                             PlaceholderText="必须"
-                                             TextChanged="TextBox_OnValueChanged" />
-                                    <!-- 值删除按钮 -->
-                                    <Button Opacity=".8"
-                                            HorizontalAlignment="Right"
-                                            Click="RemoveArrayValue_OnClicked">
-                                        <FontIcon Glyph="&#xE74D;" />
-                                    </Button>
-                                </Grid>
+                    <StackPanel Spacing="12"
+                                Margin="0,0,0,56"
+                                Visibility="{Binding ArrayValueVis}">
+                        <TextBlock Text="数组元素" Margin="0,0,0,-3" />
+                        <ItemsControl ItemsSource="{Binding ArrayValues}">
+                            <!-- 容器 -->
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Spacing="6" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <!-- 模板 -->
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="model:NodeArrayElement">
+                                    <Grid>
+                                        <!-- 值文本框 -->
+                                        <TextBox HorizontalAlignment="Stretch"
+                                                 Text="{Binding Value, Mode=TwoWay}"
+                                                 Margin="0,0,48,0"
+                                                 PlaceholderText="必须"
+                                                 TextChanged="TextBox_OnValueChanged" />
+                                        <!-- 值删除按钮 -->
+                                        <Button Opacity=".8"
+                                                HorizontalAlignment="Right"
+                                                Click="RemoveArrayValue_OnClicked">
+                                            <FontIcon Glyph="&#xE74D;" />
+                                        </Button>
+                                    </Grid>
 
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                    <!-- 添加按钮 -->
-                    <Button Opacity=".8"
-                            HorizontalAlignment="Stretch"
-                            Height="42"
-                            Click="AddArrayValue_OnClicked">
-                        <StackPanel Orientation="Horizontal" Spacing="4">
-                            <FontIcon Glyph="&#xF8AA;" FontSize="14" />
-                            <TextBlock Text="添加元素" />
-                        </StackPanel>
-                    </Button>
-                </StackPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <!-- 添加按钮 -->
+                        <Button Opacity=".8"
+                                HorizontalAlignment="Stretch"
+                                Height="42"
+                                Click="AddArrayValue_OnClicked">
+                            <StackPanel Orientation="Horizontal" Spacing="4">
+                                <FontIcon Glyph="&#xF8AA;" FontSize="14" />
+                                <TextBlock Text="添加元素" />
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
                 </ScrollView>
 
                 <!-- 普通值 -->

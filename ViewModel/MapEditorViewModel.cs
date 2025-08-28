@@ -165,8 +165,8 @@ public partial class MapEditorViewModel : ObservableObject, IMutuallyControlsMan
 
         // 对于正方形
         if (sourceImage.Width == sourceImage.Height && sourceImage.Width != _mapSize)
-            // 尺寸矫正
         {
+            // 尺寸矫正
             CompressFileHelper.CompressImage(ref sourceImage, _mapSize, _mapSize);
         }
         // 对于非正方形

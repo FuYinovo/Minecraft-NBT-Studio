@@ -287,16 +287,16 @@ public sealed partial class NbtNode
             await NotificationService
                 .GetInstance()
                 .Send(new NotificationInfo(
-                    "添加成功", 
-                    $"成功添加<{ReflectionHelper.GetEnumDescription(tagEnum)}>节点", 
-                    InfoBarSeverity.Success
+                        "添加成功",
+                        $"成功添加<{ReflectionHelper.GetEnumDescription(tagEnum)}>节点",
+                        InfoBarSeverity.Success
                     )
-                ) ;
+                );
         }
     }
 
     /// <summary>
-    /// 保存节点到单独文件
+    ///     保存节点到单独文件
     /// </summary>
     [RelayCommand]
     public async Task Save()

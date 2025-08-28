@@ -38,8 +38,7 @@
             x:Name="BottomGrid"
             Height="100"
             HorizontalAlignment="Stretch"
-            VerticalAlignment="Bottom">
-        </Grid>
+            VerticalAlignment="Bottom" />
 
 
     </Grid>

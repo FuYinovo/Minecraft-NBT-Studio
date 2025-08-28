@@ -27,16 +27,16 @@ public sealed partial class MapEditor : INotifyPropertyChanged
     public const int MinBrushRadius = 0;
     public const int MaxBrushRadius = 8;
     private readonly MapEditorToolsHandlersManager _eventHandlerManager;
+    private readonly Vector2 _scaleCenter = new((float)InitMapSize / 2, (float)InitMapSize / 2);
 
     public readonly SquareCursorManager SquareCursorManager;
     public readonly MapEditorViewModel ViewModel;
     private int _brushRadius;
-    public Matrix3x2 MapTransform;
     private float _mapScale = (float)6.25;
     public bool IsMousePressing;
     public bool IsMoving;
     public (float x, float y) MapOffset = (0, 0);
-    private readonly Vector2 _scaleCenter = new((float)InitMapSize / 2, (float)InitMapSize / 2);
+    public Matrix3x2 MapTransform;
 
     public MapEditor()
     {
@@ -120,7 +120,7 @@ public sealed partial class MapEditor : INotifyPropertyChanged
             // 右键则触发移动工具
             // Tip: 松开右键时, IsRightButtonPressed 为 false, 无法触发移动工具的 HandleReleased
             // 故增添 IsMoving 变量
-            return args.GetCurrentPoint(MapCanvas).Properties.IsRightButtonPressed || IsMoving 
+            return args.GetCurrentPoint(MapCanvas).Properties.IsRightButtonPressed || IsMoving
                 ? MapEditorTool.Move
                 : ViewModel.SelectedTool;
         }
@@ -130,11 +130,12 @@ public sealed partial class MapEditor : INotifyPropertyChanged
     public void SetCursor(CoreCursorType? cursorType)
     {
         if (cursorType == CoreCursorType.Custom) return;
-        if(cursorType is null )
+        if (cursorType is null)
         {
             ProtectedCursor.Dispose();
             return;
         }
+
         ProtectedCursor = InputCursor.CreateFromCoreCursor(new CoreCursor(cursorType.Value, 0));
     }
 

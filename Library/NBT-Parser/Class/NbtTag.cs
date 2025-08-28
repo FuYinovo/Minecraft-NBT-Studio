@@ -13,11 +13,11 @@ public class NbtTag : ICloneable
 {
     private static readonly int[] ZeroBeginArray = [0];
     public readonly NbtTagEnum ChildrenTag;
-    public bool IsBigEndian;
     public readonly NbtTagEnum Tag;
     private Memory<byte> _bytes; // 不包含子元素 (终止于「首个子元素头部 - 1」)
     private string _floatValueTemp = string.Empty;
     internal List<NbtTag> Children;
+    public bool IsBigEndian;
     public bool IsListDirectElement; // 便于构造树形结构，避免单元素(伪)列表)
     public string? Name;
     public object? Value;
@@ -85,7 +85,7 @@ public class NbtTag : ICloneable
     }
 
     /// <summary>
-    /// 设置字节序
+    ///     设置字节序
     /// </summary>
     /// <param name="isBigEndian">是否大端序</param>
     /// <returns>自身的引用</returns>

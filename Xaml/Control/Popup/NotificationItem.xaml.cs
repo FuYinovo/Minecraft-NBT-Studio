@@ -1,18 +1,18 @@
 using System;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 using NBT_Studio.Model;
 
 namespace NBT_Studio.Xaml.Control.Popup;
 
 public sealed partial class NotificationItem
 {
-    private Duration AnimationDuration { get; }
     public NotificationItem(TimeSpan animationDuration)
     {
         InitializeComponent();
         AnimationDuration = animationDuration;
     }
+
+    private Duration AnimationDuration { get; }
 
     public void SetInfo(NotificationInfo info)
     {

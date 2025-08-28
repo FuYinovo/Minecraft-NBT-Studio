@@ -6,5 +6,5 @@ public enum FileCompress
 {
     Gzip,
     Zlib,
-    [Description("不压缩")]None
+    [Description("不压缩")] None
 }

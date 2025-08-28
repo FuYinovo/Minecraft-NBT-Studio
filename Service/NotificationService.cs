@@ -21,7 +21,10 @@ public class NotificationService
         App.MainWindow.NotificationGrid.Children.Add(_notification);
     }
 
-    public static NotificationService GetInstance() => Instance;
+    public static NotificationService GetInstance()
+    {
+        return Instance;
+    }
 
     public async Task Send(NotificationInfo info)
     {

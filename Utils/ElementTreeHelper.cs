@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
@@ -72,10 +71,7 @@ public static class ElementTreeHelper
         for (var i = 0; i < childrenCount; i++)
         {
             var child = VisualTreeHelper.GetChild(parent, i);
-            if (child is T target)
-            {
-                got.Add(target);
-            }
+            if (child is T target) got.Add(target);
 
             if (VisualTreeHelper.GetChildrenCount(child) > 0) got.AddRange(GetAllChildren<T>(child));
         }

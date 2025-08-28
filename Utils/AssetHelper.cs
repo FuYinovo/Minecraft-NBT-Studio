@@ -46,7 +46,6 @@ public static class AssetHelper
     /// <summary>
     ///     获取标题栏图标
     /// </summary>
-    /// <returns></returns>
     public static string GetTitleBarIconUri()
     {
         return "ms-appx:///Assets/PNG/AppLogo.png";
