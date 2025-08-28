@@ -68,7 +68,20 @@ public static class DialogHelper
     {
         var dialogContent = content switch
         {
-            null => new ContentControl { Content = new Grid { Children = { new TextBlock { Text = description } } } },
+            null => new ContentControl
+            {
+                Content = new Grid
+                {
+                    Children =
+                    {
+                        new TextBlock
+                        {
+                            Text = description,
+                            TextWrapping = TextWrapping.Wrap
+                        }
+                    }
+                }
+            },
             _ => content
         };
         if (App.MainWindow != null)

@@ -1,9 +1,14 @@
-﻿using CommunityToolkit.Mvvm.Messaging;
+﻿using System;
+using System.Diagnostics;
+using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using NBT_Studio.Enum;
 using NBT_Studio.Message;
 using NBT_Studio.Service;
+using NBT_Studio.Utils;
+using UnhandledExceptionEventArgs = Microsoft.UI.Xaml.UnhandledExceptionEventArgs;
 
 namespace NBT_Studio;
 
@@ -14,7 +19,6 @@ public partial class App
     public App()
     {
         InitializeComponent();
-        SettingsService.GetInstance();
     }
 
     protected override void OnLaunched(LaunchActivatedEventArgs args)
