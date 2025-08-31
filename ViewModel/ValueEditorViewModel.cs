@@ -54,6 +54,7 @@ public sealed partial class ValueEditorViewModel : ObservableObject
         ChildrenType = NbtTagHelper.Instance.GetDescription(ChildrenTagEnum);
         MaxValue = NbtTagHelper.Instance.GetMaxValue(TagEnum);
         MinValue = NbtTagHelper.Instance.GetMinValue(TagEnum);
+        IsNameEditable = !node.Tag.IsListDirectElement;
         ArrayValueVis = isArray ? Visibility.Visible : Visibility.Collapsed;
         GenericValueVis = isArray ? Visibility.Collapsed : Visibility.Visible;
 
@@ -137,6 +138,7 @@ public sealed partial class ValueEditorViewModel : ObservableObject
     [ObservableProperty] private bool _isChildrenTypeEnabled;
     [ObservableProperty] private bool _isMaxValueEnabled;
     [ObservableProperty] private bool _isMinValueEnabled;
+    [ObservableProperty] private bool _isNameEditable;
     [ObservableProperty] private bool _isAllowNegativeEnabled;
     [ObservableProperty] private bool _isAllowDecimalEnabled;
     [ObservableProperty] private Visibility _genericValueVis = Visibility.Collapsed;

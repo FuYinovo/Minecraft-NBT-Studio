@@ -48,6 +48,7 @@
             <!-- 名称(占整行) -->
             <TextBox
                 Header="名称"
+                IsEnabled="{Binding IsNameEditable}"
                 TextChanged="TextBox_OnNameChanged"
                 Text="{Binding Name, Mode=TwoWay}" />
         </Grid>

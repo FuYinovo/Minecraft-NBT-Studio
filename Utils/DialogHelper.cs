@@ -16,12 +16,13 @@ public static class DialogHelper
     /// <param name="close">取消按钮文本</param>
     /// <param name="content">(优先)对话框自定义内容</param>
     /// <param name="description">对话框内容</param>
+    /// <param name="xamlRoot">XamlRoot</param>
     /// <returns>用户选择的按钮</returns>
     public static async Task<ContentDialogResult> ShowDialog(string title, string? primary = null,
         string? secondary = null,
-        string? close = null, Control? content = null, string? description = null)
+        string? close = null, Control? content = null, string? description = null, XamlRoot? xamlRoot = null)
     {
-        var dialog = BuildDialog(title, primary, secondary, close, content, description);
+        var dialog = BuildDialog(title, primary, secondary, close, content, description, xamlRoot);
         return await dialog.ShowAsync();
     }
 
@@ -34,12 +35,13 @@ public static class DialogHelper
     /// <param name="close">取消按钮文本</param>
     /// <param name="content">(优先)对话框自定义内容</param>
     /// <param name="description">对话框内容</param>
+    /// <param name="xamlRoot">XamlRoot</param>
     /// <returns>用户选择的按钮</returns>
     public static ContentDialog GetDialog(string title, string? primary = null,
         string? secondary = null,
-        string? close = null, Control? content = null, string? description = null)
+        string? close = null, Control? content = null, string? description = null, XamlRoot? xamlRoot = null)
     {
-        return BuildDialog(title, primary, secondary, close, content, description);
+        return BuildDialog(title, primary, secondary, close, content, description ,xamlRoot);
     }
 
     /// <summary>
@@ -61,10 +63,11 @@ public static class DialogHelper
     /// <param name="close">取消按钮文本</param>
     /// <param name="content">(优先)对话框自定义内容</param>
     /// <param name="description">对话框内容</param>
+    /// <param name="xamlRoot">XamlRoot</param>
     /// <returns>用户选择的按钮</returns>
     private static ContentDialog BuildDialog(string title, string? primary = null,
         string? secondary = null,
-        string? close = null, Control? content = null, string? description = null)
+        string? close = null, Control? content = null, string? description = null, XamlRoot? xamlRoot = null)
     {
         var dialogContent = content switch
         {
@@ -87,7 +90,7 @@ public static class DialogHelper
         if (App.MainWindow != null)
             dialogContent.RequestedTheme = ((FrameworkElement)App.MainWindow.Content).RequestedTheme;
 
-        var xamlRoot = GetXamlRoot();
+        xamlRoot ??= GetXamlRoot();
         return new ContentDialog
         {
             XamlRoot = xamlRoot,
