@@ -9,12 +9,13 @@ namespace NBT_Studio.ViewModel;
 
 public partial class SettingsFlyoutViewModel : ObservableObject
 {
-    private readonly SettingsService _settingsService = SettingsService.GetInstance();
+    private readonly SettingsService _settingsService = SettingsService.Instance;
 
     public SettingsFlyoutViewModel()
     {
         _theme = _settingsService.GetValue<Theme>(EnumSettings.Theme);
         _quickCreate = _settingsService.GetValue<bool>(BooleanSettings.QuickCreate);
+        _hideEmptyCollection = _settingsService.GetValue<bool>(BooleanSettings.HideEmptyCollection);
     }
 
 
@@ -22,6 +23,7 @@ public partial class SettingsFlyoutViewModel : ObservableObject
 
     private Theme _theme;
     private bool _quickCreate;
+    private bool _hideEmptyCollection;
 
     public Theme Theme
     {
@@ -33,6 +35,12 @@ public partial class SettingsFlyoutViewModel : ObservableObject
     {
         get => _quickCreate;
         set => SetSetting(ref _quickCreate, value, BooleanSettings.QuickCreate);
+    }
+
+    public bool HideEmptyCollection
+    {
+        get => _hideEmptyCollection;
+        set => SetSetting(ref _hideEmptyCollection, value, BooleanSettings.HideEmptyCollection);
     }
 
     #endregion

@@ -418,8 +418,63 @@ public sealed partial class TreeViewPageViewModel
     /// <summary> 应用节点筛选</summary>
     private void ApplyFilter()
     {
-        // 一、应用节点筛选
-        var filterEnum = _nodeFilterIndex switch
+        var filterEnum = GetSelectedFilter();
+        var childrenAll = Nodes.First().GetChildrenAll();
+
+        // 一、应用筛选
+        foreach (var child in childrenAll)
+        {
+            // 默认显示节点
+            child.Visibility = Visibility.Visible;
+
+            // 跳过容器节点
+            if (NbtTagEnumExtensions.IsCollection(child.TagEnum)) continue;
+
+            // 1、应用节点筛选
+            if (filterEnum != NbtTagEnum.Unknown)
+            {
+                SetVisibility(child,
+                    child.TagEnum == filterEnum
+                        ? Visibility.Visible
+                        : Visibility.Collapsed);
+            }
+
+            // 2、应用节点搜索
+            if (!string.IsNullOrWhiteSpace(SearchBoxText))
+            {
+                SetVisibility(child,
+                    child.DisplayName.Contains(SearchBoxText)
+                        ? Visibility.Visible
+                        : Visibility.Collapsed);
+            }
+        }
+
+        // 二、应用相关设置选项
+        // 1. 应用「隐藏空容器节点」开关
+        if (SettingsService.Instance.GetValue<bool>(BooleanSettings.HideEmptyCollection))
+            for (var i = childrenAll.Count - 1; i >= 0; i--) // 反向遍历：先判断深层节点
+            {
+                var child = childrenAll[i];
+                if (!NbtTagEnumExtensions.IsCollection(child.TagEnum)) continue; // 若为容器节点
+                if (child.GetVisibleChildrenCount() == 0) // 且可见子项为 0 个
+                    SetVisibility(child, Visibility.Collapsed); // 则隐藏
+            }
+
+        // 三、更新子项数量显示
+        foreach (var child in childrenAll.Where(child => NbtTagEnumExtensions.IsCollection(child.TagEnum)))
+            child.UpdateChildrenCount();
+    }
+
+    void SetVisibility(NbtNode node, Visibility visibility)
+    {
+        // 若节点已隐藏，则不更改其可见性
+        if (node.Visibility != visibility && node.Visibility != Visibility.Collapsed)
+            node.Visibility = visibility;
+    }
+
+    private NbtTagEnum GetSelectedFilter()
+    {
+        return _nodeFilterIndex switch
         {
             1 => NbtTagEnum.Byte,
             2 => NbtTagEnum.Short,
@@ -430,43 +485,6 @@ public sealed partial class TreeViewPageViewModel
             7 => NbtTagEnum.String,
             _ => NbtTagEnum.Unknown
         };
-        var childrenAll = Nodes.First().GetChildrenAll();
-        switch (filterEnum)
-        {
-            // 情景一：选择了「全部」筛选标签
-            case NbtTagEnum.Unknown:
-                // 全部显示
-                foreach (var child in childrenAll)
-                    child.Visibility = Visibility.Visible;
-                break;
-            // 情景二：选择了其他筛选标签
-            default:
-                // 隐藏所有非目标节点（列表、字典除外）
-                foreach (var child in childrenAll)
-                {
-                    if (NbtTagEnumExtensions.IsCollection(child.TagEnum)) continue;
-                    child.Visibility = child.TagEnum != filterEnum ? Visibility.Collapsed : Visibility.Visible;
-                }
-
-                break;
-        }
-
-        // 二、应用节点搜索
-        foreach (var child in childrenAll.Where(child =>
-                     !string.IsNullOrWhiteSpace(SearchBoxText) && !child.DisplayName.Contains(SearchBoxText) &&
-                     !NbtTagEnumExtensions.IsCollection(child.TagEnum)))
-            child.Visibility = Visibility.Collapsed;
-
-        // 三、 隐藏空的列表、字典
-        foreach (var child in childrenAll)
-            if (NbtTagEnumExtensions.IsCollection(child.TagEnum) && child.GetVisibleChildrenCount() <= 0)
-                child.Visibility = Visibility.Collapsed;
-
-        // 四、显示根节点
-        Nodes.First().Visibility = Visibility.Visible;
-
-        // 四、更新子项数量
-        foreach (var child in childrenAll) child.UpdateChildrenCount();
     }
 }
 

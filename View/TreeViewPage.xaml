@@ -201,6 +201,7 @@
                 <Border>
                     <TextBlock HorizontalAlignment="Center"
                                VerticalAlignment="Center"
+                               TextWrapping="Wrap"
                                Text="选择节点以查看详情"
                                FontSize="32"
                                FontWeight="Black"

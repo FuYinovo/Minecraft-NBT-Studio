@@ -17,7 +17,7 @@ namespace NBT_Studio.Service;
 
 public sealed class SettingsService
 {
-    private static readonly SettingsService Instance = new();
+    public static readonly SettingsService Instance = new();
 
     private readonly string _filePath;
 
@@ -35,14 +35,6 @@ public sealed class SettingsService
         InitSettingsEnums();
         LoadSettings();
         NotifySettings();
-    }
-
-    /// <summary>
-    ///     获取 <see cref="SettingsService" /> 的唯一实例
-    /// </summary>
-    public static SettingsService GetInstance()
-    {
-        return Instance;
     }
 
 

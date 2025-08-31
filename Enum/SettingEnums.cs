@@ -5,7 +5,8 @@ namespace NBT_Studio.Enum;
 
 public enum BooleanSettings
 {
-    [Setting(false, typeof(bool))] QuickCreate
+    [Setting(false, typeof(bool))] QuickCreate,
+    [Setting(false, typeof(bool))] HideEmptyCollection
 }
 
 public enum EnumSettings

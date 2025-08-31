@@ -1,3 +1,4 @@
+using Windows.Graphics;
 using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml.Controls;
@@ -17,6 +18,7 @@ public sealed partial class MainWindow
         presenter.PreferredMinimumHeight = 651;
         AppWindow.SetPresenter(presenter);
         AppWindow.SetIcon(AssetHelper.GetFilePathFromUri(AssetHelper.GetTitleBarIconUri()));
+        AppWindow.Resize(new SizeInt32(1090, 760));
 
         AppWindow.TitleBar.ExtendsContentIntoTitleBar = true;
         AppWindow.TitleBar.ButtonBackgroundColor = Colors.Transparent;

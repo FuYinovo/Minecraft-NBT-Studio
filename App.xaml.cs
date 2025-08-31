@@ -21,7 +21,6 @@ public partial class App
         MainWindow = new MainWindow();
         MainWindow.Activate();
         RegisterMessages();
-        SettingsService.GetInstance();
     }
 
     private void RegisterMessages()

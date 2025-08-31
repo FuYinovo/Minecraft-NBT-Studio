@@ -47,6 +47,12 @@
                                             Width="500">
                         <ToggleSwitch IsOn="{Binding QuickCreate, Mode=TwoWay}" />
                     </community:SettingsCard>
+                    <community:SettingsCard Header="隐藏空容器节点"
+                                            Description="应用节点筛选时，隐藏空列表和字典"
+                                            Padding="20,20,160,20"
+                                            Width="500">
+                        <ToggleSwitch IsOn="{Binding HideEmptyCollection, Mode=TwoWay}" />
+                    </community:SettingsCard>
                 </community:SettingsExpander.Items>
             </community:SettingsExpander>
 
